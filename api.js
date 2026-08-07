@@ -1,16 +1,18 @@
-
-// =================================
-// FOOTBALL GLOBAL API
-// =================================
+// ======================================
+// FOOTBALL GLOBAL
+// API FOOTBALL CONNECTION
+// ======================================
 
 
 const API_KEY = "47f671279defefb2b169097f1062a2a6";
+
 
 const API_URL = "https://v3.football.api-sports.io";
 
 
 
 
+// Fonction principale API
 
 async function apiRequest(endpoint){
 
@@ -49,9 +51,15 @@ return data;
 catch(error){
 
 
-console.log("API Error:", error);
+console.log(
+"Erreur API:",
+error
+);
 
-return null;
+
+return {
+response:[]
+};
 
 
 }
@@ -65,16 +73,18 @@ return null;
 
 
 
-// =================================
-// MATCHS LIVE - ACCUEIL
-// =================================
+// ======================================
+// MATCHS LIVE POUR INDEX + MATCHES
+// ======================================
 
 
-async function homeLiveMatches(){
+async function loadLiveMatches(id){
+
 
 
 const box =
-document.getElementById("homeLiveMatches");
+document.getElementById(id);
+
 
 
 if(!box) return;
@@ -90,11 +100,12 @@ box.innerHTML = "";
 
 
 
-if(!data || data.response.length === 0){
+if(!data.response || data.response.length === 0){
 
 
 box.innerHTML =
-"<p>Aucun match en direct.</p>";
+"<p>Aucun match en direct actuellement.</p>";
+
 
 return;
 
@@ -104,7 +115,8 @@ return;
 
 
 
-data.response.slice(0,5).forEach(match=>{
+
+data.response.slice(0,10).forEach(match=>{
 
 
 box.innerHTML += `
@@ -120,6 +132,7 @@ ${match.teams.home.name}
 </h3>
 
 
+
 <p>
 
 ${match.goals.home ?? 0}
@@ -131,6 +144,7 @@ ${match.goals.away ?? 0}
 </p>
 
 
+
 <h3>
 
 ${match.teams.away.name}
@@ -138,11 +152,13 @@ ${match.teams.away.name}
 </h3>
 
 
+
 <span>
 
 🔴 ${match.fixture.status.long}
 
 </span>
+
 
 
 </div>
@@ -154,23 +170,26 @@ ${match.teams.away.name}
 });
 
 
+
 }
 
 
 
-// =================================
-// PROCHAINS MATCHS - ACCUEIL
-// =================================
+// ======================================
+// PROCHAINS MATCHS
+// ======================================
 
 
-async function homeUpcomingMatches(){
+async function loadUpcomingMatches(){
 
 
-const box =
-document.getElementById("homeUpcomingMatches");
+const boxes = [
 
+"homeUpcomingMatches",
 
-if(!box) return;
+"upcomingMatches"
+
+];
 
 
 
@@ -186,16 +205,27 @@ await apiRequest(
 
 
 
+boxes.forEach(id=>{
+
+
+const box =
+document.getElementById(id);
+
+
+
+if(!box) return;
+
+
+
 box.innerHTML = "";
 
 
 
-if(!data || data.response.length === 0){
+if(!data.response || data.response.length === 0){
 
 
 box.innerHTML =
-
-"<p>Aucun match prévu aujourd'hui.</p>";
+"<p>Aucun match prévu.</p>";
 
 
 return;
@@ -205,8 +235,7 @@ return;
 
 
 
-
-data.response.slice(0,6).forEach(match=>{
+data.response.slice(0,10).forEach(match=>{
 
 
 box.innerHTML += `
@@ -236,11 +265,13 @@ ${match.teams.away.name}
 </h3>
 
 
+
 <span>
 
 📅 ${new Date(match.fixture.date).toLocaleString("fr-FR")}
 
 </span>
+
 
 
 </div>
@@ -252,6 +283,11 @@ ${match.teams.away.name}
 });
 
 
+
+});
+
+
+
 }
 
 
@@ -260,50 +296,109 @@ ${match.teams.away.name}
 
 
 
-// =================================
-// CLASSEMENT - ACCUEIL
-// =================================
+// ======================================
+// DERNIERS RESULTATS
+// ======================================
 
 
-async function homeStandings(){
+async function loadResults(){
 
 
-const table =
-document.getElementById("homeStandings");
-
-
-if(!table) return;
+const box =
+document.getElementById("resultsMatches");
 
 
 
-// Exemple Ligue 1 France
-// Nous allons connecter les vraies ligues après
+if(!box) return;
 
 
-table.innerHTML = `
+
+const data =
+await apiRequest(
+"/fixtures?last=10"
+);
 
 
-<tr>
 
-<td>1</td>
+box.innerHTML = "";
 
-<td>Chargement API...</td>
 
-<td>-</td>
 
-</tr>
+if(!data.response || data.response.length === 0){
+
+
+box.innerHTML =
+"<p>Aucun résultat disponible.</p>";
+
+
+return;
+
+
+}
+
+
+
+data.response.forEach(match=>{
+
+
+box.innerHTML += `
+
+
+<div class="match-card">
+
+
+<h3>
+
+${match.teams.home.name}
+
+</h3>
+
+
+
+<p>
+
+${match.goals.home ?? 0}
+
+-
+
+${match.goals.away ?? 0}
+
+</p>
+
+
+
+<h3>
+
+${match.teams.away.name}
+
+</h3>
+
+
+
+<span>
+
+✅ Terminé
+
+</span>
+
+
+
+</div>
 
 
 `;
 
 
+});
+
+
 
 }
 
 
-// =================================
+// ======================================
 // DEMARRAGE AUTOMATIQUE
-// =================================
+// ======================================
 
 
 document.addEventListener(
@@ -311,11 +406,26 @@ document.addEventListener(
 ()=>{
 
 
-homeLiveMatches();
+// Page Accueil
 
-homeUpcomingMatches();
+loadLiveMatches("homeLiveMatches");
 
-homeStandings();
+loadUpcomingMatches();
+
+
+
+
+// Page Matchs
+
+loadLiveMatches("liveMatches");
+
+
+
+
+// Résultats
+
+loadResults();
+
 
 
 });
@@ -323,6 +433,6 @@ homeStandings();
 
 
 
-// =================================
+// ======================================
 // FIN FOOTBALL GLOBAL API
-// =================================
+// ======================================
