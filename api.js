@@ -1,19 +1,16 @@
 
-// ==================================
-// FOOTBALL GLOBAL API ENGINE
-// ==================================
+// =================================
+// FOOTBALL GLOBAL API
+// =================================
 
 
-// Mete kle API ou isit la
 const API_KEY = "47f671279defefb2b169097f1062a2a6";
-
 
 const API_URL = "https://v3.football.api-sports.io";
 
 
 
 
-// Fonksyon jeneral pou rele API a
 
 async function apiRequest(endpoint){
 
@@ -23,7 +20,7 @@ try{
 
 const response = await fetch(
 
-`${API_URL}${endpoint}`,
+API_URL + endpoint,
 
 {
 
@@ -49,15 +46,10 @@ return data;
 
 }
 
-
 catch(error){
 
 
-console.log(
-"Erreur API:",
-error
-);
-
+console.log("API Error:", error);
 
 return null;
 
@@ -73,20 +65,19 @@ return null;
 
 
 
-// ===============================
-// MATCHS EN DIRECT
-// ===============================
+// =================================
+// MATCHS LIVE - ACCUEIL
+// =================================
 
 
-async function getLiveMatches(){
+async function homeLiveMatches(){
 
 
-const container =
-document.getElementById("liveMatches");
+const box =
+document.getElementById("homeLiveMatches");
 
 
-
-if(!container) return;
+if(!box) return;
 
 
 
@@ -95,17 +86,15 @@ await apiRequest("/fixtures?live=all");
 
 
 
-container.innerHTML = "";
+box.innerHTML = "";
 
 
 
 if(!data || data.response.length === 0){
 
 
-container.innerHTML =
-
-"<p>Aucun match en direct actuellement.</p>";
-
+box.innerHTML =
+"<p>Aucun match en direct.</p>";
 
 return;
 
@@ -114,10 +103,11 @@ return;
 
 
 
-data.response.forEach(match=>{
+
+data.response.slice(0,5).forEach(match=>{
 
 
-container.innerHTML += `
+box.innerHTML += `
 
 
 <div class="match-card">
@@ -168,20 +158,19 @@ ${match.teams.away.name}
 
 
 
-// ===============================
-// PROCHAINS MATCHS
-// ===============================
+// =================================
+// PROCHAINS MATCHS - ACCUEIL
+// =================================
 
 
-async function getUpcomingMatches(){
+async function homeUpcomingMatches(){
 
 
-const container =
-document.getElementById("upcomingMatches");
+const box =
+document.getElementById("homeUpcomingMatches");
 
 
-
-if(!container) return;
+if(!box) return;
 
 
 
@@ -197,14 +186,14 @@ await apiRequest(
 
 
 
-container.innerHTML = "";
+box.innerHTML = "";
 
 
 
 if(!data || data.response.length === 0){
 
 
-container.innerHTML =
+box.innerHTML =
 
 "<p>Aucun match prévu aujourd'hui.</p>";
 
@@ -217,10 +206,10 @@ return;
 
 
 
-data.response.slice(0,10).forEach(match=>{
+data.response.slice(0,6).forEach(match=>{
 
 
-container.innerHTML += `
+box.innerHTML += `
 
 
 <div class="match-card">
@@ -249,7 +238,7 @@ ${match.teams.away.name}
 
 <span>
 
-📅 ${match.fixture.date}
+📅 ${new Date(match.fixture.date).toLocaleString("fr-FR")}
 
 </span>
 
@@ -263,7 +252,6 @@ ${match.teams.away.name}
 });
 
 
-
 }
 
 
@@ -272,108 +260,50 @@ ${match.teams.away.name}
 
 
 
-// ===============================
-// DERNIERS RESULTATS
-// ===============================
+// =================================
+// CLASSEMENT - ACCUEIL
+// =================================
 
 
-async function getResults(){
+async function homeStandings(){
 
 
-const container =
-document.getElementById("resultsMatches");
+const table =
+document.getElementById("homeStandings");
 
 
-
-if(!container) return;
-
-
-
-const data =
-await apiRequest(
-"/fixtures?last=10"
-);
+if(!table) return;
 
 
 
-container.innerHTML = "";
+// Exemple Ligue 1 France
+// Nous allons connecter les vraies ligues après
 
 
-
-if(!data || data.response.length === 0){
-
-
-container.innerHTML =
-
-"<p>Aucun résultat disponible.</p>";
+table.innerHTML = `
 
 
-return;
+<tr>
 
+<td>1</td>
 
-}
+<td>Chargement API...</td>
 
+<td>-</td>
 
-
-
-data.response.forEach(match=>{
-
-
-container.innerHTML += `
-
-
-<div class="match-card">
-
-
-<h3>
-
-${match.teams.home.name}
-
-</h3>
-
-
-<p>
-
-${match.goals.home ?? 0}
-
--
-
-${match.goals.away ?? 0}
-
-</p>
-
-
-<h3>
-
-${match.teams.away.name}
-
-</h3>
-
-
-<span>
-
-✅ Terminé
-
-</span>
-
-
-</div>
+</tr>
 
 
 `;
 
 
-});
-
 
 }
 
 
-
-// ===============================
+// =================================
 // DEMARRAGE AUTOMATIQUE
-// ===============================
-
+// =================================
 
 
 document.addEventListener(
@@ -381,11 +311,11 @@ document.addEventListener(
 ()=>{
 
 
-getLiveMatches();
+homeLiveMatches();
 
-getUpcomingMatches();
+homeUpcomingMatches();
 
-getResults();
+homeStandings();
 
 
 });
@@ -393,7 +323,6 @@ getResults();
 
 
 
-
-// ===============================
+// =================================
 // FIN FOOTBALL GLOBAL API
-// ===============================
+// =================================
