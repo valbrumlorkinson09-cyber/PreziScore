@@ -1,27 +1,25 @@
 // ======================================
-// ⚽ FOOTBALL GLOBAL API ENGINE v2.0
-// CLEAN GLOBAL SYSTEM
+// ⚽ PREZISCORE API ENGINE v1.0
+// GLOBAL FOOTBALL SYSTEM
 // ======================================
 
 
-
 // ===============================
-// CONFIGURATION
+// API CONFIG
 // ===============================
 
 
 const API_KEY = "47f671279defefb2b169097f1062a2a6";
 
 
-const API_URL = 
+const API_URL =
 "https://v3.football.api-sports.io";
 
 
 
 
-
 // ===============================
-// GLOBAL REQUEST
+// GLOBAL API REQUEST
 // ===============================
 
 
@@ -80,7 +78,9 @@ response:[]
 }
 
 
+
 }
+
 
 
 
@@ -91,8 +91,7 @@ response:[]
 // ===============================
 
 
-
-function elementExiste(id){
+function getElement(id){
 
 
 return document.getElementById(id);
@@ -103,10 +102,11 @@ return document.getElementById(id);
 
 
 
-function afficherChargement(id,message){
+
+function loading(id,text){
 
 
-const box = elementExiste(id);
+const box = getElement(id);
 
 
 
@@ -115,7 +115,7 @@ if(box){
 
 box.innerHTML =
 
-`<p>${message}</p>`;
+`<p>${text}</p>`;
 
 
 }
@@ -129,41 +129,45 @@ box.innerHTML =
 
 
 console.log(
-"⚽ Football Global API v2 Connected"
+"⚽ PreziScore API Connected"
 );
 
 // ======================================
-// MATCH SYSTEM GLOBAL v2
+// MATCH SYSTEM
+// LIVE + UPCOMING
 // ======================================
 
 
 
 // ===============================
-// MATCHS EN DIRECT
+// MATCHS LIVE
 // ===============================
 
 
-async function getLiveMatches(containerId){
+async function loadLiveMatches(containerId){
 
 
-const box = elementExiste(containerId);
-
+const box = getElement(containerId);
 
 
 if(!box) return;
 
 
 
-afficherChargement(
+loading(
 containerId,
 "Chargement des matchs en direct..."
 );
 
 
 
+
 const data = await apiRequest(
+
 "/fixtures?live=all"
+
 );
+
 
 
 
@@ -178,7 +182,6 @@ box.innerHTML =
 
 "<p>Aucun match en direct actuellement.</p>";
 
-
 return;
 
 
@@ -187,7 +190,7 @@ return;
 
 
 
-data.response.slice(0,10).forEach(match=>{
+data.response.forEach(match=>{
 
 
 box.innerHTML += `
@@ -201,7 +204,6 @@ box.innerHTML += `
 ${match.teams.home.name}
 
 </h3>
-
 
 
 <h2>
@@ -224,18 +226,18 @@ ${match.teams.away.name}
 
 
 
-<span>
+<p>
 
 🔴 ${match.fixture.status.long}
 
-</span>
-
+</p>
 
 
 </div>
 
 
 `;
+
 
 
 });
@@ -252,25 +254,25 @@ ${match.teams.away.name}
 
 
 // ===============================
-// PROCHAINS MATCHS
+// MATCHS A VENIR
 // ===============================
 
 
-async function getUpcomingMatches(containerId){
+async function loadUpcomingMatches(containerId){
 
 
-const box = elementExiste(containerId);
-
+const box = getElement(containerId);
 
 
 if(!box) return;
 
 
 
-afficherChargement(
+loading(
 containerId,
 "Chargement du calendrier..."
 );
+
 
 
 
@@ -284,11 +286,13 @@ new Date()
 
 
 
+
 const data = await apiRequest(
 
 `/fixtures?date=${today}`
 
 );
+
 
 
 
@@ -304,7 +308,6 @@ box.innerHTML =
 
 "<p>Aucun match prévu.</p>";
 
-
 return;
 
 
@@ -313,8 +316,7 @@ return;
 
 
 
-
-data.response.slice(0,10).forEach(match=>{
+data.response.slice(0,20).forEach(match=>{
 
 
 box.innerHTML += `
@@ -331,11 +333,11 @@ ${match.teams.home.name}
 
 
 
-<p>
+<h2>
 
 VS
 
-</p>
+</h2>
 
 
 
@@ -347,10 +349,419 @@ ${match.teams.away.name}
 
 
 
+<p>
+
+📅 
+
+${new Date(match.fixture.date)
+.toLocaleString("fr-FR")}
+
+</p>
+
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+console.log(
+"⚽ Match System Ready"
+);
+// ======================================
+// MATCH DETAILS SYSTEM
+// STATISTICS + LINEUPS
+// ======================================
+
+
+
+// ===============================
+// STATISTIQUES MATCH
+// ===============================
+
+
+async function loadMatchStatistics(fixtureId, containerId){
+
+
+const box = getElement(containerId);
+
+
+if(!box) return;
+
+
+
+loading(
+containerId,
+"Chargement des statistiques..."
+);
+
+
+
+
+const data = await apiRequest(
+
+`/fixtures/statistics?fixture=${fixtureId}`
+
+);
+
+
+
+
+box.innerHTML = "";
+
+
+
+if(!data.response || data.response.length === 0){
+
+
+box.innerHTML =
+
+"<p>Statistiques indisponibles.</p>";
+
+return;
+
+
+}
+
+
+
+
+
+data.response.forEach(team=>{
+
+
+box.innerHTML += `
+
+
+<div class="stats-card">
+
+
+<h3>
+
+${team.team.name}
+
+</h3>
+
+
+${team.statistics.map(stat=>`
+
+
+<p>
+
+${stat.type} :
+
+${stat.value ?? 0}
+
+</p>
+
+
+`).join("")}
+
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// COMPOSITION DES EQUIPES
+// ===============================
+
+
+async function loadLineups(fixtureId, containerId){
+
+
+const box = getElement(containerId);
+
+
+if(!box) return;
+
+
+
+loading(
+containerId,
+"Chargement des compositions..."
+);
+
+
+
+
+
+const data = await apiRequest(
+
+`/fixtures/lineups?fixture=${fixtureId}`
+
+);
+
+
+
+
+
+box.innerHTML = "";
+
+
+
+if(!data.response || data.response.length === 0){
+
+
+box.innerHTML =
+
+"<p>Composition indisponible.</p>";
+
+return;
+
+
+}
+
+
+
+
+
+data.response.forEach(team=>{
+
+
+box.innerHTML += `
+
+
+<div class="lineup-card">
+
+
+<h3>
+
+${team.team.name}
+
+</h3>
+
+
+<h4>
+
+Titulaires
+
+</h4>
+
+
+<ul>
+
+
+${team.startXI.map(player=>`
+
+
+<li>
+
+${player.player.name}
+
+</li>
+
+
+`).join("")}
+
+
+</ul>
+
+
+
+<h4>
+
+Remplaçants
+
+</h4>
+
+
+<ul>
+
+
+${team.substitutes.map(player=>`
+
+
+<li>
+
+${player.player.name}
+
+</li>
+
+
+`).join("")}
+
+
+</ul>
+
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+}
+
+
+
+
+console.log(
+"📊 Statistics + Lineups System Ready"
+);
+
+// ======================================
+// COMPETITIONS + STANDINGS SYSTEM
+// ======================================
+
+
+
+const PREZISCORE_LEAGUES = {
+
+
+"Premier League":39,
+
+"La Liga":140,
+
+"Ligue 1":61,
+
+"Serie A":135,
+
+"Bundesliga":78,
+
+"Champions League":2
+
+
+};
+
+
+
+
+
+
+// ===============================
+// LOAD STANDINGS
+// ===============================
+
+
+async function loadStandings(leagueId,containerId){
+
+
+const box = getElement(containerId);
+
+
+if(!box) return;
+
+
+
+loading(
+containerId,
+"Chargement du classement..."
+);
+
+
+
+
+
+const season = new Date().getFullYear();
+
+
+
+
+
+const data = await apiRequest(
+
+`/standings?league=${leagueId}&season=${season}`
+
+);
+
+
+
+
+
+box.innerHTML = "";
+
+
+
+if(!data.response || data.response.length===0){
+
+
+box.innerHTML =
+
+"<p>Classement indisponible.</p>";
+
+return;
+
+
+}
+
+
+
+
+
+const table =
+
+data.response[0]
+.league
+.standings[0];
+
+
+
+
+
+table.forEach(team=>{
+
+
+box.innerHTML += `
+
+
+<div class="standing-card">
+
+
 <span>
 
-📅 ${new Date(match.fixture.date)
-.toLocaleString("fr-FR")}
+${team.rank}
+
+</span>
+
+
+
+<strong>
+
+${team.team.name}
+
+</strong>
+
+
+
+<span>
+
+${team.points} pts
 
 </span>
 
@@ -366,335 +777,6 @@ ${match.teams.away.name}
 });
 
 
-}
-
-
-
-
-// ===============================
-// RESULTATS RECENTS
-// ===============================
-
-
-async function getResults(containerId){
-
-
-const box = elementExiste(containerId);
-
-
-
-if(!box) return;
-
-
-
-afficherChargement(
-containerId,
-"Chargement des résultats..."
-);
-
-
-
-const today =
-
-new Date()
-.toISOString()
-.split("T")[0];
-
-
-
-const data = await apiRequest(
-
-`/fixtures?date=${today}`
-
-);
-
-
-
-box.innerHTML = "";
-
-
-
-if(!data.response || data.response.length===0){
-
-
-box.innerHTML =
-
-"<p>Aucun résultat disponible.</p>";
-
-
-return;
-
-
-}
-
-
-
-
-data.response.slice(0,10).forEach(match=>{
-
-
-box.innerHTML += `
-
-
-<div class="match-card">
-
-
-<h3>
-
-${match.teams.home.name}
-
-${match.goals.home ?? 0}
-
--
-
-${match.goals.away ?? 0}
-
-${match.teams.away.name}
-
-</h3>
-
-
-
-</div>
-
-
-`;
-
-
-});
-
-
-}
-
-
-
-
-console.log(
-"⚽ Match System v2 Ready"
-);
-
-// ======================================
-// PLAYERS + TRANSFERS SYSTEM v2
-// ======================================
-
-
-
-// ===============================
-// RECHERCHE JOUEUR
-// ===============================
-
-
-async function searchPlayer(name, containerId){
-
-
-const box = elementExiste(containerId);
-
-
-
-if(!box) return;
-
-
-
-afficherChargement(
-containerId,
-"Recherche joueur..."
-);
-
-
-
-const data = await apiRequest(
-
-`/players?search=${name}`
-
-);
-
-
-
-box.innerHTML = "";
-
-
-
-if(!data.response || data.response.length === 0){
-
-
-box.innerHTML =
-
-"<p>Aucun joueur trouvé.</p>";
-
-return;
-
-
-}
-
-
-
-
-data.response.slice(0,10).forEach(item=>{
-
-
-const player = item.player;
-
-
-
-box.innerHTML += `
-
-
-<div class="player-card">
-
-
-<h3>
-
-⭐ ${player.name}
-
-</h3>
-
-
-
-<p>
-
-Pays : ${player.nationality ?? "N/A"}
-
-</p>
-
-
-
-<p>
-
-Âge : ${player.age ?? "N/A"}
-
-</p>
-
-
-
-<button onclick="getPlayerStats(${player.id}, ${new Date().getFullYear()}, 'playerStats')">
-
-Voir statistiques
-
-</button>
-
-
-
-</div>
-
-
-`;
-
-
-
-});
-
-
-
-}
-
-
-
-
-
-
-
-
-// ===============================
-// STATISTIQUES JOUEUR
-// ===============================
-
-
-async function getPlayerStats(playerId, season, containerId){
-
-
-const box = elementExiste(containerId);
-
-
-
-if(!box) return;
-
-
-
-afficherChargement(
-containerId,
-"Chargement statistiques..."
-);
-
-
-
-const data = await apiRequest(
-
-`/players?id=${playerId}&season=${season}`
-
-);
-
-
-
-box.innerHTML = "";
-
-
-
-if(!data.response || data.response.length===0){
-
-
-box.innerHTML =
-
-"<p>Statistiques indisponibles.</p>";
-
-return;
-
-
-}
-
-
-
-
-const player = data.response[0].player;
-
-const stats = data.response[0].statistics[0];
-
-
-
-
-box.innerHTML = `
-
-
-<div class="player-card">
-
-
-<h3>
-
-${player.name}
-
-</h3>
-
-
-
-<p>
-
-Matchs : ${stats.games.appearences ?? 0}
-
-</p>
-
-
-
-<p>
-
-Buts : ${stats.goals.total ?? 0}
-
-</p>
-
-
-
-<p>
-
-Passes : ${stats.goals.assists ?? 0}
-
-</p>
-
-
-
-</div>
-
-
-`;
-
-
 
 }
 
@@ -705,363 +787,59 @@ Passes : ${stats.goals.assists ?? 0}
 
 
 // ===============================
-// TRANSFERTS JOUEUR
-// ===============================
-
-
-async function getTransfers(playerId, season, containerId){
-
-
-const box = elementExiste(containerId);
-
-
-
-if(!box) return;
-
-
-
-afficherChargement(
-containerId,
-"Chargement des transferts..."
-);
-
-
-
-const data = await apiRequest(
-
-`/transfers?player=${playerId}&season=${season}`
-
-);
-
-
-
-box.innerHTML = "";
-
-
-
-if(!data.response || data.response.length===0){
-
-
-box.innerHTML =
-
-"<p>Aucun transfert disponible.</p>";
-
-return;
-
-
-}
-
-
-
-
-
-data.response.forEach(item=>{
-
-
-item.transfers.forEach(move=>{
-
-
-box.innerHTML += `
-
-
-<div class="transfer-card">
-
-
-<h3>
-
-${item.player.name}
-
-</h3>
-
-
-
-<p>
-
-${move.teams.out.name}
-
-➡️
-
-${move.teams.in.name}
-
-</p>
-
-
-
-</div>
-
-
-`;
-
-
-
-});
-
-
-});
-
-
-}
-
-
-
-
-console.log(
-"👤 Players + Transfers v2 Ready"
-);
-
-// ======================================
-// STANDINGS + COMPETITIONS SYSTEM v2
-// ======================================
-
-
-
-const FOOTBALL_LEAGUES = {
-
-
-premierLeague:39,
-
-laLiga:140,
-
-ligue1:61,
-
-serieA:135,
-
-bundesliga:78,
-
-championsLeague:2
-
-
-};
-
-
-
-
-
-
-// ===============================
-// CLASSEMENT
-// ===============================
-
-
-async function getStandings(league, season, containerId){
-
-
-const table = elementExiste(containerId);
-
-
-
-if(!table) return;
-
-
-
-afficherChargement(
-containerId,
-"Chargement du classement..."
-);
-
-
-
-
-const data = await apiRequest(
-
-`/standings?league=${league}&season=${season}`
-
-);
-
-
-
-
-table.innerHTML = "";
-
-
-
-if(!data.response || data.response.length===0){
-
-
-table.innerHTML =
-
-"<tr><td>Aucun classement disponible.</td></tr>";
-
-return;
-
-
-}
-
-
-
-
-const standings =
-
-data.response[0]
-.league
-.standings[0];
-
-
-
-
-
-standings.forEach(team=>{
-
-
-table.innerHTML += `
-
-
-<tr>
-
-
-<td>${team.rank}</td>
-
-
-<td>${team.team.name}</td>
-
-
-<td>${team.points}</td>
-
-
-<td>${team.all.played}</td>
-
-
-</tr>
-
-
-`;
-
-
-
-});
-
-
-}
-
-
-
-
-
-
-
-
-// ===============================
-// COMPETITION BUTTON
-// ===============================
-
-
-async function loadCompetition(leagueId){
-
-
-const season = new Date().getFullYear();
-
-
-
-getStandings(
-
-leagueId,
-
-season,
-
-"competitionStandings"
-
-);
-
-
-
-const info = elementExiste(
-"competitionInfo"
-);
-
-
-
-if(info){
-
-
-info.innerHTML =
-
-`
-
-<h3>
-
-🏆 Saison ${season}
-
-</h3>
-
-
-<p>
-
-Classement mis à jour depuis API Football.
-
-</p>
-
-`;
-
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-// ===============================
-// AUTO LOAD GLOBAL
+// AUTO START SYSTEM
 // ===============================
 
 
 document.addEventListener(
-
 "DOMContentLoaded",
-
 ()=>{
 
 
 
-getLiveMatches(
+// ACCUEIL
+
+
+loadLiveMatches(
 "homeLiveMatches"
 );
 
 
 
-getUpcomingMatches(
+loadUpcomingMatches(
 "homeUpcomingMatches"
 );
 
 
 
 
+// PAGE MATCHS
 
-getLiveMatches(
+
+loadLiveMatches(
 "liveMatches"
 );
 
 
 
-getUpcomingMatches(
+loadUpcomingMatches(
 "upcomingMatches"
 );
 
 
 
 
-
-const season =
-new Date().getFullYear();
+// PAGE COMPETITIONS
 
 
+if(getElement("standings")){
 
-if(elementExiste("homeStandings")){
 
-
-getStandings(
+loadStandings(
 
 39,
 
-season,
-
-"homeStandings"
+"standings"
 
 );
 
@@ -1077,6 +855,7 @@ season,
 
 
 
+
 console.log(
-"🚀 Football Global API v2 Loaded Successfully"
+"🚀 PreziScore Global System Loaded"
 );
