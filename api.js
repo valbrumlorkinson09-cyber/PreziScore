@@ -931,3 +931,175 @@ season,
 console.log(
 "🚀 Football Global API v1.0 Loaded Successfully"
 );
+
+
+// ======================================
+// COMPETITIONS SYSTEM GLOBAL
+// ======================================
+
+
+
+async function loadCompetition(leagueId){
+
+
+const table =
+elementExiste("competitionStandings");
+
+
+const info =
+elementExiste("competitionInfo");
+
+
+
+if(!table) return;
+
+
+
+table.innerHTML =
+
+`
+<tr>
+<td colspan="4">
+Chargement du classement...
+</td>
+</tr>
+`;
+
+
+
+
+const season =
+new Date().getFullYear();
+
+
+
+
+const data =
+await apiRequest(
+
+`/standings?league=${leagueId}&season=${season}`
+
+);
+
+
+
+
+table.innerHTML = "";
+
+
+
+if(!data.response || data.response.length === 0){
+
+
+table.innerHTML =
+
+`
+<tr>
+<td colspan="4">
+Classement indisponible.
+</td>
+</tr>
+`;
+
+
+return;
+
+
+}
+
+
+
+
+
+const standings =
+
+data.response[0]
+.league
+.standings[0];
+
+
+
+
+standings.forEach(team=>{
+
+
+table.innerHTML += `
+
+
+<tr>
+
+
+<td>
+
+${team.rank}
+
+</td>
+
+
+<td>
+
+${team.team.name}
+
+</td>
+
+
+
+<td>
+
+${team.points}
+
+</td>
+
+
+
+<td>
+
+${team.all.played}
+
+</td>
+
+
+
+</tr>
+
+
+`;
+
+
+
+});
+
+
+
+
+if(info){
+
+
+info.innerHTML =
+
+`
+
+<h3>
+
+${data.response[0].league.name}
+
+</h3>
+
+
+<p>
+
+Saison ${season}
+
+</p>
+
+`;
+
+}
+
+
+
+}
+
+console.log(
+"🏆 Competition System Ready"
+);
