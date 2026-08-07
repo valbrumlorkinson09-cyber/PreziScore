@@ -1,18 +1,27 @@
 // ======================================
-// FOOTBALL GLOBAL
-// API FOOTBALL CONNECTION
+// ⚽ FOOTBALL GLOBAL API ENGINE v1.0
+// GLOBAL SYSTEM
 // ======================================
+
+
+// ===============================
+// CONFIGURATION API
+// ===============================
 
 
 const API_KEY = "47f671279defefb2b169097f1062a2a6";
 
 
-const API_URL = "https://v3.football.api-sports.io";
+const API_URL =
+"https://v3.football.api-sports.io";
 
 
 
 
-// Fonction principale API
+// ===============================
+// API REQUEST GLOBAL
+// ===============================
+
 
 async function apiRequest(endpoint){
 
@@ -43,7 +52,9 @@ headers:{
 const data = await response.json();
 
 
+
 return data;
+
 
 
 }
@@ -52,38 +63,91 @@ catch(error){
 
 
 console.log(
-"Erreur API:",
+"API ERROR:",
 error
 );
 
 
+
 return {
+
 response:[]
+
 };
 
 
-}
-
 
 }
 
 
+}
 
 
 
 
+
+
+// ===============================
+// SYSTEME DE VERIFICATION
+// ===============================
+
+
+function elementExiste(id){
+
+
+return document.getElementById(id);
+
+}
+
+
+
+
+function afficherChargement(id,message){
+
+
+const element =
+elementExiste(id);
+
+
+
+if(element){
+
+
+element.innerHTML =
+
+`<p>${message}</p>`;
+
+
+}
+
+
+
+}
+
+
+
+
+console.log(
+"⚽ Football Global API Global System Active"
+);
 
 // ======================================
-// MATCHS LIVE POUR INDEX + MATCHES
+// MATCH SYSTEM GLOBAL
 // ======================================
 
 
-async function loadLiveMatches(id){
+
+// ===============================
+// MATCHS EN DIRECT
+// ===============================
+
+
+async function getLiveMatches(containerId){
 
 
 
 const box =
-document.getElementById(id);
+elementExiste(containerId);
 
 
 
@@ -91,8 +155,17 @@ if(!box) return;
 
 
 
+afficherChargement(
+containerId,
+"Chargement des matchs en direct..."
+);
+
+
+
 const data =
-await apiRequest("/fixtures?live=all");
+await apiRequest(
+"/fixtures?live=all"
+);
 
 
 
@@ -104,15 +177,13 @@ if(!data.response || data.response.length === 0){
 
 
 box.innerHTML =
-"<p>Aucun match en direct actuellement.</p>";
 
+"<p>Aucun match en direct actuellement.</p>";
 
 return;
 
 
 }
-
-
 
 
 
@@ -130,7 +201,6 @@ box.innerHTML += `
 ${match.teams.home.name}
 
 </h3>
-
 
 
 <p>
@@ -160,7 +230,6 @@ ${match.teams.away.name}
 </span>
 
 
-
 </div>
 
 
@@ -170,50 +239,51 @@ ${match.teams.away.name}
 });
 
 
-
 }
 
 
 
-// ======================================
+
+
+
+
+// ===============================
 // PROCHAINS MATCHS
-// ======================================
+// ===============================
 
 
-async function loadUpcomingMatches(){
+async function getUpcomingMatches(containerId){
 
 
-const boxes = [
+const box =
+elementExiste(containerId);
 
-"homeUpcomingMatches",
 
-"upcomingMatches"
 
-];
+if(!box) return;
+
+
+
+afficherChargement(
+containerId,
+"Chargement du calendrier..."
+);
 
 
 
 const today =
-new Date().toISOString().split("T")[0];
+new Date()
+.toISOString()
+.split("T")[0];
 
 
 
 const data =
 await apiRequest(
+
 `/fixtures?date=${today}`
+
 );
-
-
-
-boxes.forEach(id=>{
-
-
-const box =
-document.getElementById(id);
-
-
-
-if(!box) return;
 
 
 
@@ -225,13 +295,14 @@ if(!data.response || data.response.length === 0){
 
 
 box.innerHTML =
-"<p>Aucun match prévu.</p>";
 
+"<p>Aucun match prévu.</p>";
 
 return;
 
 
 }
+
 
 
 
@@ -268,7 +339,8 @@ ${match.teams.away.name}
 
 <span>
 
-📅 ${new Date(match.fixture.date).toLocaleString("fr-FR")}
+📅 ${new Date(match.fixture.date)
+.toLocaleString("fr-FR")}
 
 </span>
 
@@ -284,6 +356,114 @@ ${match.teams.away.name}
 
 
 
+}
+
+// ======================================
+// STANDINGS SYSTEM GLOBAL
+// ======================================
+
+
+
+// ===============================
+// CLASSEMENT D'UNE LIGUE
+// ===============================
+
+
+async function getStandings(league, season, containerId){
+
+
+
+const table =
+elementExiste(containerId);
+
+
+
+if(!table) return;
+
+
+
+afficherChargement(
+containerId,
+"Chargement du classement..."
+);
+
+
+
+const data =
+await apiRequest(
+
+`/standings?league=${league}&season=${season}`
+
+);
+
+
+
+table.innerHTML = "";
+
+
+
+if(!data.response || data.response.length === 0){
+
+
+table.innerHTML =
+
+"<tr><td>Aucun classement disponible.</td></tr>";
+
+return;
+
+
+}
+
+
+
+
+const standings =
+data.response[0]
+.league
+.standings[0];
+
+
+
+
+
+standings.forEach(team=>{
+
+
+table.innerHTML += `
+
+
+<tr>
+
+
+<td>
+
+${team.rank}
+
+</td>
+
+
+<td>
+
+${team.team.name}
+
+</td>
+
+
+<td>
+
+${team.points}
+
+</td>
+
+
+
+</tr>
+
+
+`;
+
+
+
 });
 
 
@@ -296,16 +476,62 @@ ${match.teams.away.name}
 
 
 
+// ===============================
+// LIGUES POPULAIRES
+// ===============================
+
+
+
+const FOOTBALL_LEAGUES = {
+
+
+premierLeague:39,
+
+
+laLiga:140,
+
+
+ligue1:61,
+
+
+serieA:135,
+
+
+bundesliga:78,
+
+
+championsLeague:2
+
+
+};
+
+
+
+
+
+console.log(
+"📊 Standings System Ready"
+);
+
 // ======================================
-// DERNIERS RESULTATS
+// PLAYERS + TRANSFERS SYSTEM GLOBAL
 // ======================================
 
 
-async function loadResults(){
+
+
+
+// ===============================
+// RECHERCHE JOUEUR
+// ===============================
+
+
+async function searchPlayer(name, containerId){
+
 
 
 const box =
-document.getElementById("resultsMatches");
+elementExiste(containerId);
 
 
 
@@ -313,9 +539,18 @@ if(!box) return;
 
 
 
+afficherChargement(
+containerId,
+"Recherche joueur..."
+);
+
+
+
 const data =
 await apiRequest(
-"/fixtures?last=10"
+
+`/players?search=${name}`
+
 );
 
 
@@ -328,8 +563,8 @@ if(!data.response || data.response.length === 0){
 
 
 box.innerHTML =
-"<p>Aucun résultat disponible.</p>";
 
+"<p>Aucun joueur trouvé.</p>";
 
 return;
 
@@ -338,18 +573,20 @@ return;
 
 
 
-data.response.forEach(match=>{
+
+
+data.response.slice(0,10).forEach(player=>{
 
 
 box.innerHTML += `
 
 
-<div class="match-card">
+<div class="player-card">
 
 
 <h3>
 
-${match.teams.home.name}
+${player.player.name}
 
 </h3>
 
@@ -357,29 +594,19 @@ ${match.teams.home.name}
 
 <p>
 
-${match.goals.home ?? 0}
-
--
-
-${match.goals.away ?? 0}
+Age : ${player.player.age ?? "N/A"}
 
 </p>
 
 
 
-<h3>
+<p>
 
-${match.teams.away.name}
+Nationalité :
 
-</h3>
+${player.player.nationality ?? "N/A"}
 
-
-
-<span>
-
-✅ Terminé
-
-</span>
+</p>
 
 
 
@@ -396,9 +623,207 @@ ${match.teams.away.name}
 }
 
 
+
+
+
+
+
+// ===============================
+// STATISTIQUES JOUEUR
+// ===============================
+
+
+async function getPlayerStats(playerId, season, containerId){
+
+
+
+const box =
+elementExiste(containerId);
+
+
+
+if(!box) return;
+
+
+
+const data =
+await apiRequest(
+
+`/players?id=${playerId}&season=${season}`
+
+);
+
+
+
+box.innerHTML = "";
+
+
+
+if(!data.response || data.response.length === 0){
+
+
+box.innerHTML =
+
+"<p>Statistiques indisponibles.</p>";
+
+return;
+
+
+}
+
+
+
+const stats =
+data.response[0]
+.statistics[0];
+
+
+
+
+box.innerHTML = `
+
+
+<div class="player-card">
+
+
+<h3>
+
+${data.response[0].player.name}
+
+</h3>
+
+
+<p>
+
+Matchs: ${stats.games.appearences ?? 0}
+
+</p>
+
+
+<p>
+
+Buts: ${stats.goals.total ?? 0}
+
+</p>
+
+
+
+<p>
+
+Passes: ${stats.goals.assists ?? 0}
+
+</p>
+
+
+</div>
+
+
+`;
+
+
+
+}
+
+
+
+
+
+
+
+// ===============================
+// TRANSFERTS
+// ===============================
+
+
+async function getTransfers(playerId, season, containerId){
+
+
+
+const box =
+elementExiste(containerId);
+
+
+
+if(!box) return;
+
+
+
+const data =
+await apiRequest(
+
+`/transfers?player=${playerId}&season=${season}`
+
+);
+
+
+
+box.innerHTML = "";
+
+
+
+if(!data.response || data.response.length === 0){
+
+
+box.innerHTML =
+
+"<p>Aucun transfert trouvé.</p>";
+
+return;
+
+
+}
+
+
+
+data.response.slice(0,10).forEach(item=>{
+
+
+box.innerHTML += `
+
+
+<div class="transfer-card">
+
+
+<p>
+
+${item.player.name}
+
+</p>
+
+
+<p>
+
+${item.transfers[0].teams.out.name}
+
+➡️
+
+${item.transfers[0].teams.in.name}
+
+</p>
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+
+}
+
+
+
+console.log(
+"👤 Players & Transfers System Ready"
+);
+
 // ======================================
-// DEMARRAGE AUTOMATIQUE
+// AUTO START SYSTEM
 // ======================================
+
 
 
 document.addEventListener(
@@ -406,25 +831,93 @@ document.addEventListener(
 ()=>{
 
 
-// Page Accueil
-
-loadLiveMatches("homeLiveMatches");
-
-loadUpcomingMatches();
+// ===============================
+// ACCUEIL
+// ===============================
 
 
+getLiveMatches(
+"homeLiveMatches"
+);
 
 
-// Page Matchs
-
-loadLiveMatches("liveMatches");
-
-
+getUpcomingMatches(
+"homeUpcomingMatches"
+);
 
 
-// Résultats
 
-loadResults();
+
+// ===============================
+// PAGE MATCHS
+// ===============================
+
+
+getLiveMatches(
+"liveMatches"
+);
+
+
+getUpcomingMatches(
+"upcomingMatches"
+);
+
+
+
+// ===============================
+// PAGE RESULTATS
+// ===============================
+
+
+const results =
+elementExiste("resultsMatches");
+
+
+
+if(results){
+
+
+getUpcomingMatches(
+"resultsMatches"
+);
+
+
+}
+
+
+
+
+// ===============================
+// CLASSEMENT PAR DEFAUT
+// ===============================
+
+
+const standings =
+elementExiste("homeStandings");
+
+
+
+if(standings){
+
+
+const season =
+new Date()
+.getFullYear();
+
+
+
+getStandings(
+
+39,
+
+season,
+
+"homeStandings"
+
+);
+
+
+}
 
 
 
@@ -433,6 +926,8 @@ loadResults();
 
 
 
-// ======================================
-// FIN FOOTBALL GLOBAL API
-// ======================================
+
+
+console.log(
+"🚀 Football Global API v1.0 Loaded Successfully"
+);
