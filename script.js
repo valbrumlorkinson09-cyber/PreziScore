@@ -161,3 +161,21 @@ link.innerText
 
 
 });
+document.addEventListener("DOMContentLoaded",()=>{
+
+if(document.getElementById("homeLiveMatches")){
+
+loadLiveMatches("homeLiveMatches");
+
+}
+
+
+if(document.getElementById("homeUpcomingMatches")){
+
+loadUpcomingMatches("homeUpcomingMatches");
+
+}
+
+
+
+});
