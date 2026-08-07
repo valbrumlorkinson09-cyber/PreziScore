@@ -180,11 +180,3 @@ loadUpcomingMatches("homeUpcomingMatches");
 
 });
 
-console.log("API TEST START");
-
-apiRequest("/fixtures?live=all")
-.then(data=>{
-
-console.log("LIVE DATA:",data);
-
-});
