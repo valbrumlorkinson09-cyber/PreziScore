@@ -1,38 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Football Global - Competitions</title>
+
+<title>Compétitions - Football Global ⚽</title>
+
 
 <link rel="stylesheet" href="style.css">
 
+
 </head>
+
 
 
 <body>
 
 
-<header>
+
+<header class="header">
+
 
 <div class="logo">
+
 ⚽ Football Global
+
 </div>
+
 
 
 <nav>
 
-<a href="index.html">Home</a>
-<a href="news.html">News</a>
-<a href="transfers.html">Transfers</a>
-<a href="matches.html">Matches</a>
-<a href="players.html">Players</a>
-<a href="competitions.html">Competitions</a>
+
+<a href="index.html">
+
+Accueil
+
+</a>
+
+
+<a href="matches.html">
+
+Matchs
+
+</a>
+
+
+<a href="players.html">
+
+Joueurs
+
+</a>
+
+
+<a href="competitions.html">
+
+Compétitions
+
+</a>
+
+
+<a href="news.html">
+
+Actualités
+
+</a>
+
 
 </nav>
+
 
 </header>
 
@@ -40,101 +80,23 @@
 
 
 
+
+
 <section class="hero">
 
+
 <h1>
-Football Competitions 🏆
+
+🏆 Compétitions de Football
+
 </h1>
 
-<p>
-Explore the biggest football leagues and tournaments worldwide.
-</p>
-
-</section>
-
-
-
-
-
-
-<section class="content">
-
-
-<div class="card">
-
-<h2>🌍 Champions League</h2>
 
 <p>
-Follow Europe's biggest club competition.
+
+Classements et informations des plus grands championnats du monde.
+
 </p>
-
-</div>
-
-
-
-
-<div class="card">
-
-<h2>🏴 Premier League</h2>
-
-<p>
-Latest news, fixtures and standings from England.
-</p>
-
-</div>
-
-
-
-
-<div class="card">
-
-<h2>🇪🇸 La Liga</h2>
-
-<p>
-Discover Spanish football and its biggest clubs.
-</p>
-
-</div>
-
-
-
-
-<div class="card">
-
-<h2>🇮🇹 Serie A</h2>
-
-<p>
-Italian football updates and statistics.
-</p>
-
-</div>
-
-
-
-
-<div class="card">
-
-<h2>🇩🇪 Bundesliga</h2>
-
-<p>
-German football news and results.
-</p>
-
-</div>
-
-
-
-
-<div class="card">
-
-<h2>🌎 World Cup</h2>
-
-<p>
-International football's biggest tournament.
-</p>
-
-</div>
-
 
 
 </section>
@@ -145,20 +107,201 @@ International football's biggest tournament.
 
 
 
-<section class="about">
+
+<section class="section">
 
 
 <h2>
-Global Football Coverage
+
+🌍 Choisir une compétition
+
 </h2>
 
 
-<p>
-Football Global brings information from the world's most important competitions.
-</p>
+
+<div class="competition-grid">
+
+
+
+<button onclick="loadCompetition(39)">
+
+🇬🇧 Premier League
+
+</button>
+
+
+
+<button onclick="loadCompetition(140)">
+
+🇪🇸 La Liga
+
+</button>
+
+
+
+<button onclick="loadCompetition(61)">
+
+🇫🇷 Ligue 1
+
+</button>
+
+
+
+<button onclick="loadCompetition(135)">
+
+🇮🇹 Serie A
+
+</button>
+
+
+
+<button onclick="loadCompetition(78)">
+
+🇩🇪 Bundesliga
+
+</button>
+
+
+
+<button onclick="loadCompetition(2)">
+
+🏆 Champions League
+
+</button>
+
+
+
+</div>
 
 
 </section>
+
+
+<section class="section">
+
+
+<h2>
+
+📊 Classement
+
+</h2>
+
+
+
+<div class="table-container">
+
+
+
+<table class="table">
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Position
+
+</th>
+
+
+
+<th>
+
+Équipe
+
+</th>
+
+
+
+<th>
+
+Points
+
+</th>
+
+
+
+<th>
+
+Matchs
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody id="competitionStandings">
+
+
+<tr>
+
+
+<td colspan="4">
+
+Sélectionnez une compétition
+
+</td>
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+<section class="section">
+
+
+<h2>
+
+🏅 Informations compétition
+
+</h2>
+
+
+
+<div id="competitionInfo" class="competition-info">
+
+
+<p>
+
+Choisissez une ligue pour voir les informations.
+
+</p>
+
+
+</div>
+
+
+
+</section>
+
 
 
 
@@ -167,18 +310,36 @@ Football Global brings information from the world's most important competitions.
 
 <footer>
 
+
+<h3>
+
+⚽ Football Global
+
+</h3>
+
+
 <p>
-© 2026 Football Global | The World of Football
+
+© 2026 Football Global - Tous droits réservés.
+
 </p>
+
 
 </footer>
 
 
 
 
+
+
 <script src="script.js"></script>
+
+<script src="api.js"></script>
+
 
 
 </body>
 
+
 </html>
+
