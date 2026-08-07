@@ -1,6 +1,6 @@
 /* ==========================
-   FOOTBALL GLOBAL
-   Main Design
+   FOOTBALL GLOBAL PRO
+   STYLE CSS
 ========================== */
 
 
@@ -22,21 +22,31 @@ body{
 
 
 
+a{
+
+    text-decoration:none;
+    color:white;
+
+}
+
+
+
+
+
 /* HEADER */
 
-header{
 
+.header{
+
+    width:100%;
+    background:#111;
+    padding:20px 8%;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:20px 8%;
-
-    background:#0d0d0d;
-    border-bottom:1px solid #1f1f1f;
-
     position:sticky;
     top:0;
-    z-index:100;
+    z-index:1000;
 
 }
 
@@ -44,11 +54,12 @@ header{
 
 .logo{
 
-    font-size:28px;
+    font-size:25px;
     font-weight:bold;
     color:#00ff66;
 
 }
+
 
 
 
@@ -63,9 +74,7 @@ nav{
 
 nav a{
 
-    color:white;
-    text-decoration:none;
-    font-weight:bold;
+    font-size:15px;
     transition:.3s;
 
 }
@@ -82,29 +91,35 @@ nav a:hover{
 
 
 
-/* HERO */
+
+
+/* HERO SECTION */
+
 
 .hero{
 
     min-height:80vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-
-    text-align:center;
-
-    padding:30px;
-
     background:
     linear-gradient(
     rgba(0,0,0,.7),
-    rgba(0,0,0,.9)
+    rgba(0,0,0,.8)
     ),
-    url("images/banner.jpg");
+    url("images/stadium.jpg");
 
     background-size:cover;
     background-position:center;
+
+    display:flex;
+    align-items:center;
+    padding:8%;
+
+}
+
+
+
+.hero-content{
+
+    max-width:600px;
 
 }
 
@@ -112,7 +127,7 @@ nav a:hover{
 
 .hero h1{
 
-    font-size:55px;
+    font-size:50px;
     margin-bottom:20px;
 
 }
@@ -122,34 +137,27 @@ nav a:hover{
 .hero p{
 
     font-size:20px;
-    max-width:600px;
-    color:#ccc;
+    color:#ddd;
 
 }
 
 
 
-.hero button{
+button{
 
-    margin-top:30px;
-    padding:15px 35px;
-
+    margin-top:25px;
+    padding:14px 30px;
     border:none;
-    border-radius:30px;
-
     background:#00ff66;
     color:black;
-
-    font-size:16px;
     font-weight:bold;
-
+    border-radius:30px;
     cursor:pointer;
 
 }
 
 
-
-.hero button:hover{
+button:hover{
 
     transform:scale(1.05);
 
@@ -157,36 +165,25 @@ nav a:hover{
 
 
 
+/* ==========================
+   SECTIONS
+========================== */
 
 
-/* BREAKING NEWS */
+.section{
 
-.breaking{
-
-    padding:50px 8%;
-
-}
-
-
-
-.breaking h2{
-
-    color:#00ff66;
-    margin-bottom:25px;
+    padding:60px 8%;
 
 }
 
 
 
-.news-box{
+.section h2{
 
-    background:#111;
-
-    padding:25px;
-
-    border-radius:15px;
-
+    font-size:32px;
+    margin-bottom:35px;
     border-left:5px solid #00ff66;
+    padding-left:15px;
 
 }
 
@@ -194,18 +191,14 @@ nav a:hover{
 
 
 
-/* CARDS */
+/* NEWS CARDS */
 
-.content{
+
+.cards{
 
     display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(250px,1fr));
-
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
     gap:25px;
-
-    padding:40px 8%;
 
 }
 
@@ -213,12 +206,9 @@ nav a:hover{
 
 .card{
 
-    background:#111;
-
-    padding:30px;
-
+    background:#151515;
+    padding:25px;
     border-radius:15px;
-
     transition:.3s;
 
 }
@@ -229,16 +219,13 @@ nav a:hover{
 
     transform:translateY(-8px);
 
-    border:1px solid #00ff66;
-
 }
 
 
 
-.card h2{
+.card h3{
 
     color:#00ff66;
-
     margin-bottom:15px;
 
 }
@@ -247,25 +234,77 @@ nav a:hover{
 
 
 
-/* ABOUT */
+/* MATCHS */
 
-.about{
 
-    text-align:center;
+.match-container{
 
-    padding:60px 10%;
-
-    background:#0d0d0d;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
 
 }
 
 
 
-.about h2{
+.match-card{
 
+    background:#151515;
+    padding:25px;
+    text-align:center;
+    border-radius:15px;
+
+}
+
+
+
+.match-card h3{
+
+    font-size:22px;
+
+}
+
+
+
+.match-card span{
+
+    display:inline-block;
+    margin-top:15px;
     color:#00ff66;
 
-    font-size:32px;
+}
+
+
+
+
+
+/* TRANSFERTS */
+
+
+.transfer-box{
+
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+
+}
+
+
+
+.transfer-box div{
+
+    background:#151515;
+    padding:20px;
+    border-radius:12px;
+
+}
+
+
+
+.transfer-box strong{
+
+    color:#00ff66;
+    font-size:20px;
 
 }
 
@@ -273,17 +312,177 @@ nav a:hover{
 
 
 
-/* FOOTER */
+/* COMPETITIONS */
+
+
+.competition-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:20px;
+
+}
+
+
+
+.competition{
+
+    background:#151515;
+    padding:25px;
+    text-align:center;
+    border-radius:15px;
+    font-size:18px;
+
+}
+
+
+
+
+
+/* PLAYERS */
+
+
+.players{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:20px;
+
+}
+
+
+
+.player{
+
+    background:#151515;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    font-size:18px;
+
+}
+
+
+
+/* ==========================
+   CLASSEMENT TABLE
+========================== */
+
+
+.table{
+
+    width:100%;
+    border-collapse:collapse;
+    background:#151515;
+    border-radius:15px;
+    overflow:hidden;
+
+}
+
+
+
+.table th{
+
+    background:#00ff66;
+    color:black;
+    padding:15px;
+    text-align:left;
+
+}
+
+
+
+.table td{
+
+    padding:15px;
+    border-bottom:1px solid #333;
+
+}
+
+
+
+
+/* ==========================
+   NEWSLETTER
+========================== */
+
+
+.newsletter{
+
+    padding:60px 8%;
+    text-align:center;
+    background:#111;
+
+}
+
+
+
+.newsletter h2{
+
+    font-size:35px;
+    margin-bottom:15px;
+
+}
+
+
+
+.newsletter input{
+
+    margin-top:25px;
+    padding:15px;
+    width:280px;
+    border:none;
+    border-radius:25px;
+    outline:none;
+
+}
+
+
+
+
+
+
+
+/* ==========================
+   FOOTER
+========================== */
+
 
 footer{
 
+    background:#050505;
+    padding:40px 8%;
     text-align:center;
 
-    padding:25px;
+}
 
-    background:#050505;
 
-    color:#aaa;
+
+.footer-logo{
+
+    font-size:28px;
+    font-weight:bold;
+    color:#00ff66;
+    margin-bottom:15px;
+
+}
+
+
+
+.social{
+
+    margin:20px 0;
+    display:flex;
+    justify-content:center;
+    gap:25px;
+
+}
+
+
+
+.social a:hover{
+
+    color:#00ff66;
 
 }
 
@@ -291,18 +490,21 @@ footer{
 
 
 
+/* ==========================
+   MOBILE DESIGN
+========================== */
 
-/* MOBILE */
 
 @media(max-width:768px){
 
 
-header{
+.header{
 
     flex-direction:column;
     gap:20px;
 
 }
+
 
 
 nav{
@@ -313,11 +515,77 @@ nav{
 }
 
 
+
 .hero h1{
 
     font-size:35px;
 
 }
 
+
+
+.hero p{
+
+    font-size:17px;
+
+}
+
+
+
+.section h2{
+
+    font-size:26px;
+
+}
+
+
+
+.newsletter input{
+
+    width:90%;
+
+}
+
+
+}
+
+
+
+
+
+
+
+/* ==========================
+   ANIMATION
+========================== */
+
+
+.card,
+.match-card,
+.player,
+.competition{
+
+    animation:show .6s ease;
+
+}
+
+
+
+@keyframes show{
+
+from{
+
+    opacity:0;
+    transform:translateY(20px);
+
+}
+
+
+to{
+
+    opacity:1;
+    transform:translateY(0);
+
+}
 
 }
