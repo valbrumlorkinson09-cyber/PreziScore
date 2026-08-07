@@ -1207,3 +1207,102 @@ ${move.teams.in.name}
 console.log(
 "🔄 Transfer System Ready"
 );
+
+// ======================================
+// NEWS SYSTEM GLOBAL
+// ======================================
+
+
+
+async function getNews(containerId){
+
+
+const box =
+elementExiste(containerId);
+
+
+
+if(!box) return;
+
+
+
+box.innerHTML =
+
+"<p>Chargement des actualités...</p>";
+
+
+
+
+// API Football pa bay yon flux news klasik sou tout plan yo.
+// Cette partie est préparée pour connecter une source news football.
+
+
+const news = [
+
+{
+title:"⚽ Actualités Football",
+text:"Les dernières informations du monde du football."
+},
+
+
+{
+title:"🔥 Mercato",
+text:"Suivez les mouvements des joueurs et des clubs."
+},
+
+
+{
+title:"🏆 Compétitions",
+text:"Résultats et informations des grands championnats."
+}
+
+
+];
+
+
+
+
+box.innerHTML = "";
+
+
+
+news.forEach(article=>{
+
+
+box.innerHTML += `
+
+
+<div class="news-card">
+
+
+<h3>
+
+${article.title}
+
+</h3>
+
+
+<p>
+
+${article.text}
+
+</p>
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+
+}
+
+
+
+console.log(
+"📰 News System Ready"
+);
