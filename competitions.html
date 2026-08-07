@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="fr">
 
+
 <head>
 
+
 <meta charset="UTF-8">
+
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-<title>Compétitions - Football Global ⚽</title>
+<title>Compétitions - PreziScore ⚽</title>
+
+
+<meta name="description" content="PreziScore - Classements football mondial">
 
 
 <link rel="stylesheet" href="style.css">
@@ -27,7 +33,7 @@
 
 <div class="logo">
 
-⚽ Football Global
+⚽ PreziScore
 
 </div>
 
@@ -37,38 +43,21 @@
 
 
 <a href="index.html">
-
 Accueil
-
 </a>
+
 
 
 <a href="matches.html">
-
 Matchs
-
 </a>
 
-
-<a href="players.html">
-
-Joueurs
-
-</a>
 
 
 <a href="competitions.html">
-
 Compétitions
-
 </a>
 
-
-<a href="news.html">
-
-Actualités
-
-</a>
 
 
 </nav>
@@ -87,20 +76,21 @@ Actualités
 
 <h1>
 
-🏆 Compétitions de Football
+🏆 Compétitions Football
 
 </h1>
 
 
+
 <p>
 
-Classements et informations des plus grands championnats du monde.
+Classements des grands championnats mondiaux.
 
 </p>
 
 
-</section>
 
+</section>
 
 
 
@@ -112,186 +102,170 @@ Classements et informations des plus grands championnats du monde.
 
 
 <h2>
-
-🌍 Choisir une compétition
-
-</h2>
-
-
-
-<div class="competition-grid">
-
-
-
-<button onclick="loadCompetition(39)">
 
 🇬🇧 Premier League
 
-</button>
-
-
-
-<button onclick="loadCompetition(140)">
-
-🇪🇸 La Liga
-
-</button>
-
-
-
-<button onclick="loadCompetition(61)">
-
-🇫🇷 Ligue 1
-
-</button>
-
-
-
-<button onclick="loadCompetition(135)">
-
-🇮🇹 Serie A
-
-</button>
-
-
-
-<button onclick="loadCompetition(78)">
-
-🇩🇪 Bundesliga
-
-</button>
-
-
-
-<button onclick="loadCompetition(2)">
-
-🏆 Champions League
-
-</button>
-
-
-
-</div>
-
-
-</section>
-
-
-<section class="section">
-
-
-<h2>
-
-📊 Classement
-
 </h2>
 
 
 
-<div class="table-container">
-
-
-
-<table class="table">
-
-
-<thead>
-
-
-<tr>
-
-
-<th>
-
-Position
-
-</th>
-
-
-
-<th>
-
-Équipe
-
-</th>
-
-
-
-<th>
-
-Points
-
-</th>
-
-
-
-<th>
-
-Matchs
-
-</th>
-
-
-</tr>
-
-
-</thead>
-
-
-
-<tbody id="competitionStandings">
-
-
-<tr>
-
-
-<td colspan="4">
-
-Sélectionnez une compétition
-
-</td>
-
-
-</tr>
-
-
-
-</tbody>
-
-
-
-</table>
-
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-<section class="section">
-
-
-<h2>
-
-🏅 Informations compétition
-
-</h2>
-
-
-
-<div id="competitionInfo" class="competition-info">
+<div id="premierLeague" class="standings-container">
 
 
 <p>
 
-Choisissez une ligue pour voir les informations.
+Chargement du classement...
+
+</p>
+
+
+</div>
+
+
+
+</section>
+
+  <section class="section">
+
+
+<h2>
+
+🇪🇸 La Liga
+
+</h2>
+
+
+
+<div id="laLiga" class="standings-container">
+
+
+<p>
+
+Chargement du classement...
+
+</p>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+<section class="section">
+
+
+<h2>
+
+🇫🇷 Ligue 1
+
+</h2>
+
+
+
+<div id="ligue1" class="standings-container">
+
+
+<p>
+
+Chargement du classement...
+
+</p>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+<section class="section">
+
+
+<h2>
+
+🇮🇹 Serie A
+
+</h2>
+
+
+
+<div id="serieA" class="standings-container">
+
+
+<p>
+
+Chargement du classement...
+
+</p>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+<section class="section">
+
+
+<h2>
+
+🇩🇪 Bundesliga
+
+</h2>
+
+
+
+<div id="bundesliga" class="standings-container">
+
+
+<p>
+
+Chargement du classement...
+
+</p>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+<section class="section">
+
+
+<h2>
+
+🏆 Champions League
+
+</h2>
+
+
+
+<div id="championsLeague" class="standings-container">
+
+
+<p>
+
+Chargement du classement...
 
 </p>
 
@@ -313,33 +287,82 @@ Choisissez une ligue pour voir les informations.
 
 <h3>
 
-⚽ Football Global
+⚽ PreziScore
 
 </h3>
 
 
+
 <p>
 
-© 2026 Football Global - Tous droits réservés.
+Classements et scores football mondial.
+
+</p>
+
+
+
+<p>
+
+© 2026 PreziScore - Tous droits réservés.
 
 </p>
 
 
 </footer>
 
-
-
-
-
+  <script src="api.js"></script>
 
 <script src="script.js"></script>
 
-<script src="api.js"></script>
 
+<script>
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+
+loadStandings(
+39,
+"premierLeague"
+);
+
+
+loadStandings(
+140,
+"laLiga"
+);
+
+
+loadStandings(
+61,
+"ligue1"
+);
+
+
+loadStandings(
+135,
+"serieA"
+);
+
+
+loadStandings(
+78,
+"bundesliga"
+);
+
+
+loadStandings(
+2,
+"championsLeague"
+);
+
+
+
+});
+
+
+</script>
 
 
 </body>
 
-
 </html>
-
