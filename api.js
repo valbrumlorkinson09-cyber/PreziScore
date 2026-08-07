@@ -1186,3 +1186,4 @@ console.log(
 console.log(
     "🚀 PreziScore Global System Loaded!"
 );
+alert("🔥 NOUVO API.JS LA CHARGE");
