@@ -1,5 +1,5 @@
 /* ==========================
-   FOOTBALL GLOBAL
+   ⚽ FOOTBALL GLOBAL
    Main JavaScript
 ========================== */
 
@@ -9,9 +9,13 @@ console.log("⚽ Football Global is running!");
 
 
 
-// BUTTON HERO
 
-const exploreBtn = document.querySelector(".hero button");
+// ==========================
+// HERO BUTTON
+// ==========================
+
+
+const exploreBtn = document.querySelector(".hero .btn");
 
 
 if(exploreBtn){
@@ -19,8 +23,8 @@ if(exploreBtn){
 exploreBtn.addEventListener("click",()=>{
 
 
-alert(
-"Welcome to Football Global 🌍⚽\n\nThe world of football news, transfers and analysis."
+console.log(
+"Opening matches page..."
 );
 
 
@@ -34,9 +38,14 @@ alert(
 
 
 
+
+// ==========================
 // SIMPLE NEWS SYSTEM
+// ==========================
+
 
 const newsBox = document.querySelector(".news-box");
+
 
 
 const footballNews = [
@@ -99,7 +108,9 @@ setInterval(updateNews,5000);
 
 
 
-// CURRENT YEAR FOOTER
+// ==========================
+// FOOTER YEAR
+// ==========================
 
 
 const footerText = document.querySelector("footer p");
@@ -112,6 +123,7 @@ const year = new Date().getFullYear();
 
 
 footerText.innerHTML =
+
 `© ${year} Football Global | The World of Football`;
 
 
@@ -123,7 +135,9 @@ footerText.innerHTML =
 
 
 
-// SMOOTH MENU
+// ==========================
+// MENU ACTIVE LOG
+// ==========================
 
 
 const links = document.querySelectorAll("nav a");
@@ -132,15 +146,14 @@ const links = document.querySelectorAll("nav a");
 links.forEach(link=>{
 
 
-link.addEventListener("click",(e)=>{
-
-
-e.preventDefault();
+link.addEventListener("click",()=>{
 
 
 console.log(
+
 "Opening:",
 link.innerText
+
 );
 
 
