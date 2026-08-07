@@ -15,7 +15,8 @@ const API_KEY =
 const API_URL =
     "https://v3.football.api-sports.io";
 
-
+console.log("PREZISCORE API URL:", API_URL);
+console.log("PREZISCORE API KEY EXISTS:", !!API_KEY);
 // ======================================
 // GLOBAL API REQUEST
 // ======================================
