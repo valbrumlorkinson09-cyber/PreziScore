@@ -1103,3 +1103,107 @@ Saison ${season}
 console.log(
 "🏆 Competition System Ready"
 );
+
+// ======================================
+// TRANSFERS SYSTEM GLOBAL
+// ======================================
+
+
+async function getTransfers(playerId, season, containerId){
+
+
+const box =
+elementExiste(containerId);
+
+
+
+if(!box) return;
+
+
+
+box.innerHTML =
+
+"<p>Chargement des transferts...</p>";
+
+
+
+const data =
+await apiRequest(
+
+`/transfers?player=${playerId}&season=${season}`
+
+);
+
+
+
+box.innerHTML = "";
+
+
+
+if(!data.response || data.response.length === 0){
+
+
+box.innerHTML =
+
+"<p>Aucun transfert disponible.</p>";
+
+return;
+
+
+}
+
+
+
+data.response.forEach(item=>{
+
+
+item.transfers.forEach(move=>{
+
+
+box.innerHTML += `
+
+<div class="transfer-card">
+
+
+<h3>
+
+${item.player.name}
+
+</h3>
+
+
+<p>
+
+${move.teams.out.name}
+
+➡️
+
+${move.teams.in.name}
+
+</p>
+
+
+
+</div>
+
+`;
+
+
+
+});
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+console.log(
+"🔄 Transfer System Ready"
+);
