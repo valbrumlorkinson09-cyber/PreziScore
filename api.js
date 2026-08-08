@@ -9,7 +9,7 @@
 // 🔐 API CONFIG
 // ======================================================
 
-const API_TOKEN = "METE_TOKEN_SPORTMONKS_LA_ISIT";
+const API_TOKEN = "oaP2ACwS4QvpjWx7rHQUE4VQxA4LDu0s6OV4DW7omnDHz4oszwYyrwqk47Vm";
 
 const API_BASE =
     "https://api.sportmonks.com/v3/football";
