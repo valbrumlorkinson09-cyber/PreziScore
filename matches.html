@@ -3,34 +3,24 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Match - PreziScore ⚽</title>
+<title>Matchs - PreziScore ⚽</title>
 
-    <meta
-        name="description"
-        content="PreziScore - Détails des matchs de football en direct."
-    >
+<meta
+    name="description"
+    content="PreziScore - Matchs de football en direct"
+/>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+<link rel="stylesheet" href="style.css">
 
 </head>
 
 
 <body>
 
-
-<!-- =====================================
-     HEADER
-===================================== -->
 
 <header class="header">
 
@@ -45,11 +35,9 @@
             Accueil
         </a>
 
-
         <a href="matches.html">
             Matchs
         </a>
-
 
         <a href="competitions.html">
             Compétitions
@@ -61,41 +49,34 @@
 
 
 
-<!-- =====================================
-     HERO
-===================================== -->
-
 <section class="hero">
 
-    <div class="hero-content">
+    <h1>
+        ⚽ Matchs Football
+    </h1>
 
-        <h1>
-            ⚽ Détails du match
-        </h1>
-
-        <p>
-            Informations et statistiques du match.
-        </p>
-
-    </div>
+    <p>
+        Résultats en direct et calendrier mondial.
+    </p>
 
 </section>
 
 
 
-<!-- =====================================
-     MATCH DETAILS
-===================================== -->
-
 <section class="section">
 
+    <h2>
+        🔴 Matchs en direct
+    </h2>
+
+
     <div
-        id="matchDetails"
+        id="liveMatches"
         class="match-container"
     >
 
         <p>
-            🔄 Chargement du match...
+            🔄 Chargement...
         </p>
 
     </div>
@@ -103,25 +84,21 @@
 </section>
 
 
-
-<!-- =====================================
-     STATISTICS
-===================================== -->
 
 <section class="section">
 
     <h2>
-        📊 Statistiques
+        📅 Matchs à venir
     </h2>
 
 
     <div
-        id="matchStatistics"
-        class="stats-container"
+        id="upcomingMatches"
+        class="match-container"
     >
 
         <p>
-            🔄 Chargement des statistiques...
+            🔄 Chargement...
         </p>
 
     </div>
@@ -129,36 +106,6 @@
 </section>
 
 
-
-<!-- =====================================
-     LINEUPS
-===================================== -->
-
-<section class="section">
-
-    <h2>
-        👥 Compositions
-    </h2>
-
-
-    <div
-        id="matchLineups"
-        class="lineups-container"
-    >
-
-        <p>
-            🔄 Chargement des compositions...
-        </p>
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================
-     FOOTER
-===================================== -->
 
 <footer>
 
@@ -166,10 +113,8 @@
         ⚽ PreziScore
     </h3>
 
-
     <p>
-        Les scores football en direct
-        partout dans le monde.
+        Les scores football en direct partout dans le monde.
     </p>
 
 
@@ -179,11 +124,9 @@
             Instagram
         </a>
 
-
         <a href="#">
             Facebook
         </a>
-
 
         <a href="#">
             X
@@ -196,125 +139,25 @@
         © 2026 PreziScore - Tous droits réservés.
     </p>
 
+
+    <p style="font-size:12px;">
+        Powered by
+        <a
+            href="https://sportscore.com/"
+            target="_blank"
+            rel="dofollow"
+        >
+            SportScore
+        </a>
+    </p>
+
 </footer>
 
 
 
-<!-- =====================================
-     API
-===================================== -->
-
 <script src="api.js"></script>
 
-
-<!-- =====================================
-     MATCH PAGE
-===================================== -->
-
-<script>
-
-document.addEventListener(
-    "DOMContentLoaded",
-    async function () {
-
-
-        // =================================
-        // GET MATCH ID
-        // =================================
-
-        const params =
-            new URLSearchParams(
-                window.location.search
-            );
-
-
-        const matchId =
-            params.get("id");
-
-
-        // =================================
-        // NO MATCH ID
-        // =================================
-
-        if (!matchId) {
-
-            document.getElementById(
-                "matchDetails"
-            ).innerHTML = `
-
-                <p>
-                    ⚠️ Aucun match sélectionné.
-                </p>
-
-                <a
-                    href="matches.html"
-                    class="btn"
-                >
-                    ← Retour aux matchs
-                </a>
-
-            `;
-
-            document.getElementById(
-                "matchStatistics"
-            ).innerHTML = `
-                <p>
-                    Statistiques indisponibles.
-                </p>
-            `;
-
-
-            document.getElementById(
-                "matchLineups"
-            ).innerHTML = `
-                <p>
-                    Compositions indisponibles.
-                </p>
-            `;
-
-
-            return;
-
-        }
-
-
-
-        // =================================
-        // MATCH DETAILS
-        // =================================
-
-        await PreziScore.loadMatchDetails(
-            decodeURIComponent(matchId),
-            "matchDetails"
-        );
-
-
-
-        // =================================
-        // STATISTICS
-        // =================================
-
-        await PreziScore.loadMatchStatistics(
-            decodeURIComponent(matchId),
-            "matchStatistics"
-        );
-
-
-
-        // =================================
-        // LINEUPS
-        // =================================
-
-        await PreziScore.loadLineups(
-            decodeURIComponent(matchId),
-            "matchLineups"
-        );
-
-
-    }
-);
-
-</script>
+<script src="script.js"></script>
 
 
 </body>
