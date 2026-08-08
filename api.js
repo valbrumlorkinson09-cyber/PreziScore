@@ -1209,3 +1209,31 @@ const PreziScore = {
 
 
         bo
+console.log("🔥🔥🔥 API.JS LOADED!");
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    console.log("🔥 DOM READY!");
+
+    if (typeof loadLiveMatches === "function") {
+        console.log("✅ loadLiveMatches EXISTS");
+        loadLiveMatches("liveMatches");
+    } else {
+        console.error("❌ loadLiveMatches NOT FOUND");
+    }
+
+    if (typeof loadFinishedMatches === "function") {
+        console.log("✅ loadFinishedMatches EXISTS");
+        loadFinishedMatches("finishedMatches");
+    } else {
+        console.error("❌ loadFinishedMatches NOT FOUND");
+    }
+
+    if (typeof loadUpcomingMatches === "function") {
+        console.log("✅ loadUpcomingMatches EXISTS");
+        loadUpcomingMatches("upcomingMatches");
+    } else {
+        console.error("❌ loadUpcomingMatches NOT FOUND");
+    }
+
+});
