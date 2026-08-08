@@ -3,231 +3,181 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
+    <title>Matchs - PreziScore ⚽</title>
 
-<title>Matchs - PreziScore ⚽</title>
+    <meta
+        name="description"
+        content="PreziScore - Scores football en direct et matchs à venir."
+    >
 
-
-<meta name="description" content="PreziScore - Matchs de football en direct">
-
-
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 
 </head>
-
 
 
 <body>
 
 
+<!-- =====================================
+     HEADER
+===================================== -->
+
 <header class="header">
 
-
-<div class="logo">
-
-⚽ PreziScore
-
-</div>
+    <div class="logo">
+        ⚽ PreziScore
+    </div>
 
 
+    <nav>
 
-<nav>
+        <a href="index.html">
+            Accueil
+        </a>
 
+        <a href="matches.html">
+            Matchs
+        </a>
 
-<a href="index.html">
-Accueil
-</a>
+        <a href="competitions.html">
+            Compétitions
+        </a>
 
-
-<a href="matches.html">
-Matchs
-</a>
-
-
-<a href="competitions.html">
-Compétitions
-</a>
-
-
-
-</nav>
-
+    </nav>
 
 </header>
 
 
 
-
+<!-- =====================================
+     HERO
+===================================== -->
 
 <section class="hero">
 
+    <div class="hero-content">
 
-<h1>
+        <h1>
+            ⚽ Matchs de football
+        </h1>
 
-⚽ Matchs Football
+        <p>
+            Suivez les scores en direct
+            et les prochains matchs du monde entier.
+        </p>
 
-</h1>
-
-
-<p>
-
-Résultats en direct et calendrier mondial.
-
-</p>
-
+    </div>
 
 </section>
 
 
 
-
+<!-- =====================================
+     MATCHS LIVE
+===================================== -->
 
 <section class="section">
 
-
-<h2>
-
-🔴 Matchs en direct
-
-</h2>
+    <h2>
+        🔴 Matchs en direct
+    </h2>
 
 
+    <div
+        id="liveMatches"
+        class="match-container"
+    >
 
-<div id="liveMatches" class="match-container">
+        <p>
+            🔄 Chargement des matchs en direct...
+        </p>
 
-
-<p>
-
-Chargement des matchs en direct...
-
-</p>
-
-
-</div>
-
-
-
-</section>
-
- <section class="section">
-
-
-<h2>
-
-📅 Matchs à venir
-
-</h2>
-
-
-
-<div id="upcomingMatches" class="match-container">
-
-
-<p>
-
-Chargement du calendrier...
-
-</p>
-
-
-</div>
-
-
+    </div>
 
 </section>
 
 
 
+<!-- =====================================
+     MATCHS À VENIR
+===================================== -->
+
+<section class="section">
+
+    <h2>
+        📅 Matchs à venir
+    </h2>
 
 
+    <div
+        id="upcomingMatches"
+        class="match-container"
+    >
+
+        <p>
+            🔄 Chargement du calendrier...
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================
+     FOOTER
+===================================== -->
 
 <footer>
 
-
-<h3>
-
-⚽ PreziScore
-
-</h3>
+    <h3>
+        ⚽ PreziScore
+    </h3>
 
 
-
-<p>
-
-Les scores football en direct partout dans le monde.
-
-</p>
+    <p>
+        Les scores football en direct
+        partout dans le monde.
+    </p>
 
 
+    <div class="social">
 
-<div class="social">
+        <a href="#">
+            Instagram
+        </a>
 
+        <a href="#">
+            Facebook
+        </a>
 
-<a href="#">
+        <a href="#">
+            X
+        </a>
 
-Instagram
-
-</a>
-
-
-
-<a href="#">
-
-Facebook
-
-</a>
+    </div>
 
 
+    <p>
+        © 2026 PreziScore - Tous droits réservés.
+    </p>
 
-<a href="#">
-
-X
-
-</a>
+</footer>
 
 
 
-</div>
+<!-- =====================================
+     API
+===================================== -->
 
-
-
-<p>
-
-© 2026 PreziScore - Tous droits réservés.
-
-</p>
-
-
-</footer> 
 <script src="api.js"></script>
 
 <script src="script.js"></script>
-
-
-<script>
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-
-loadLiveMatches(
-"liveMatches"
-);
-
-
-
-loadUpcomingMatches(
-"upcomingMatches"
-);
-
-
-
-});
-
-
-</script>
 
 
 </body>
