@@ -557,6 +557,7 @@ console.log(
 // ⚽ PREZISCORE — SPORTScore API
 // API.JS — PATI 2/4
 // LIVE • TERMINÉS • À VENIR • MATCH CARDS
+// VERSION CORRIGÉE
 // ======================================================
 
 
@@ -570,28 +571,286 @@ function extractMatches(data) {
         return [];
     }
 
-
     if (Array.isArray(data)) {
         return data;
     }
-
 
     if (Array.isArray(data.matches)) {
         return data.matches;
     }
 
-
     if (Array.isArray(data.data)) {
         return data.data;
     }
-
 
     if (Array.isArray(data.results)) {
         return data.results;
     }
 
-
     return [];
+}
+
+
+// ======================================================
+// 🧩 GET MATCH DATE FROM DIFFERENT API FORMATS
+// ======================================================
+
+function getSafeMatchDate(match) {
+
+    if (!match) {
+        return null;
+    }
+
+    const possibleDates = [
+
+        match.starting_at,
+        match.start_time,
+        match.startTime,
+        match.date,
+        match.datetime,
+        match.date_time,
+        match.kickoff,
+        match.kickoff_time,
+        match.scheduled_at,
+        match.scheduled,
+        match.time
+
+    ];
+
+    for (const value of possibleDates) {
+
+        if (!value) {
+            continue;
+        }
+
+        const date = new Date(value);
+
+        if (!isNaN(date.getTime())) {
+            return date;
+        }
+
+    }
+
+    return null;
+}
+
+
+// ======================================================
+// 📅 SAFE DATE STRING
+// ======================================================
+
+function getSafeDateString(match) {
+
+    const date =
+        getSafeMatchDate(match);
+
+    if (!date) {
+        return "";
+    }
+
+    return date.toISOString();
+}
+
+
+// ======================================================
+// 🔴 CHECK LIVE
+// ======================================================
+
+function isLiveMatch(match) {
+
+    if (!match) {
+        return false;
+    }
+
+    const status = String(
+
+        match.status ||
+        match.state ||
+        match.match_status ||
+        match.matchStatus ||
+        match.status_name ||
+        match.state_name ||
+        ""
+
+    )
+    .toLowerCase()
+    .trim();
+
+
+    // Si l'API donne directement un indicateur live
+
+    if (
+        match.live === true ||
+        match.is_live === true ||
+        match.inplay === true ||
+        match.in_play === true
+    ) {
+
+        return true;
+
+    }
+
+
+    const liveWords = [
+
+        "live",
+        "inplay",
+        "in play",
+        "playing",
+        "1h",
+        "2h",
+        "ht",
+        "half time",
+        "extra time",
+        "et",
+        "penalties",
+        "pen_live"
+
+    ];
+
+
+    if (
+        liveWords.some(
+            word =>
+                status.includes(word)
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    return false;
+}
+
+
+// ======================================================
+// ✅ CHECK FINISHED
+// ======================================================
+
+function isFinishedMatch(match) {
+
+    if (!match) {
+        return false;
+    }
+
+
+    const status = String(
+
+        match.status ||
+        match.state ||
+        match.match_status ||
+        match.matchStatus ||
+        match.status_name ||
+        match.state_name ||
+        ""
+
+    )
+    .toLowerCase()
+    .trim();
+
+
+    const finishedWords = [
+
+        "finished",
+        "finish",
+        "ft",
+        "full time",
+        "ended",
+        "end",
+        "completed",
+        "complete",
+        "final",
+        "aet",
+        "ft_pen"
+
+    ];
+
+
+    if (
+        finishedWords.some(
+            word =>
+                status === word ||
+                status.includes(word)
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    // Si l'API donne une période terminée
+
+    if (
+        match.finished === true ||
+        match.is_finished === true ||
+        match.completed === true
+    ) {
+
+        return true;
+
+    }
+
+
+    return false;
+}
+
+
+// ======================================================
+// 📅 CHECK UPCOMING
+// ======================================================
+
+function isUpcomingMatch(match) {
+
+    if (!match) {
+        return false;
+    }
+
+
+    // 🔴 Un match live n'est jamais upcoming
+
+    if (
+        isLiveMatch(match)
+    ) {
+
+        return false;
+
+    }
+
+
+    // ✅ Un match terminé n'est jamais upcoming
+
+    if (
+        isFinishedMatch(match)
+    ) {
+
+        return false;
+
+    }
+
+
+    const matchDate =
+        getSafeMatchDate(match);
+
+
+    if (!matchDate) {
+
+        return false;
+
+    }
+
+
+    const now =
+        new Date();
+
+
+    return (
+        matchDate.getTime()
+        >
+        now.getTime()
+    );
 
 }
 
@@ -617,7 +876,16 @@ function renderMatchCard(
 
 
     const slug =
-        getMatchSlug(match);
+        typeof getMatchSlug === "function"
+        ?
+        getMatchSlug(match)
+        :
+        (
+            match.id ||
+            match.slug ||
+            match.match_id ||
+            ""
+        );
 
 
     const home =
@@ -670,7 +938,7 @@ function renderMatchCard(
 
     const date =
         formatDate(
-            getMatchDate(match)
+            getSafeDateString(match)
         );
 
 
@@ -722,7 +990,9 @@ function renderMatchCard(
                 }
 
                 ${
-                    minute !== ""
+                    minute !== "" &&
+                    minute !== null &&
+                    minute !== undefined
                     ?
                     ` • ${escapeHTML(minute)}'`
                     :
@@ -772,7 +1042,10 @@ function renderMatchCard(
         info = `
             <div class="match-status">
 
-                ${status || "Match terminé"}
+                ${
+                    status ||
+                    "Finished"
+                }
 
             </div>
         `;
@@ -795,7 +1068,9 @@ function renderMatchCard(
 
         score = `
             <div class="match-score upcoming-score">
+
                 VS
+
             </div>
         `;
 
@@ -815,20 +1090,26 @@ function renderMatchCard(
     // 🔘 BUTTON
     // ==================================================
 
-    const button =
-        slug
-        ?
-        `
-        <button
-            class="match-button"
-            type="button"
-            onclick="openMatch('${encodeURIComponent(slug)}')"
-        >
-            Voir le match →
-        </button>
-        `
-        :
-        "";
+    let button = "";
+
+
+    if (slug) {
+
+        button = `
+
+            <button
+                class="match-button"
+                type="button"
+                onclick="openMatch('${encodeURIComponent(String(slug))}')"
+            >
+
+                Voir le match →
+
+            </button>
+
+        `;
+
+    }
 
 
     // ==================================================
@@ -905,6 +1186,46 @@ function renderMatchCard(
 
 
 // ======================================================
+// 🔥 LOAD ALL MATCHES
+// ======================================================
+
+async function loadAllSportScoreMatches() {
+
+    const response =
+        await sportScoreRequest(
+            "/matches/?sport=football&limit=100"
+        );
+
+
+    if (!response) {
+
+        console.error(
+            "❌ SPORTScore: aucune réponse"
+        );
+
+        return [];
+
+    }
+
+
+    const matches =
+        extractMatches(
+            response
+        );
+
+
+    console.log(
+        "⚽ SPORTScore TOTAL:",
+        matches.length
+    );
+
+
+    return matches;
+
+}
+
+
+// ======================================================
 // 🔴 LOAD LIVE MATCHES
 // ======================================================
 
@@ -919,9 +1240,7 @@ async function loadLiveMatches(
 
 
     if (!box) {
-
         return;
-
     }
 
 
@@ -932,30 +1251,21 @@ async function loadLiveMatches(
     `;
 
 
-    const response =
-        await sportScoreRequest(
-            "/matches/?sport=football&limit=100"
-        );
+    const matches =
+        await loadAllSportScoreMatches();
 
 
-    if (!response) {
+    if (!matches.length) {
 
         box.innerHTML = `
             <p>
-                ⚠️ Impossible de charger
-                les matchs live.
+                Aucun match en direct actuellement.
             </p>
         `;
 
         return;
 
     }
-
-
-    const matches =
-        extractMatches(
-            response
-        );
 
 
     preziMatches =
@@ -970,7 +1280,7 @@ async function loadLiveMatches(
 
 
     console.log(
-        "🔴 PREZISCORE LIVE:",
+        "🔴 SPORTScore LIVE:",
         liveMatches
     );
 
@@ -1025,9 +1335,7 @@ async function loadUpcomingMatches(
 
 
     if (!box) {
-
         return;
-
     }
 
 
@@ -1038,30 +1346,21 @@ async function loadUpcomingMatches(
     `;
 
 
-    const response =
-        await sportScoreRequest(
-            "/matches/?sport=football&limit=100"
-        );
+    const matches =
+        await loadAllSportScoreMatches();
 
 
-    if (!response) {
+    if (!matches.length) {
 
         box.innerHTML = `
             <p>
-                ⚠️ Impossible de charger
-                les matchs à venir.
+                Aucun match à venir.
             </p>
         `;
 
         return;
 
     }
-
-
-    const matches =
-        extractMatches(
-            response
-        );
 
 
     const upcomingMatches =
@@ -1075,16 +1374,27 @@ async function loadUpcomingMatches(
             .sort(
                 (a, b) => {
 
+                    const dateA =
+                        getSafeMatchDate(a);
+
+                    const dateB =
+                        getSafeMatchDate(b);
+
+
+                    if (!dateA) {
+                        return 1;
+                    }
+
+
+                    if (!dateB) {
+                        return -1;
+                    }
+
+
                     return (
-
-                        new Date(
-                            getMatchDate(a)
-                        )
+                        dateA.getTime()
                         -
-                        new Date(
-                            getMatchDate(b)
-                        )
-
+                        dateB.getTime()
                     );
 
                 }
@@ -1092,7 +1402,7 @@ async function loadUpcomingMatches(
 
 
     console.log(
-        "📅 PREZISCORE UPCOMING:",
+        "📅 SPORTScore UPCOMING:",
         upcomingMatches
     );
 
@@ -1106,7 +1416,7 @@ async function loadUpcomingMatches(
 
         box.innerHTML = `
             <p>
-                Aucun match à venir.
+                Aucun match à venir dans les données reçues.
             </p>
         `;
 
@@ -1147,9 +1457,7 @@ async function loadFinishedMatches(
 
 
     if (!box) {
-
         return;
-
     }
 
 
@@ -1160,30 +1468,21 @@ async function loadFinishedMatches(
     `;
 
 
-    const response =
-        await sportScoreRequest(
-            "/matches/?sport=football&limit=100"
-        );
+    const matches =
+        await loadAllSportScoreMatches();
 
 
-    if (!response) {
+    if (!matches.length) {
 
         box.innerHTML = `
             <p>
-                ⚠️ Impossible de charger
-                les matchs terminés.
+                Aucun match terminé.
             </p>
         `;
 
         return;
 
     }
-
-
-    const matches =
-        extractMatches(
-            response
-        );
 
 
     const finishedMatches =
@@ -1194,7 +1493,7 @@ async function loadFinishedMatches(
 
 
     console.log(
-        "✅ PREZISCORE FINISHED:",
+        "✅ SPORTScore FINISHED:",
         finishedMatches
     );
 
@@ -1240,11 +1539,19 @@ async function loadFinishedMatches(
 
 function refreshLiveMatches() {
 
-    if (
+    const liveBox =
         getElement(
             "liveMatches"
-        )
-    ) {
+        );
+
+
+    const homeLiveBox =
+        getElement(
+            "homeLiveMatches"
+        );
+
+
+    if (liveBox) {
 
         loadLiveMatches(
             "liveMatches"
@@ -1253,11 +1560,7 @@ function refreshLiveMatches() {
     }
 
 
-    if (
-        getElement(
-            "homeLiveMatches"
-        )
-    ) {
+    if (homeLiveBox) {
 
         loadLiveMatches(
             "homeLiveMatches"
@@ -1269,7 +1572,7 @@ function refreshLiveMatches() {
 
 
 // ======================================================
-// ⏱️ AUTO REFRESH
+// ⏱️ AUTO REFRESH LIVE
 // ======================================================
 
 setInterval(
@@ -1283,12 +1586,21 @@ setInterval(
 // ======================================================
 
 console.log(
-    "⚽ PreziScore SportScore API — PART 2 loaded"
+    "⚽ PreziScore SportScore API — PART 2 CORRIGÉE"
 );
 
 console.log(
-    "🔴 LIVE • ✅ TERMINÉS • 📅 À VENIR"
+    "🔴 LIVE"
 );
+
+console.log(
+    "✅ TERMINÉS"
+);
+
+console.log(
+    "📅 À VENIR"
+);
+
 
 // ======================================================
 // ⚽ PREZISCORE — SPORTScore API
