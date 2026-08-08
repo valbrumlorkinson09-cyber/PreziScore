@@ -1,280 +1,464 @@
-/* =================================
+/* =========================================
    ⚽ PREZISCORE
-   Modern Football Design
-================================= */
+   COMPACT FOOTBALL DESIGN
+========================================= */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #0f172a;
-    color: #ffffff;
-    line-height: 1.6;
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f5f6f8;
+    color:#111827;
+    line-height:1.4;
 }
 
 
-/* =================================
+/* =========================================
    HEADER
-================================= */
+========================================= */
 
-.header {
-    background: #020617;
-    padding: 16px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    border-bottom: 1px solid #1e293b;
+.header{
+    background:#ffffff;
+    padding:15px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:100;
+    border-bottom:1px solid #e5e7eb;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: 800;
-    color: #22c55e;
+.logo{
+    font-size:22px;
+    font-weight:bold;
+    color:#16a34a;
 }
 
-nav {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+nav{
+    display:flex;
+    align-items:center;
+    gap:18px;
 }
 
-nav a {
-    color: #e2e8f0;
-    text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 7px;
-    font-size: 15px;
-    transition: 0.2s;
+nav a{
+    color:#374151;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
 }
 
-nav a:hover {
-    background: #1e293b;
-    color: #22c55e;
+nav a:hover{
+    color:#16a34a;
 }
 
 
-/* =================================
+/* =========================================
    HERO
-================================= */
+========================================= */
 
-.hero {
-    padding: 75px 20px;
-    text-align: center;
-    background:
-        linear-gradient(
-            135deg,
-            #020617,
-            #172033,
-            #1e293b
-        );
+.hero{
+    padding:35px 20px;
+    text-align:center;
+    background:#ffffff;
+    border-bottom:1px solid #e5e7eb;
 }
 
-.hero h1 {
-    font-size: 42px;
-    font-weight: 800;
-    margin-bottom: 15px;
+.hero h1{
+    font-size:30px;
+    margin-bottom:8px;
 }
 
-.hero p {
-    max-width: 650px;
-    margin: 0 auto 28px;
-    color: #cbd5e1;
-    font-size: 17px;
-}
-
-.btn {
-    display: inline-block;
-    background: #22c55e;
-    color: #ffffff;
-    padding: 12px 26px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 700;
-    transition: 0.2s;
-}
-
-.btn:hover {
-    background: #16a34a;
-    transform: translateY(-1px);
+.hero p{
+    color:#6b7280;
+    font-size:14px;
 }
 
 
-/* =================================
-   SECTIONS
-================================= */
+/* =========================================
+   MATCHES SECTION
+========================================= */
 
-.section {
-    max-width: 1200px;
-    margin: auto;
-    padding: 35px 20px;
+.matches-section{
+    max-width:850px;
+    margin:0 auto;
+    padding:22px 15px;
 }
 
-.section h2 {
-    margin-bottom: 22px;
-    color: #22c55e;
-    font-size: 24px;
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
 }
 
-
-/* =================================
-   MATCH CONTAINER
-================================= */
-
-.match-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
+.section-title h2{
+    font-size:18px;
+    color:#111827;
 }
 
-
-/* =================================
-   MATCH CARDS
-================================= */
-
-.match-card {
-    background: #1e293b;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    border: 1px solid #334155;
-    transition: 0.2s;
-}
-
-.match-card:hover {
-    transform: translateY(-3px);
-    border-color: #22c55e;
-}
-
-.match-card h3 {
-    margin: 8px 0;
-    font-size: 17px;
-}
-
-.match-card h2 {
-    color: #22c55e;
-    font-size: 27px;
-    margin: 8px 0;
+.section-title span{
+    font-size:11px;
+    font-weight:bold;
+    color:#dc2626;
 }
 
 
-/* =================================
-   STANDINGS
-================================= */
+/* =========================================
+   FOOTBALL LIST
+========================================= */
 
-.standings-container {
-    display: grid;
-    gap: 10px;
-}
-
-.standing-card {
-    background: #1e293b;
-    padding: 15px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid #334155;
+.football-list{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
 }
 
 
-/* =================================
+/* =========================================
+   MATCH ROW
+========================================= */
+
+.match-card{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:7px;
+    padding:10px 12px;
+    cursor:pointer;
+    transition:0.15s;
+}
+
+.match-card:hover{
+    background:#f9fafb;
+    transform:translateY(-1px);
+}
+
+
+/* =========================================
+   MATCH HEADER
+========================================= */
+
+.match-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:7px;
+}
+
+.live-badge,
+.finished-badge,
+.upcoming-badge{
+    font-size:10px;
+    font-weight:bold;
+    padding:3px 7px;
+    border-radius:4px;
+}
+
+.live-badge{
+    color:#dc2626;
+    background:#fee2e2;
+}
+
+.finished-badge{
+    color:#374151;
+    background:#f3f4f6;
+}
+
+.upcoming-badge{
+    color:#2563eb;
+    background:#dbeafe;
+}
+
+
+/* =========================================
+   TEAMS
+========================================= */
+
+.match-teams{
+    display:grid;
+    grid-template-columns:1fr 70px 1fr;
+    align-items:center;
+    gap:10px;
+}
+
+.team{
+    min-width:0;
+}
+
+.home-team{
+    text-align:right;
+}
+
+.away-team{
+    text-align:left;
+}
+
+.team h3{
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+
+/* =========================================
+   SCORE
+========================================= */
+
+.score-area{
+    text-align:center;
+}
+
+.match-score{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:5px;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.match-score b{
+    color:#9ca3af;
+}
+
+.upcoming-score{
+    font-size:12px;
+    color:#6b7280;
+    font-weight:bold;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.match-live-status{
+    text-align:center;
+    margin-top:6px;
+    color:#dc2626;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.match-status{
+    text-align:center;
+    margin-top:6px;
+    color:#6b7280;
+    font-size:11px;
+}
+
+.match-date{
+    text-align:center;
+    margin-top:6px;
+    color:#2563eb;
+    font-size:11px;
+    font-weight:600;
+}
+
+
+/* =========================================
+   COMPETITION
+========================================= */
+
+.match-competition{
+    text-align:center;
+    color:#6b7280;
+    font-size:10px;
+    margin-top:5px;
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+.loading{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:7px;
+    padding:15px;
+    text-align:center;
+    color:#6b7280;
+    font-size:13px;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.btn{
+    display:inline-block;
+    background:#16a34a;
+    color:white;
+    padding:10px 18px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+
+/* =========================================
    FOOTER
-================================= */
+========================================= */
 
-footer {
-    background: #020617;
-    text-align: center;
-    padding: 35px 20px;
-    margin-top: 35px;
-    border-top: 1px solid #1e293b;
+footer{
+    background:#111827;
+    color:white;
+    text-align:center;
+    padding:30px 20px;
+    margin-top:30px;
 }
 
-footer h3 {
-    color: #22c55e;
-    font-size: 21px;
-    margin-bottom: 8px;
+footer h3{
+    color:#22c55e;
+    margin-bottom:8px;
 }
 
-footer p {
-    color: #94a3b8;
-    margin: 6px 0;
+footer p{
+    color:#d1d5db;
+    font-size:13px;
+    margin:6px 0;
 }
 
-.social {
-    margin: 18px 0;
+.social{
+    margin:15px 0;
 }
 
-.social a {
-    color: #e2e8f0;
-    margin: 0 10px;
-    text-decoration: none;
-    transition: 0.2s;
+.social a{
+    color:white;
+    text-decoration:none;
+    margin:0 8px;
+    font-size:13px;
 }
 
-.social a:hover {
-    color: #22c55e;
+.social a:hover{
+    color:#22c55e;
 }
 
 
-/* =================================
+/* =========================================
+   MATCH DETAILS
+========================================= */
+
+.match-detail-container{
+    max-width:850px;
+    margin:auto;
+}
+
+.match-detail-card{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+}
+
+.match-detail-teams{
+    display:grid;
+    grid-template-columns:1fr 100px 1fr;
+    align-items:center;
+    gap:15px;
+    margin:20px 0;
+}
+
+.detail-score{
+    display:flex;
+    justify-content:center;
+    gap:7px;
+    font-size:25px;
+}
+
+.match-detail-status{
+    color:#6b7280;
+    font-size:13px;
+}
+
+.match-time-box,
+.events-container,
+.stats-container,
+.lineups-container{
+    max-width:850px;
+    margin:auto;
+}
+
+.event-card,
+.stat-card,
+.lineup-card,
+.match-time-card{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:7px;
+    padding:12px;
+    margin-bottom:6px;
+}
+
+
+/* =========================================
    MOBILE
-================================= */
+========================================= */
 
-@media (max-width: 700px) {
+@media(max-width:700px){
 
-    .header {
-        padding: 14px 15px;
-        flex-direction: column;
-        gap: 12px;
+    .header{
+        flex-direction:column;
+        gap:10px;
+        padding:13px;
     }
 
-    .logo {
-        font-size: 22px;
+    nav{
+        gap:12px;
     }
 
-    nav {
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
+    nav a{
+        font-size:13px;
     }
 
-    nav a {
-        font-size: 14px;
-        margin: 2px;
+    .hero{
+        padding:28px 15px;
     }
 
-    .hero {
-        padding: 55px 18px;
+    .hero h1{
+        font-size:25px;
     }
 
-    .hero h1 {
-        font-size: 29px;
+    .matches-section{
+        padding:18px 10px;
     }
 
-    .hero p {
-        font-size: 15px;
+    .match-card{
+        padding:9px 10px;
     }
 
-    .section {
-        padding: 28px 15px;
+    .match-teams{
+        grid-template-columns:1fr 55px 1fr;
+        gap:6px;
     }
 
-    .section h2 {
-        font-size: 21px;
+    .team h3{
+        font-size:12px;
     }
 
-    .match-container {
-        grid-template-columns: 1fr;
+    .match-score{
+        font-size:15px;
     }
 
-    .match-card {
-        padding: 17px;
+    .match-competition{
+        font-size:9px;
     }
 
-}
+    .match-detail-teams{
+        grid-template-columns:1fr 70px 1fr;
+    }
+
+    .detail-score{
+        font-size:21px;
+    }
+
+   }
