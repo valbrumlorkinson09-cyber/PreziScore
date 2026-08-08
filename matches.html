@@ -11,7 +11,7 @@
 
 <meta
     name="description"
-    content="PreziScore - Matchs de football en direct, terminés et à venir."
+    content="PreziScore - Football en direct, résultats et matchs à venir."
 >
 
 <link rel="stylesheet" href="style.css">
@@ -22,9 +22,7 @@
 <body>
 
 
-<!-- ==========================
-     HEADER
-========================== -->
+<!-- HEADER -->
 
 <header class="header">
 
@@ -51,40 +49,45 @@
 </header>
 
 
-<!-- ==========================
-     HERO
-========================== -->
+<!-- HERO -->
 
-<section class="hero">
+<section class="hero match-hero">
 
     <h1>
-        ⚽ Matchs Football
+        ⚽ Matchs
     </h1>
 
     <p>
-        Résultats en direct, matchs terminés et calendrier mondial.
+        Résultats football en direct partout dans le monde.
     </p>
 
 </section>
 
 
-<!-- ==========================
-     🔴 MATCHS LIVE
-========================== -->
+<!-- LIVE -->
 
-<section class="section">
+<section class="matches-section">
 
-    <h2>
-        🔴 Matchs en direct
-    </h2>
+    <div class="section-title">
+
+        <h2>
+            🔴 En direct
+        </h2>
+
+        <span>
+            LIVE
+        </span>
+
+    </div>
+
 
     <div
         id="liveMatches"
-        class="match-container"
+        class="football-list"
     >
 
-        <p>
-            🔄 Chargement des matchs en direct...
+        <p class="loading">
+            🔄 Chargement...
         </p>
 
     </div>
@@ -92,23 +95,26 @@
 </section>
 
 
-<!-- ==========================
-     ✅ MATCHS TERMINÉS
-========================== -->
+<!-- FINISHED -->
 
-<section class="section">
+<section class="matches-section">
 
-    <h2>
-        ✅ Matchs terminés
-    </h2>
+    <div class="section-title">
+
+        <h2>
+            ✅ Terminés
+        </h2>
+
+    </div>
+
 
     <div
         id="finishedMatches"
-        class="match-container"
+        class="football-list"
     >
 
-        <p>
-            🔄 Chargement des matchs terminés...
+        <p class="loading">
+            🔄 Chargement...
         </p>
 
     </div>
@@ -116,23 +122,26 @@
 </section>
 
 
-<!-- ==========================
-     📅 MATCHS À VENIR
-========================== -->
+<!-- UPCOMING -->
 
-<section class="section">
+<section class="matches-section">
 
-    <h2>
-        📅 Matchs à venir
-    </h2>
+    <div class="section-title">
+
+        <h2>
+            📅 À venir
+        </h2>
+
+    </div>
+
 
     <div
         id="upcomingMatches"
-        class="match-container"
+        class="football-list"
     >
 
-        <p>
-            🔄 Chargement des prochains matchs...
+        <p class="loading">
+            🔄 Chargement...
         </p>
 
     </div>
@@ -140,9 +149,7 @@
 </section>
 
 
-<!-- ==========================
-     FOOTER
-========================== -->
+<!-- FOOTER -->
 
 <footer>
 
@@ -176,10 +183,6 @@
 
 </footer>
 
-
-<!-- ==========================
-     JAVASCRIPT
-========================== -->
 
 <script src="api.js"></script>
 
