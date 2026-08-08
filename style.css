@@ -1,328 +1,280 @@
 /* =================================
-   ⚽ PREZISCORE STYLE
-   Classic Modern Design
+   ⚽ PREZISCORE
+   Modern Football Design
 ================================= */
 
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-
-body{
-
+body {
     font-family: Arial, Helvetica, sans-serif;
-
-    background:#0f172a;
-
-    color:white;
-
-    line-height:1.6;
-
+    background: #0f172a;
+    color: #ffffff;
+    line-height: 1.6;
 }
 
 
+/* =================================
+   HEADER
+================================= */
 
-/* HEADER */
+.header {
+    background: #020617;
+    padding: 16px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #1e293b;
+}
 
-.header{
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: #22c55e;
+}
 
-    background:#020617;
+nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-    padding:20px;
+nav a {
+    color: #e2e8f0;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 15px;
+    transition: 0.2s;
+}
 
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:100;
-
+nav a:hover {
+    background: #1e293b;
+    color: #22c55e;
 }
 
 
+/* =================================
+   HERO
+================================= */
 
-.logo{
-
-    font-size:24px;
-
-    font-weight:bold;
-
-    color:#22c55e;
-
-}
-
-
-
-
-nav a{
-
-    color:white;
-
-    text-decoration:none;
-
-    margin-left:15px;
-
-    font-size:15px;
-
-}
-
-
-
-nav a:hover{
-
-    color:#22c55e;
-
-}
-
-
-
-/* HERO */
-
-
-.hero{
-
-    padding:60px 20px;
-
-    text-align:center;
-
+.hero {
+    padding: 75px 20px;
+    text-align: center;
     background:
+        linear-gradient(
+            135deg,
+            #020617,
+            #172033,
+            #1e293b
+        );
+}
 
-    linear-gradient(
-    135deg,
-    #020617,
-    #1e293b
-    );
+.hero h1 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
 
+.hero p {
+    max-width: 650px;
+    margin: 0 auto 28px;
+    color: #cbd5e1;
+    font-size: 17px;
+}
+
+.btn {
+    display: inline-block;
+    background: #22c55e;
+    color: #ffffff;
+    padding: 12px 26px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background: #16a34a;
+    transform: translateY(-1px);
 }
 
 
+/* =================================
+   SECTIONS
+================================= */
 
-.hero h1{
+.section {
+    max-width: 1200px;
+    margin: auto;
+    padding: 35px 20px;
+}
 
-    font-size:40px;
-
-    margin-bottom:15px;
-
+.section h2 {
+    margin-bottom: 22px;
+    color: #22c55e;
+    font-size: 24px;
 }
 
 
+/* =================================
+   MATCH CONTAINER
+================================= */
 
-.hero p{
-
-    color:#cbd5e1;
-
-    margin-bottom:25px;
-
+.match-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
 }
 
 
+/* =================================
+   MATCH CARDS
+================================= */
 
-.btn{
+.match-card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #334155;
+    transition: 0.2s;
+}
 
-    background:#22c55e;
+.match-card:hover {
+    transform: translateY(-3px);
+    border-color: #22c55e;
+}
 
-    color:white;
+.match-card h3 {
+    margin: 8px 0;
+    font-size: 17px;
+}
 
-    padding:12px 25px;
-
-    border-radius:8px;
-
-    text-decoration:none;
-
-    font-weight:bold;
-
+.match-card h2 {
+    color: #22c55e;
+    font-size: 27px;
+    margin: 8px 0;
 }
 
 
+/* =================================
+   STANDINGS
+================================= */
 
-/* SECTIONS */
+.standings-container {
+    display: grid;
+    gap: 10px;
+}
 
-
-.section{
-
-    padding:30px 20px;
-
+.standing-card {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #334155;
 }
 
 
+/* =================================
+   FOOTER
+================================= */
 
-.section h2{
+footer {
+    background: #020617;
+    text-align: center;
+    padding: 35px 20px;
+    margin-top: 35px;
+    border-top: 1px solid #1e293b;
+}
 
-    margin-bottom:20px;
+footer h3 {
+    color: #22c55e;
+    font-size: 21px;
+    margin-bottom: 8px;
+}
 
-    color:#22c55e;
+footer p {
+    color: #94a3b8;
+    margin: 6px 0;
+}
 
+.social {
+    margin: 18px 0;
+}
+
+.social a {
+    color: #e2e8f0;
+    margin: 0 10px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.social a:hover {
+    color: #22c55e;
 }
 
 
-
-
-
-/* MATCH CARDS */
-
-
-.match-container{
-
-    display:grid;
-
-    gap:15px;
-
-}
-
-
-
-.match-card{
-
-    background:#1e293b;
-
-    padding:20px;
-
-    border-radius:12px;
-
-    text-align:center;
-
-    border:1px solid #334155;
-
-}
-
-
-
-.match-card h3{
-
-    margin:8px;
-
-}
-
-
-
-.match-card h2{
-
-    color:#22c55e;
-
-}
-
-
-
-/* STANDINGS */
-
-
-.standings-container{
-
-    display:grid;
-
-    gap:10px;
-
-}
-
-
-
-.standing-card{
-
-    background:#1e293b;
-
-    padding:15px;
-
-    border-radius:10px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    border:1px solid #334155;
-
-}
-
-
-
-
-/* FOOTER */
-
-
-footer{
-
-    background:#020617;
-
-    text-align:center;
-
-    padding:30px 20px;
-
-    margin-top:30px;
-
-}
-
-
-
-footer h3{
-
-    color:#22c55e;
-
-}
-
-
-
-.social a{
-
-    color:white;
-
-    margin:10px;
-
-    text-decoration:none;
-
-}
-
-
-
-
-/* MOBILE */
-
-
-@media(max-width:700px){
-
-
-.header{
-
-    flex-direction:column;
-
-    gap:15px;
-
-}
-
-
-
-nav{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    justify-content:center;
-
-}
-
-
-
-nav a{
-
-    margin:5px;
-
-}
-
-
-
-.hero h1{
-
-    font-size:28px;
-
-}
-
-
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 700px) {
+
+    .header {
+        padding: 14px 15px;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+
+    nav {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    nav a {
+        font-size: 14px;
+        margin: 2px;
+    }
+
+    .hero {
+        padding: 55px 18px;
+    }
+
+    .hero h1 {
+        font-size: 29px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .section {
+        padding: 28px 15px;
+    }
+
+    .section h2 {
+        font-size: 21px;
+    }
+
+    .match-container {
+        grid-template-columns: 1fr;
+    }
+
+    .match-card {
+        padding: 17px;
+    }
 
 }
