@@ -11,8 +11,8 @@
 
 <meta
     name="description"
-    content="PreziScore - Matchs de football en direct"
-/>
+    content="PreziScore - Matchs de football en direct, terminés et à venir."
+>
 
 <link rel="stylesheet" href="style.css">
 
@@ -22,12 +22,15 @@
 <body>
 
 
+<!-- ==========================
+     HEADER
+========================== -->
+
 <header class="header">
 
     <div class="logo">
         ⚽ PreziScore
     </div>
-
 
     <nav>
 
@@ -48,6 +51,9 @@
 </header>
 
 
+<!-- ==========================
+     HERO
+========================== -->
 
 <section class="hero">
 
@@ -56,12 +62,15 @@
     </h1>
 
     <p>
-        Résultats en direct et calendrier mondial.
+        Résultats en direct, matchs terminés et calendrier mondial.
     </p>
 
 </section>
 
 
+<!-- ==========================
+     🔴 MATCHS LIVE
+========================== -->
 
 <section class="section">
 
@@ -69,14 +78,13 @@
         🔴 Matchs en direct
     </h2>
 
-
     <div
         id="liveMatches"
         class="match-container"
     >
 
         <p>
-            🔄 Chargement...
+            🔄 Chargement des matchs en direct...
         </p>
 
     </div>
@@ -84,6 +92,33 @@
 </section>
 
 
+<!-- ==========================
+     ✅ MATCHS TERMINÉS
+========================== -->
+
+<section class="section">
+
+    <h2>
+        ✅ Matchs terminés
+    </h2>
+
+    <div
+        id="finishedMatches"
+        class="match-container"
+    >
+
+        <p>
+            🔄 Chargement des matchs terminés...
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================
+     📅 MATCHS À VENIR
+========================== -->
 
 <section class="section">
 
@@ -91,14 +126,13 @@
         📅 Matchs à venir
     </h2>
 
-
     <div
         id="upcomingMatches"
         class="match-container"
     >
 
         <p>
-            🔄 Chargement...
+            🔄 Chargement des prochains matchs...
         </p>
 
     </div>
@@ -106,6 +140,9 @@
 </section>
 
 
+<!-- ==========================
+     FOOTER
+========================== -->
 
 <footer>
 
@@ -116,7 +153,6 @@
     <p>
         Les scores football en direct partout dans le monde.
     </p>
-
 
     <div class="social">
 
@@ -134,26 +170,16 @@
 
     </div>
 
-
     <p>
         © 2026 PreziScore - Tous droits réservés.
-    </p>
-
-
-    <p style="font-size:12px;">
-        Powered by
-        <a
-            href="https://sportscore.com/"
-            target="_blank"
-            rel="dofollow"
-        >
-            SportScore
-        </a>
     </p>
 
 </footer>
 
 
+<!-- ==========================
+     JAVASCRIPT
+========================== -->
 
 <script src="api.js"></script>
 
