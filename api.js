@@ -385,3 +385,463 @@ console.log(
     "⚽ PreziScore - SportScore API Ready"
 );
 
+// ==========================================
+// ⚽ PREZISCORE
+// MATCH DETAILS SYSTEM
+// SportScore
+// ==========================================
+
+const SPORT_SCORE_BASE =
+    "https://sportscore.com/api/widget";
+
+
+// ==========================================
+// GET MATCH DETAILS
+// ==========================================
+
+async function loadMatchDetails(
+    matchSlug,
+    containerId
+) {
+
+    const box =
+        document.getElementById(containerId);
+
+    if (!box) return;
+
+
+    box.innerHTML = `
+        <p>🔄 Chargement du match...</p>
+    `;
+
+
+    try {
+
+        const url =
+            `${SPORT_SCORE_BASE}/match/?sport=football&slug=${encodeURIComponent(matchSlug)}`;
+
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `HTTP ${response.status}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "MATCH DETAILS:",
+            data
+        );
+
+
+        const match =
+            data.match || data;
+
+
+        if (!match) {
+
+            box.innerHTML = `
+                <p>
+                    ⚠️ Match introuvable.
+                </p>
+            `;
+
+            return;
+
+        }
+
+
+        const home =
+            match.home ||
+            match.home_team ||
+            "Équipe domicile";
+
+
+        const away =
+            match.away ||
+            match.away_team ||
+            "Équipe extérieure";
+
+
+        const homeScore =
+            match.home_score ??
+            "-";
+
+
+        const awayScore =
+            match.away_score ??
+            "-";
+
+
+        const status =
+            match.status_text ||
+            match.status ||
+            "";
+
+
+        box.innerHTML = `
+
+            <div class="match-detail-card">
+
+                <h2>
+                    ${home}
+                </h2>
+
+                <div class="match-score">
+
+                    ${homeScore}
+                    -
+                    ${awayScore}
+
+                </div>
+
+                <h2>
+                    ${away}
+                </h2>
+
+                <p>
+                    ${status}
+                </p>
+
+            </div>
+
+        `;
+
+
+    } catch (error) {
+
+        console.error(
+            "MATCH DETAILS ERROR:",
+            error
+        );
+
+
+        box.innerHTML = `
+            <p>
+                ⚠️ Impossible de charger le match.
+            </p>
+        `;
+
+    }
+
+}
+
+
+// ==========================================
+// 📊 STATISTIQUES
+// ==========================================
+
+async function loadMatchStatistics(
+    matchSlug,
+    containerId
+) {
+
+    const box =
+        document.getElementById(containerId);
+
+    if (!box) return;
+
+
+    box.innerHTML = `
+        <p>
+            🔄 Chargement des statistiques...
+        </p>
+    `;
+
+
+    try {
+
+        const url =
+            `${SPORT_SCORE_BASE}/match/?sport=football&slug=${encodeURIComponent(matchSlug)}`;
+
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `HTTP ${response.status}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "MATCH STATISTICS:",
+            data
+        );
+
+
+        const match =
+            data.match || data;
+
+
+        const statistics =
+            match.statistics ||
+            match.stats ||
+            [];
+
+
+        if (
+            !Array.isArray(statistics) ||
+            statistics.length === 0
+        ) {
+
+            box.innerHTML = `
+                <p>
+                    📊 Statistiques indisponibles.
+                </p>
+            `;
+
+            return;
+
+        }
+
+
+        box.innerHTML = "";
+
+
+        statistics.forEach(stat => {
+
+            const name =
+                stat.name ||
+                stat.type ||
+                "Statistique";
+
+
+            const home =
+                stat.home ??
+                stat.home_value ??
+                "-";
+
+
+            const away =
+                stat.away ??
+                stat.away_value ??
+                "-";
+
+
+            box.innerHTML += `
+
+                <div class="stats-row">
+
+                    <span>
+                        ${home}
+                    </span>
+
+                    <strong>
+                        ${name}
+                    </strong>
+
+                    <span>
+                        ${away}
+                    </span>
+
+                </div>
+
+            `;
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "STATISTICS ERROR:",
+            error
+        );
+
+
+        box.innerHTML = `
+            <p>
+                ⚠️ Statistiques indisponibles.
+            </p>
+        `;
+
+    }
+
+}
+
+
+// ==========================================
+// 👥 COMPOSITIONS
+// ==========================================
+
+async function loadLineups(
+    matchSlug,
+    containerId
+) {
+
+    const box =
+        document.getElementById(containerId);
+
+    if (!box) return;
+
+
+    box.innerHTML = `
+        <p>
+            🔄 Chargement des compositions...
+        </p>
+    `;
+
+
+    try {
+
+        const url =
+            `${SPORT_SCORE_BASE}/match/?sport=football&slug=${encodeURIComponent(matchSlug)}`;
+
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `HTTP ${response.status}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "MATCH LINEUPS:",
+            data
+        );
+
+
+        const match =
+            data.match || data;
+
+
+        const lineups =
+            match.lineups ||
+            match.lineup ||
+            [];
+
+
+        if (
+            !Array.isArray(lineups) ||
+            lineups.length === 0
+        ) {
+
+            box.innerHTML = `
+                <p>
+                    👥 Compositions indisponibles.
+                </p>
+            `;
+
+            return;
+
+        }
+
+
+        box.innerHTML = "";
+
+
+        lineups.forEach(team => {
+
+            const teamName =
+                team.team ||
+                team.name ||
+                "Équipe";
+
+
+            const players =
+                team.players ||
+                team.lineup ||
+                [];
+
+
+            box.innerHTML += `
+
+                <div class="lineup-card">
+
+                    <h3>
+                        ${teamName}
+                    </h3>
+
+                    <ul>
+
+                        ${
+                            Array.isArray(players)
+                            ?
+                            players.map(player => `
+
+                                <li>
+                                    ${
+                                        player.name ||
+                                        player.player ||
+                                        "Joueur"
+                                    }
+                                </li>
+
+                            `).join("")
+                            :
+                            "<li>Données indisponibles</li>"
+                        }
+
+                    </ul>
+
+                </div>
+
+            `;
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "LINEUPS ERROR:",
+            error
+        );
+
+
+        box.innerHTML = `
+            <p>
+                ⚠️ Compositions indisponibles.
+            </p>
+        `;
+
+    }
+
+}
+
+
+// ==========================================
+// 🌍 GLOBAL
+// ==========================================
+
+window.PreziScore = {
+
+    loadMatchDetails,
+    loadMatchStatistics,
+    loadLineups
+
+};
+
+
+console.log(
+    "📊 Match Details + Statistics + Lineups Ready"
+);
