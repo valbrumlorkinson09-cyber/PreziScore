@@ -1,40 +1,13 @@
 // ======================================================
-// ⚽ PREZISCORE — NEW API ENGINE
-// LIVE / TERMINÉS / À VENIR
+// ⚽ PREZISCORE — API ENGINE
+// LIVE / TERMINÉ / À VENIR
+// + MATCH CENTER
 // ======================================================
 
 const SPORT_SCORE_API =
     "https://sportscore.com/api/widget";
 
 let preziMatches = [];
-
-
-// ======================================================
-// GET ELEMENT
-// ======================================================
-
-function getElement(id) {
-    return document.getElementById(id);
-}
-
-
-// ======================================================
-// ESCAPE HTML
-// ======================================================
-
-function escapeHTML(value) {
-
-    if (value === null || value === undefined) {
-        return "";
-    }
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
 
 
 // ======================================================
@@ -56,13 +29,16 @@ async function sportScoreRequest() {
             );
         }
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
         return Array.isArray(data.matches)
             ? data.matches
             : [];
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "❌ SportScore API ERROR:",
@@ -77,10 +53,45 @@ async function sportScoreRequest() {
 
 
 // ======================================================
-// TEAM NAME
+// HELPERS
 // ======================================================
 
-function getTeamName(match, side) {
+function getElement(id) {
+
+    return document.getElementById(id);
+
+}
+
+
+function escapeHTML(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+// ======================================================
+// TEAM
+// ======================================================
+
+function getTeamName(
+    match,
+    side
+) {
 
     if (side === "home") {
 
@@ -110,12 +121,31 @@ function getTeamName(match, side) {
 
 
 // ======================================================
-// MATCH STATUS
+// MATCH ID
+// ======================================================
+
+function getMatchId(match) {
+
+    return (
+        match.id ||
+        match.match_id ||
+        match.fixture_id ||
+        match.fixture?.id ||
+        match.slug ||
+        ""
+    );
+
+}
+
+
+// ======================================================
+// STATUS
 // ======================================================
 
 function getMatchStatus(match) {
 
     return String(
+
         match.status?.short ||
         match.status?.type ||
         match.status?.name ||
@@ -123,6 +153,7 @@ function getMatchStatus(match) {
         match.status_text ||
         match.status ||
         ""
+
     ).trim();
 
 }
@@ -185,6 +216,7 @@ function getAwayScore(match) {
 function getCompetition(match) {
 
     return (
+
         match.competition?.name ||
         match.competition ||
         match.league?.name ||
@@ -194,24 +226,7 @@ function getCompetition(match) {
         match.competition_name ||
         match.league_name ||
         ""
-    );
 
-}
-
-
-// ======================================================
-// MATCH ID
-// ======================================================
-
-function getMatchId(match) {
-
-    return (
-        match.id ||
-        match.match_id ||
-        match.fixture_id ||
-        match.fixture?.id ||
-        match.slug ||
-        ""
     );
 
 }
@@ -233,7 +248,55 @@ function normalizeStatus(status) {
 
 
 // ======================================================
-// 🔴 LIVE STATUS
+// ✅ FINISHED
+// ======================================================
+
+function isFinishedMatch(match) {
+
+    const status =
+        normalizeStatus(
+            getMatchStatus(match)
+        );
+
+
+    const finishedStatuses = [
+
+        "ft",
+        "finished",
+        "finish",
+        "ended",
+        "end",
+        "complete",
+        "completed",
+        "final",
+
+        "aet",
+        "after extra time",
+
+        "penalties finished",
+
+        "cancelled",
+        "canceled",
+
+        "abandoned",
+
+        "walkover",
+        "awarded"
+
+    ];
+
+
+    return finishedStatuses.some(
+        value =>
+            status === value ||
+            status.includes(value)
+    );
+
+}
+
+
+// ======================================================
+// 🔴 LIVE
 // ======================================================
 
 function isLiveMatch(match) {
@@ -244,11 +307,13 @@ function isLiveMatch(match) {
         );
 
 
-    // IMPORTANT:
-    // FINISHED STATUS ALWAYS HAS PRIORITY
+    // Finished toujou gen priyorite
+    if (
+        isFinishedMatch(match)
+    ) {
 
-    if (isFinishedMatch(match)) {
         return false;
+
     }
 
 
@@ -272,7 +337,6 @@ function isLiveMatch(match) {
 
         "et",
         "extra time",
-        "extra-time",
 
         "overtime",
 
@@ -283,54 +347,9 @@ function isLiveMatch(match) {
 
 
     return liveStatuses.some(
-        liveStatus =>
-            status === liveStatus ||
-            status.includes(liveStatus)
-    );
-
-}
-
-
-// ======================================================
-// ✅ FINISHED STATUS
-// ======================================================
-
-function isFinishedMatch(match) {
-
-    const status =
-        normalizeStatus(
-            getMatchStatus(match)
-        );
-
-
-    const finishedStatuses = [
-
-        "ft",
-        "finished",
-        "finish",
-        "ended",
-        "end",
-        "complete",
-        "completed",
-        "final",
-        "aet",
-        "after extra time",
-        "pen",
-        "penalties finished",
-        "cancelled",
-        "canceled",
-        "abandoned",
-        "postponed",
-        "walkover",
-        "awarded"
-
-    ];
-
-
-    return finishedStatuses.some(
-        finishedStatus =>
-            status === finishedStatus ||
-            status.includes(finishedStatus)
+        value =>
+            status === value ||
+            status.includes(value)
     );
 
 }
@@ -376,7 +395,10 @@ function isUpcomingMatch(match) {
     }
 
 
-    return date.getTime() > Date.now();
+    return (
+        date.getTime() >
+        Date.now()
+    );
 
 }
 
@@ -418,7 +440,62 @@ function formatMatchDate(dateValue) {
 
 
 // ======================================================
-// MATCH CARD
+// ⏱️ LIVE MINUTE
+// ======================================================
+
+function getLiveMinute(match) {
+
+    const minute =
+
+        match.minute ??
+        match.minutes ??
+        match.elapsed ??
+        match.match_time ??
+        match.status?.minute ??
+        match.status?.elapsed ??
+        "";
+
+
+    if (
+        minute === null ||
+        minute === undefined ||
+        minute === ""
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(
+        minute
+    );
+
+}
+
+
+// ======================================================
+// 🔗 OPEN MATCH
+// ======================================================
+
+function openMatch(matchId) {
+
+    if (!matchId) {
+        return;
+    }
+
+
+    window.location.href =
+        "match-details.html?id=" +
+        encodeURIComponent(
+            matchId
+        );
+
+}
+
+
+// ======================================================
+// 🧩 RENDER COMPACT MATCH
 // ======================================================
 
 function renderMatchCard(
@@ -427,9 +504,18 @@ function renderMatchCard(
     type
 ) {
 
-    if (!box || !match) {
+    if (
+        !box ||
+        !match
+    ) {
+
         return;
+
     }
+
+
+    const id =
+        getMatchId(match);
 
 
     const home =
@@ -452,44 +538,64 @@ function renderMatchCard(
 
     const competition =
         escapeHTML(
-            getCompetition(match)
+            getCompetition(
+                match
+            )
         );
 
 
     const status =
         escapeHTML(
-            getMatchStatus(match)
-        );
-
-
-    const date =
-        formatMatchDate(
-            getMatchDate(match)
+            getMatchStatus(
+                match
+            )
         );
 
 
     const homeScore =
         escapeHTML(
-            getHomeScore(match)
+            getHomeScore(
+                match
+            )
         );
 
 
     const awayScore =
         escapeHTML(
-            getAwayScore(match)
+            getAwayScore(
+                match
+            )
+        );
+
+
+    const date =
+        formatMatchDate(
+            getMatchDate(
+                match
+            )
+        );
+
+
+    const minute =
+        escapeHTML(
+            getLiveMinute(
+                match
+            )
         );
 
 
     let badge = "";
-    let score = "";
-    let information = "";
+    let middle = "";
+    let bottom = "";
 
 
-    // ==================================================
+    // ==============================================
     // 🔴 LIVE
-    // ==================================================
+    // ==============================================
 
-    if (type === "live") {
+    if (
+        type === "live"
+    ) {
 
         badge = `
             <span class="live-badge">
@@ -497,74 +603,136 @@ function renderMatchCard(
             </span>
         `;
 
-        score = `
-            <div class="match-score">
-                <span>${homeScore}</span>
-                <b>-</b>
-                <span>${awayScore}</span>
+
+        middle = `
+
+            <div class="score-area">
+
+                <div class="match-score">
+
+                    <span>
+                        ${homeScore}
+                    </span>
+
+                    <b>-</b>
+
+                    <span>
+                        ${awayScore}
+                    </span>
+
+                </div>
+
             </div>
+
         `;
 
-        information = `
+
+        bottom = `
+
             <div class="match-live-status">
-                🔴 ${status || "LIVE"}
+
+                ${
+                    minute
+                    ?
+                    minute + "'"
+                    :
+                    status || "LIVE"
+                }
+
             </div>
+
         `;
 
     }
 
 
-    // ==================================================
+    // ==============================================
     // ✅ FINISHED
-    // ==================================================
+    // ==============================================
 
-    else if (type === "finished") {
+    else if (
+        type === "finished"
+    ) {
 
         badge = `
             <span class="finished-badge">
-                ✅ TERMINÉ
+                TERMINÉ
             </span>
         `;
 
-        score = `
-            <div class="match-score">
-                <span>${homeScore}</span>
-                <b>-</b>
-                <span>${awayScore}</span>
+
+        middle = `
+
+            <div class="score-area">
+
+                <div class="match-score">
+
+                    <span>
+                        ${homeScore}
+                    </span>
+
+                    <b>-</b>
+
+                    <span>
+                        ${awayScore}
+                    </span>
+
+                </div>
+
             </div>
+
         `;
 
-        information = `
+
+        bottom = `
+
             <div class="match-status">
+
                 Match terminé
+
             </div>
+
         `;
 
     }
 
 
-    // ==================================================
+    // ==============================================
     // 📅 UPCOMING
-    // ==================================================
+    // ==============================================
 
     else {
 
         badge = `
             <span class="upcoming-badge">
-                📅 À VENIR
+                À VENIR
             </span>
         `;
 
-        score = `
-            <div class="match-score upcoming-score">
-                VS
+
+        middle = `
+
+            <div class="score-area">
+
+                <div class="match-score upcoming-score">
+
+                    VS
+
+                </div>
+
             </div>
+
         `;
 
-        information = `
+
+        bottom = `
+
             <div class="match-date">
-                📅 ${date}
+
+                ${date}
+
             </div>
+
         `;
 
     }
@@ -572,36 +740,62 @@ function renderMatchCard(
 
     box.innerHTML += `
 
-        <article class="match-card">
+        <article
+
+            class="match-card"
+
+            onclick="
+                openMatch(
+                    '${encodeURIComponent(id)}'
+                )
+            "
+
+        >
 
             <div class="match-header">
+
                 ${badge}
+
             </div>
+
 
             <div class="match-teams">
 
+
                 <div class="team home-team">
-                    <h3>${home}</h3>
+
+                    <h3>
+                        ${home}
+                    </h3>
+
                 </div>
 
-                <div class="score-area">
-                    ${score}
-                </div>
+
+                ${middle}
+
 
                 <div class="team away-team">
-                    <h3>${away}</h3>
+
+                    <h3>
+                        ${away}
+                    </h3>
+
                 </div>
 
             </div>
 
-            ${information}
+
+            ${bottom}
+
 
             ${
                 competition
                 ?
                 `
                 <div class="match-competition">
+
                     🏆 ${competition}
+
                 </div>
                 `
                 :
@@ -619,10 +813,14 @@ function renderMatchCard(
 // 🔴 LOAD LIVE
 // ======================================================
 
-async function loadLiveMatches(containerId) {
+async function loadLiveMatches(
+    containerId
+) {
 
     const box =
-        getElement(containerId);
+        getElement(
+            containerId
+        );
 
 
     if (!box) {
@@ -631,7 +829,9 @@ async function loadLiveMatches(containerId) {
 
 
     box.innerHTML = `
-        <p>🔄 Chargement des matchs en direct...</p>
+        <p class="loading">
+            🔄 Chargement des matchs en direct...
+        </p>
     `;
 
 
@@ -649,12 +849,6 @@ async function loadLiveMatches(containerId) {
         );
 
 
-    console.log(
-        "🔴 LIVE:",
-        liveMatches.length
-    );
-
-
     box.innerHTML = "";
 
 
@@ -663,7 +857,7 @@ async function loadLiveMatches(containerId) {
     ) {
 
         box.innerHTML = `
-            <p>
+            <p class="loading">
                 Aucun match en direct actuellement.
             </p>
         `;
@@ -674,7 +868,7 @@ async function loadLiveMatches(containerId) {
 
 
     liveMatches
-        .slice(0, 30)
+        .slice(0, 50)
         .forEach(
             match => {
 
@@ -694,10 +888,14 @@ async function loadLiveMatches(containerId) {
 // ✅ LOAD FINISHED
 // ======================================================
 
-async function loadFinishedMatches(containerId) {
+async function loadFinishedMatches(
+    containerId
+) {
 
     const box =
-        getElement(containerId);
+        getElement(
+            containerId
+        );
 
 
     if (!box) {
@@ -706,7 +904,9 @@ async function loadFinishedMatches(containerId) {
 
 
     box.innerHTML = `
-        <p>🔄 Chargement des matchs terminés...</p>
+        <p class="loading">
+            🔄 Chargement des matchs terminés...
+        </p>
     `;
 
 
@@ -720,12 +920,6 @@ async function loadFinishedMatches(containerId) {
         );
 
 
-    console.log(
-        "✅ FINISHED:",
-        finishedMatches.length
-    );
-
-
     box.innerHTML = "";
 
 
@@ -734,8 +928,8 @@ async function loadFinishedMatches(containerId) {
     ) {
 
         box.innerHTML = `
-            <p>
-                Aucun match terminé.
+            <p class="loading">
+                Aucun match terminé disponible.
             </p>
         `;
 
@@ -745,7 +939,7 @@ async function loadFinishedMatches(containerId) {
 
 
     finishedMatches
-        .slice(0, 30)
+        .slice(0, 50)
         .forEach(
             match => {
 
@@ -770,7 +964,9 @@ async function loadUpcomingMatches(
 ) {
 
     const box =
-        getElement(containerId);
+        getElement(
+            containerId
+        );
 
 
     if (!box) {
@@ -779,7 +975,9 @@ async function loadUpcomingMatches(
 
 
     box.innerHTML = `
-        <p>🔄 Chargement des prochains matchs...</p>
+        <p class="loading">
+            🔄 Chargement des prochains matchs...
+        </p>
     `;
 
 
@@ -796,23 +994,21 @@ async function loadUpcomingMatches(
                 (a, b) => {
 
                     return (
+
                         new Date(
                             getMatchDate(a)
                         ).getTime()
+
                         -
+
                         new Date(
                             getMatchDate(b)
                         ).getTime()
+
                     );
 
                 }
             );
-
-
-    console.log(
-        "📅 UPCOMING:",
-        upcomingMatches.length
-    );
 
 
     box.innerHTML = "";
@@ -823,7 +1019,7 @@ async function loadUpcomingMatches(
     ) {
 
         box.innerHTML = `
-            <p>
+            <p class="loading">
                 Aucun match prévu.
             </p>
         `;
@@ -834,7 +1030,7 @@ async function loadUpcomingMatches(
 
 
     upcomingMatches
-        .slice(0, 30)
+        .slice(0, 50)
         .forEach(
             match => {
 
@@ -851,7 +1047,7 @@ async function loadUpcomingMatches(
 
 
 // ======================================================
-// 🔄 AUTO REFRESH
+// 🔄 AUTO REFRESH LIVE
 // ======================================================
 
 setInterval(
@@ -892,27 +1088,10 @@ setInterval(
 
 
 // ======================================================
-// 🚀 READY
-// ======================================================
-
-console.log(
-    "⚽ PreziScore NEW API Engine loaded!"
-);
-
-console.log(
-    "🔴 Live / ✅ Terminé / 📅 À venir"
-);
-
-// ======================================================
-// ⚽ PREZISCORE — MATCH CENTER
-// DETAILS / EVENTS / STATISTICS / LINEUPS
+// ⚽ MATCH CENTER
 // ======================================================
 
 const PreziScore = {
-
-    // ==================================================
-    // LOAD MATCH DETAILS
-    // ==================================================
 
     async loadMatchDetails(
         matchId,
@@ -920,776 +1099,145 @@ const PreziScore = {
     ) {
 
         const box =
-            document.getElementById(
+            getElement(
                 containerId
             );
+
 
         if (!box) {
             return null;
         }
 
 
-        box.innerHTML = `
-            <div class="loading-box">
-                <p>
-                    🔄 Chargement du match...
-                </p>
-            </div>
-        `;
-
-
-        try {
-
-            const matches =
-                await sportScoreRequest();
-
-
-            const match =
-                matches.find(
-                    item => {
-
-                        const id =
-                            String(
-                                getMatchId(item)
-                            );
-
-                        return (
-                            id ===
-                            String(matchId)
-                        );
-
-                    }
-                );
-
-
-            if (!match) {
-
-                box.innerHTML = `
-                    <div class="error-box">
-
-                        <h2>
-                            ⚠️ Match introuvable
-                        </h2>
-
-                        <p>
-                            Ce match n'est plus disponible.
-                        </p>
-
-                    </div>
-                `;
-
-                return null;
-
-            }
-
-
-            const home =
-                escapeHTML(
-                    getTeamName(
-                        match,
-                        "home"
-                    )
-                );
-
-
-            const away =
-                escapeHTML(
-                    getTeamName(
-                        match,
-                        "away"
-                    )
-                );
-
-
-            const homeScore =
-                escapeHTML(
-                    getHomeScore(match)
-                );
-
-
-            const awayScore =
-                escapeHTML(
-                    getAwayScore(match)
-                );
-
-
-            const status =
-                escapeHTML(
-                    getMatchStatus(match)
-                );
-
-
-            const competition =
-                escapeHTML(
-                    getCompetition(match)
-                );
-
-
-            const date =
-                formatMatchDate(
-                    getMatchDate(match)
-                );
-
-
-            let statusBadge = "";
-
-
-            if (
-                isLiveMatch(match)
-            ) {
-
-                statusBadge = `
-                    <span class="live-badge">
-                        🔴 LIVE
-                    </span>
-                `;
-
-            }
-
-            else if (
-                isFinishedMatch(match)
-            ) {
-
-                statusBadge = `
-                    <span class="finished-badge">
-                        ✅ TERMINÉ
-                    </span>
-                `;
-
-            }
-
-            else {
-
-                statusBadge = `
-                    <span class="upcoming-badge">
-                        📅 À VENIR
-                    </span>
-                `;
-
-            }
-
-
-            box.innerHTML = `
-
-                <div class="match-detail-card">
-
-                    <div class="match-header">
-
-                        ${statusBadge}
-
-                    </div>
-
-
-                    ${
-                        competition
-                        ?
-                        `
-                        <div class="match-competition">
-
-                            🏆
-                            ${competition}
-
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-
-                    <div class="match-detail-teams">
-
-                        <div class="team">
-
-                            <h2>
-                                ${home}
-                            </h2>
-
-                        </div>
-
-
-                        <div class="detail-score">
-
-                            <strong>
-                                ${homeScore}
-                            </strong>
-
-                            <span>
-                                -
-                            </span>
-
-                            <strong>
-                                ${awayScore}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="team">
-
-                            <h2>
-                                ${away}
-                            </h2>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="match-detail-status">
-
-                        <p>
-                            ⏱️
-                            ${
-                                status ||
-                                "Information indisponible"
-                            }
-                        </p>
-
-
-                        ${
-                            date
-                            ?
-                            `
-                            <p>
-                                📅 ${date}
-                            </p>
-                            `
-                            :
-                            ""
-                        }
-
-                    </div>
-
-                </div>
-
-            `;
-
-
-            return match;
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "❌ MATCH DETAILS ERROR:",
-                error
+        const matches =
+            await sportScoreRequest();
+
+
+        const match =
+            matches.find(
+                item =>
+                    String(
+                        getMatchId(item)
+                    ) ===
+                    String(matchId)
             );
 
+
+        if (!match) {
 
             box.innerHTML = `
                 <div class="error-box">
 
                     <h2>
-                        ⚠️ Erreur
+                        ⚠️ Match introuvable
                     </h2>
-
-                    <p>
-                        Impossible de charger le match.
-                    </p>
 
                 </div>
             `;
-
 
             return null;
 
         }
 
-    },
 
-
-    // ==================================================
-    // ⚽ EVENTS
-    // ==================================================
-
-    async loadMatchEvents(
-        match,
-        containerId
-    ) {
-
-        const box =
-            document.getElementById(
-                containerId
+        const home =
+            escapeHTML(
+                getTeamName(
+                    match,
+                    "home"
+                )
             );
 
 
-        if (!box) {
-            return;
-        }
+        const away =
+            escapeHTML(
+                getTeamName(
+                    match,
+                    "away"
+                )
+            );
 
 
-        const events =
-            match?.events ||
-            match?.timeline ||
-            match?.incidents ||
-            [];
+        const homeScore =
+            getHomeScore(match);
 
 
-        if (
-            !Array.isArray(events) ||
-            events.length === 0
-        ) {
-
-            box.innerHTML = `
-                <p>
-                    ⚽ Aucun événement disponible
-                    pour ce match.
-                </p>
-            `;
-
-            return;
-
-        }
+        const awayScore =
+            getAwayScore(match);
 
 
-        box.innerHTML = "";
+        const status =
+            escapeHTML(
+                getMatchStatus(match)
+            );
 
 
-        events.forEach(
-            event => {
-
-                const minute =
-                    event.minute ??
-                    event.time ??
-                    event.min ??
-                    "";
+        const competition =
+            escapeHTML(
+                getCompetition(match)
+            );
 
 
-                const player =
-                    event.player?.name ||
-                    event.player_name ||
-                    event.player ||
-                    "";
+        box.innerHTML = `
+
+            <div class="match-detail-card">
+
+                ${
+                    competition
+                    ?
+                    `
+                    <div class="match-competition">
+                        🏆 ${competition}
+                    </div>
+                    `
+                    :
+                    ""
+                }
 
 
-                const team =
-                    event.team?.name ||
-                    event.team_name ||
-                    event.team ||
-                    "";
+                <div class="match-detail-teams">
+
+                    <div class="team">
+
+                        <h2>
+                            ${home}
+                        </h2>
+
+                    </div>
 
 
-                const type =
-                    event.type ||
-                    event.event ||
-                    event.name ||
-                    "Événement";
-
-
-                box.innerHTML += `
-
-                    <div class="event-card">
-
-                        <span>
-                            ${
-                                minute
-                                ?
-                                minute + "'"
-                                :
-                                "•"
-                            }
-                        </span>
-
+                    <div class="detail-score">
 
                         <strong>
-                            ${escapeHTML(type)}
+                            ${homeScore}
                         </strong>
 
+                        <span>-</span>
 
-                        ${
-                            player
-                            ?
-                            `
-                            <p>
-                                ${escapeHTML(player)}
-                            </p>
-                            `
-                            :
-                            ""
-                        }
-
-
-                        ${
-                            team
-                            ?
-                            `
-                            <small>
-                                ${escapeHTML(team)}
-                            </small>
-                            `
-                            :
-                            ""
-                        }
+                        <strong>
+                            ${awayScore}
+                        </strong>
 
                     </div>
 
-                `;
 
-            }
-        );
+                    <div class="team">
 
-    },
-
-
-    // ==================================================
-    // 📊 STATISTICS
-    // ==================================================
-
-    async loadMatchStatistics(
-        matchId,
-        containerId
-    ) {
-
-        const box =
-            document.getElementById(
-                containerId
-            );
-
-
-        if (!box) {
-            return;
-        }
-
-
-        box.innerHTML = `
-            <p>
-                🔄 Chargement des statistiques...
-            </p>
-        `;
-
-
-        try {
-
-            const matches =
-                await sportScoreRequest();
-
-
-            const match =
-                matches.find(
-                    item =>
-                        String(
-                            getMatchId(item)
-                        ) ===
-                        String(matchId)
-                );
-
-
-            if (!match) {
-
-                box.innerHTML = `
-                    <p>
-                        📊 Statistiques indisponibles.
-                    </p>
-                `;
-
-                return;
-
-            }
-
-
-            const statistics =
-                match.statistics ||
-                match.stats ||
-                match.match_statistics ||
-                [];
-
-
-            if (
-                !Array.isArray(statistics) ||
-                statistics.length === 0
-            ) {
-
-                box.innerHTML = `
-                    <div class="stats-card">
-
-                        <p>
-                            📊 Les statistiques détaillées
-                            ne sont pas disponibles
-                            pour ce match.
-                        </p>
+                        <h2>
+                            ${away}
+                        </h2>
 
                     </div>
-                `;
 
-                return;
-
-            }
+                </div>
 
 
-            box.innerHTML = "";
-
-
-            statistics.forEach(
-                stat => {
-
-                    const name =
-                        stat.name ||
-                        stat.type ||
-                        stat.label ||
-                        "Statistique";
-
-
-                    const homeValue =
-                        stat.home ??
-                        stat.home_value ??
-                        stat.values?.home ??
-                        "-";
-
-
-                    const awayValue =
-                        stat.away ??
-                        stat.away_value ??
-                        stat.values?.away ??
-                        "-";
-
-
-                    box.innerHTML += `
-
-                        <div class="stat-card">
-
-                            <strong>
-                                ${escapeHTML(name)}
-                            </strong>
-
-
-                            <div>
-
-                                <span>
-                                    ${escapeHTML(homeValue)}
-                                </span>
-
-
-                                <span>
-                                    ${escapeHTML(awayValue)}
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-            );
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "❌ STATISTICS ERROR:",
-                error
-            );
-
-
-            box.innerHTML = `
                 <p>
-                    📊 Statistiques indisponibles.
-                </p>
-            `;
-
-        }
-
-    },
-
-
-    // ==================================================
-    // 👥 LINEUPS
-    // ==================================================
-
-    async loadLineups(
-        matchId,
-        containerId
-    ) {
-
-        const box =
-            document.getElementById(
-                containerId
-            );
-
-
-        if (!box) {
-            return;
-        }
-
-
-        box.innerHTML = `
-            <p>
-                🔄 Chargement des compositions...
-            </p>
-        `;
-
-
-        try {
-
-            const matches =
-                await sportScoreRequest();
-
-
-            const match =
-                matches.find(
-                    item =>
-                        String(
-                            getMatchId(item)
-                        ) ===
-                        String(matchId)
-                );
-
-
-            if (!match) {
-
-                box.innerHTML = `
-                    <p>
-                        👥 Compositions indisponibles.
-                    </p>
-                `;
-
-                return;
-
-            }
-
-
-            const lineups =
-                match.lineups ||
-                match.lineup ||
-                match.formations ||
-                [];
-
-
-            if (
-                !Array.isArray(lineups) ||
-                lineups.length === 0
-            ) {
-
-                box.innerHTML = `
-                    <div class="lineup-card">
-
-                        <p>
-                            👥 Les compositions ne sont
-                            pas encore disponibles.
-                        </p>
-
-                    </div>
-                `;
-
-                return;
-
-            }
-
-
-            box.innerHTML = "";
-
-
-            lineups.forEach(
-                lineup => {
-
-                    const team =
-                        lineup.team?.name ||
-                        lineup.team_name ||
-                        lineup.team ||
-                        "Équipe";
-
-
-                    const players =
-                        lineup.players ||
-                        lineup.lineup ||
-                        [];
-
-
-                    box.innerHTML += `
-
-                        <div class="lineup-card">
-
-                            <h3>
-                                👥
-                                ${escapeHTML(team)}
-                            </h3>
-
-                            ${
-                                Array.isArray(players) &&
-                                players.length > 0
-                                ?
-                                players.map(
-                                    player => {
-
-                                        const name =
-                                            player.player?.name ||
-                                            player.name ||
-                                            player.player_name ||
-                                            "Joueur";
-
-
-                                        const number =
-                                            player.number ||
-                                            player.jersey ||
-                                            "";
-
-
-                                        return `
-                                            <div class="player-row">
-
-                                                <span>
-                                                    ${
-                                                        number
-                                                        ?
-                                                        "#" + escapeHTML(number)
-                                                        :
-                                                        ""
-                                                    }
-                                                </span>
-
-                                                <strong>
-                                                    ${escapeHTML(name)}
-                                                </strong>
-
-                                            </div>
-                                        `;
-
-                                    }
-                                ).join("")
-                                :
-                                `
-                                <p>
-                                    Composition indisponible.
-                                </p>
-                                `
-                            }
-
-                        </div>
-
-                    `;
-
-                }
-            );
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "❌ LINEUPS ERROR:",
-                error
-            );
-
-
-            box.innerHTML = `
-                <p>
-                    👥 Compositions indisponibles.
-                </p>
-            `;
-
-        }
-
-    }
-
-};
-
-
-// ======================================================
-// 🚀 MATCH CENTER READY
-// ======================================================
-
-console.log(
-    "⚽ PreziScore Match Center loaded!"
-);
+                    ${
+                        isLiveMatch(match)
+                        ?
+                        "🔴 " + (status || "LIVE")
+                        :
+                        isFinishedMatch(match)
+                        ?
+        
