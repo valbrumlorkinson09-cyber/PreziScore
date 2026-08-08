@@ -1,30 +1,12 @@
-// ======================================================
-// ⚽ PREZISCORE — SPORTMONKS FOOTBALL API V3
-// PART 1/4
-// API CONNECTION + HELPERS + STATUS
-// ======================================================
-
 
 // ======================================================
-// 🔐 API CONFIG
+// ⚽ PREZISCORE — SPORTMONKS TEST
 // ======================================================
 
-const API_TOKEN = "oaP2ACwS4QvpjWx7rHQUE4VQxA4LDu0s6OV4DW7omnDHz4oszwYyrwqk47Vm";
+const API_TOKEN = "METE_TOKEN_SPORTMONKS_OU_LA";
 
 const API_BASE =
     "https://api.sportmonks.com/v3/football";
-
-
-// ======================================================
-// GLOBAL
-// ======================================================
-
-let preziMatches = [];
-
-
-// ======================================================
-// API REQUEST
-// ======================================================
 
 async function sportMonksRequest(endpoint) {
 
@@ -33,60 +15,42 @@ async function sportMonksRequest(endpoint) {
         const url =
             API_BASE + endpoint;
 
-        console.log(
-            "🌐 Sportmonks:",
-            url
-        );
+        console.log("🌐 REQUEST:", url);
 
-
-        const response =
-            await fetch(
-                url,
-                {
-                    method: "GET",
-
-                    headers: {
-                        "Authorization": API_TOKEN,
-                        "Accept": "application/json"
-                    }
-                }
-            );
-
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Authorization": API_TOKEN,
+                "Accept": "application/json"
+            }
+        });
 
         const text =
             await response.text();
 
-
         console.log(
-            "📡 HTTP:",
+            "📡 STATUS:",
             response.status
         );
 
+        console.log(
+            "📦 RESPONSE:",
+            text
+        );
 
         if (!response.ok) {
 
-            console.error(
-                "❌ API ERROR:",
-                text
-            );
-
             throw new Error(
-                "Sportmonks HTTP " +
-                response.status
+                "HTTP " +
+                response.status +
+                " → " +
+                text
             );
 
         }
 
-
         const json =
             JSON.parse(text);
-
-
-        console.log(
-            "✅ API DATA:",
-            json
-        );
-
 
         return json.data || [];
 
@@ -95,7 +59,7 @@ async function sportMonksRequest(endpoint) {
     catch (error) {
 
         console.error(
-            "🚨 SPORTMONKS ERROR:",
+            "❌ SPORTMONKS ERROR:",
             error
         );
 
@@ -104,7 +68,6 @@ async function sportMonksRequest(endpoint) {
     }
 
 }
-
 
 // ======================================================
 // ELEMENT
