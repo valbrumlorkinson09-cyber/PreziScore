@@ -5,17 +5,22 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Matchs - PreziScore ⚽</title>
+    <title>Match - PreziScore ⚽</title>
 
     <meta
         name="description"
-        content="PreziScore - Scores football en direct et matchs à venir."
+        content="PreziScore - Détails des matchs de football en direct."
     >
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
@@ -40,9 +45,11 @@
             Accueil
         </a>
 
+
         <a href="matches.html">
             Matchs
         </a>
+
 
         <a href="competitions.html">
             Compétitions
@@ -63,12 +70,11 @@
     <div class="hero-content">
 
         <h1>
-            ⚽ Matchs de football
+            ⚽ Détails du match
         </h1>
 
         <p>
-            Suivez les scores en direct
-            et les prochains matchs du monde entier.
+            Informations et statistiques du match.
         </p>
 
     </div>
@@ -78,23 +84,18 @@
 
 
 <!-- =====================================
-     MATCHS LIVE
+     MATCH DETAILS
 ===================================== -->
 
 <section class="section">
 
-    <h2>
-        🔴 Matchs en direct
-    </h2>
-
-
     <div
-        id="liveMatches"
+        id="matchDetails"
         class="match-container"
     >
 
         <p>
-            🔄 Chargement des matchs en direct...
+            🔄 Chargement du match...
         </p>
 
     </div>
@@ -104,23 +105,49 @@
 
 
 <!-- =====================================
-     MATCHS À VENIR
+     STATISTICS
 ===================================== -->
 
 <section class="section">
 
     <h2>
-        📅 Matchs à venir
+        📊 Statistiques
     </h2>
 
 
     <div
-        id="upcomingMatches"
-        class="match-container"
+        id="matchStatistics"
+        class="stats-container"
     >
 
         <p>
-            🔄 Chargement du calendrier...
+            🔄 Chargement des statistiques...
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================
+     LINEUPS
+===================================== -->
+
+<section class="section">
+
+    <h2>
+        👥 Compositions
+    </h2>
+
+
+    <div
+        id="matchLineups"
+        class="lineups-container"
+    >
+
+        <p>
+            🔄 Chargement des compositions...
         </p>
 
     </div>
@@ -152,9 +179,11 @@
             Instagram
         </a>
 
+
         <a href="#">
             Facebook
         </a>
+
 
         <a href="#">
             X
@@ -177,7 +206,115 @@
 
 <script src="api.js"></script>
 
-<script src="script.js"></script>
+
+<!-- =====================================
+     MATCH PAGE
+===================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function () {
+
+
+        // =================================
+        // GET MATCH ID
+        // =================================
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const matchId =
+            params.get("id");
+
+
+        // =================================
+        // NO MATCH ID
+        // =================================
+
+        if (!matchId) {
+
+            document.getElementById(
+                "matchDetails"
+            ).innerHTML = `
+
+                <p>
+                    ⚠️ Aucun match sélectionné.
+                </p>
+
+                <a
+                    href="matches.html"
+                    class="btn"
+                >
+                    ← Retour aux matchs
+                </a>
+
+            `;
+
+            document.getElementById(
+                "matchStatistics"
+            ).innerHTML = `
+                <p>
+                    Statistiques indisponibles.
+                </p>
+            `;
+
+
+            document.getElementById(
+                "matchLineups"
+            ).innerHTML = `
+                <p>
+                    Compositions indisponibles.
+                </p>
+            `;
+
+
+            return;
+
+        }
+
+
+
+        // =================================
+        // MATCH DETAILS
+        // =================================
+
+        await PreziScore.loadMatchDetails(
+            decodeURIComponent(matchId),
+            "matchDetails"
+        );
+
+
+
+        // =================================
+        // STATISTICS
+        // =================================
+
+        await PreziScore.loadMatchStatistics(
+            decodeURIComponent(matchId),
+            "matchStatistics"
+        );
+
+
+
+        // =================================
+        // LINEUPS
+        // =================================
+
+        await PreziScore.loadLineups(
+            decodeURIComponent(matchId),
+            "matchLineups"
+        );
+
+
+    }
+);
+
+</script>
 
 
 </body>
