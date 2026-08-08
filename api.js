@@ -19,35 +19,50 @@ async function sportMonksRequest(endpoint) {
 
     try {
 
-        const separator =
-            endpoint.includes("?")
-                ? "&"
-                : "?";
+        const url =
+            API_BASE + endpoint;
 
-        const response = await fetch(
-            API_BASE +
-            endpoint +
-            separator +
-            "api_token=" +
-            encodeURIComponent(API_TOKEN)
+        console.log("🌐 Sportmonks request:", url);
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Authorization": API_TOKEN,
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        const text = await response.text();
+
+        console.log(
+            "📡 Sportmonks HTTP:",
+            response.status
         );
 
         if (!response.ok) {
 
-            const errorText =
-                await response.text();
+            console.error(
+                "❌ Sportmonks response:",
+                text
+            );
 
             throw new Error(
-                "HTTP " +
+                "Sportmonks HTTP " +
                 response.status +
-                " - " +
-                errorText
+                ": " +
+                text
             );
 
         }
 
         const json =
-            await response.json();
+            JSON.parse(text);
+
+        console.log(
+            "✅ Sportmonks data:",
+            json
+        );
 
         return json.data || [];
 
@@ -56,7 +71,7 @@ async function sportMonksRequest(endpoint) {
     catch (error) {
 
         console.error(
-            "❌ SPORTMONKS ERROR:",
+            "🚨 SPORTMONKS API ERROR:",
             error
         );
 
