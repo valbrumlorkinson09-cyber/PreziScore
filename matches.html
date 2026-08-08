@@ -5,16 +5,22 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Matchs - PreziScore ⚽</title>
 
 <meta
     name="description"
-    content="PreziScore - Football en direct, résultats et matchs à venir."
+    content="PreziScore - Matchs de football en direct, terminés et à venir."
 >
 
-<link rel="stylesheet" href="style.css">
+<link
+    rel="stylesheet"
+    href="style.css"
+>
 
 </head>
 
@@ -22,13 +28,16 @@
 <body>
 
 
-<!-- HEADER -->
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header class="header">
 
     <div class="logo">
         ⚽ PreziScore
     </div>
+
 
     <nav>
 
@@ -49,9 +58,12 @@
 </header>
 
 
-<!-- HERO -->
 
-<section class="hero match-hero">
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
 
     <h1>
         ⚽ Matchs
@@ -64,30 +76,25 @@
 </section>
 
 
-<!-- LIVE -->
 
-<section class="matches-section">
+<!-- =====================================================
+     🔴 LIVE
+===================================================== -->
 
-    <div class="section-title">
+<section class="section">
 
-        <h2>
-            🔴 En direct
-        </h2>
-
-        <span>
-            LIVE
-        </span>
-
-    </div>
+    <h2>
+        🔴 En direct
+    </h2>
 
 
     <div
         id="liveMatches"
-        class="football-list"
+        class="match-container"
     >
 
-        <p class="loading">
-            🔄 Chargement...
+        <p>
+            🔄 Chargement des matchs en direct...
         </p>
 
     </div>
@@ -95,26 +102,25 @@
 </section>
 
 
-<!-- FINISHED -->
 
-<section class="matches-section">
+<!-- =====================================================
+     ✅ TERMINÉS
+===================================================== -->
 
-    <div class="section-title">
+<section class="section">
 
-        <h2>
-            ✅ Terminés
-        </h2>
-
-    </div>
+    <h2>
+        ✅ Terminés
+    </h2>
 
 
     <div
         id="finishedMatches"
-        class="football-list"
+        class="match-container"
     >
 
-        <p class="loading">
-            🔄 Chargement...
+        <p>
+            🔄 Chargement des matchs terminés...
         </p>
 
     </div>
@@ -122,26 +128,25 @@
 </section>
 
 
-<!-- UPCOMING -->
 
-<section class="matches-section">
+<!-- =====================================================
+     📅 À VENIR
+===================================================== -->
 
-    <div class="section-title">
+<section class="section">
 
-        <h2>
-            📅 À venir
-        </h2>
-
-    </div>
+    <h2>
+        📅 À venir
+    </h2>
 
 
     <div
         id="upcomingMatches"
-        class="football-list"
+        class="match-container"
     >
 
-        <p class="loading">
-            🔄 Chargement...
+        <p>
+            🔄 Chargement des prochains matchs...
         </p>
 
     </div>
@@ -149,7 +154,10 @@
 </section>
 
 
-<!-- FOOTER -->
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 
 <footer>
 
@@ -157,9 +165,11 @@
         ⚽ PreziScore
     </h3>
 
+
     <p>
         Les scores football en direct partout dans le monde.
     </p>
+
 
     <div class="social">
 
@@ -177,6 +187,7 @@
 
     </div>
 
+
     <p>
         © 2026 PreziScore - Tous droits réservés.
     </p>
@@ -184,9 +195,82 @@
 </footer>
 
 
+
+<!-- =====================================================
+     API
+===================================================== -->
+
 <script src="api.js"></script>
 
+
+<!-- =====================================================
+     MAIN SCRIPT
+===================================================== -->
+
 <script src="script.js"></script>
+
+
+<!-- =====================================================
+     LOAD MATCHES
+===================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        console.log(
+            "⚽ PreziScore Matchs page ready"
+        );
+
+
+        // 🔴 MATCHS LIVE
+
+        if (
+            typeof loadLiveMatches ===
+            "function"
+        ) {
+
+            loadLiveMatches(
+                "liveMatches"
+            );
+
+        }
+
+
+        // ✅ MATCHS TERMINÉS
+
+        if (
+            typeof loadFinishedMatches ===
+            "function"
+        ) {
+
+            loadFinishedMatches(
+                "finishedMatches"
+            );
+
+        }
+
+
+        // 📅 MATCHS À VENIR
+
+        if (
+            typeof loadUpcomingMatches ===
+            "function"
+        ) {
+
+            loadUpcomingMatches(
+                "upcomingMatches"
+            );
+
+        }
+
+    }
+
+);
+
+</script>
 
 
 </body>
