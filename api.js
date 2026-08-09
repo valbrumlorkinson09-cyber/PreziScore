@@ -1,78 +1,91 @@
 // ======================================================
-// ⚽ PREZISCORE
-// SPORTScore API — PART 1
-// CONFIG + REQUEST + HELPERS
+// ⚽ PREZISCORE — SPORTScore
+// API.JS — PATI 1/4
+// API BASE + REQUEST + HELPERS
 // ======================================================
 
 const SPORT_SCORE_API =
     "https://sportscore.com/api/widget";
 
+
+// ======================================================
+// 🌍 GLOBAL DATA
+// ======================================================
+
 let preziMatches = [];
 
 
 // ======================================================
-// 🌐 REQUEST SPORTScore
+// 🌐 API REQUEST
 // ======================================================
 
-async function sportScoreRequest(endpoint) {
+async function sportScoreRequest(
+    endpoint
+) {
 
     try {
 
-        const url =
-            SPORT_SCORE_API + endpoint;
-
-        console.log("🌐 SportScore:", url);
-
-        const response =
-            await fetch(url, {
+        const response = await fetch(
+            SPORT_SCORE_API + endpoint,
+            {
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
                 }
-            });
+            }
+        );
+
+
+        console.log(
+            "🌐 SportScore:",
+            SPORT_SCORE_API + endpoint
+        );
 
         console.log(
             "📡 HTTP:",
             response.status
         );
 
+
         if (!response.ok) {
 
-            const error =
-                await response.text();
-
-            console.error(
-                "❌ SportScore:",
-                error
+            throw new Error(
+                "HTTP " + response.status
             );
 
-            return null;
         }
+
 
         const json =
             await response.json();
 
+
         console.log(
-            "✅ SPORTScore DATA:",
+            "✅ SportScore DATA:",
             json
         );
 
+
         return json;
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
-            "🚨 API ERROR:",
+            "❌ SportScore ERROR:",
             error
         );
 
         return null;
+
     }
+
 }
 
 
 // ======================================================
-// 🧩 ELEMENT
+// 🧩 GET ELEMENT
 // ======================================================
 
 function getElement(id) {
@@ -83,7 +96,7 @@ function getElement(id) {
 
 
 // ======================================================
-// 🔐 SECURITY
+// 🔐 ESCAPE HTML
 // ======================================================
 
 function escapeHTML(value) {
@@ -94,7 +107,9 @@ function escapeHTML(value) {
     ) {
 
         return "";
+
     }
+
 
     return String(value)
         .replace(/&/g, "&amp;")
@@ -102,6 +117,158 @@ function escapeHTML(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+
+}
+
+
+// ======================================================
+// 🧩 EXTRACT MATCHES
+// ======================================================
+
+function extractMatches(data) {
+
+    if (!data) {
+        return [];
+    }
+
+
+    if (Array.isArray(data)) {
+        return data;
+    }
+
+
+    if (Array.isArray(data.matches)) {
+        return data.matches;
+    }
+
+
+    if (Array.isArray(data.data)) {
+        return data.data;
+    }
+
+
+    return [];
+
+}
+
+
+// ======================================================
+// 🏠 TEAM NAME
+// ======================================================
+
+function getTeamName(
+    match,
+    side
+) {
+
+    const team =
+        match?.[side] ||
+        match?.teams?.[side] ||
+        match?.[`${side}_team`] ||
+        null;
+
+
+    if (typeof team === "string") {
+
+        return team;
+
+    }
+
+
+    return (
+        team?.name ||
+        team?.short_name ||
+        team?.shortName ||
+        "Équipe"
+    );
+
+}
+
+
+// ======================================================
+// ⚽ SCORE
+// ======================================================
+
+function getScore(
+    match,
+    side
+) {
+
+    const team =
+        match?.[side] ||
+        match?.teams?.[side] ||
+        null;
+
+
+    if (typeof team === "object") {
+
+        return (
+            team?.score ??
+            team?.goals ??
+            0
+        );
+
+    }
+
+
+    return (
+        match?.score?.[side] ??
+        match?.scores?.[side] ??
+        match?.[`${side}_score`] ??
+        0
+    );
+
+}
+
+
+// ======================================================
+// 📅 MATCH DATE
+// ======================================================
+
+function getMatchDate(match) {
+
+    return (
+        match?.starting_at ||
+        match?.start_time ||
+        match?.startTime ||
+        match?.date ||
+        match?.timestamp ||
+        ""
+    );
+
+}
+
+
+// ======================================================
+// 📊 STATUS
+// ======================================================
+
+function getMatchStatus(match) {
+
+    return (
+        match?.status?.name ||
+        match?.status ||
+        match?.state?.name ||
+        match?.state ||
+        ""
+    );
+
+}
+
+
+// ======================================================
+// 🏆 COMPETITION
+// ======================================================
+
+function getCompetition(match) {
+
+    return (
+        match?.competition?.name ||
+        match?.league?.name ||
+        match?.tournament?.name ||
+        ""
+    );
+
 }
 
 
@@ -122,242 +289,6 @@ function getMatchSlug(match) {
 
 
 // ======================================================
-// ⚽ TEAM
-// ======================================================
-
-function getTeam(
-    match,
-    side
-) {
-
-    if (!match) {
-        return null;
-    }
-
-    const team =
-        match[side] ||
-        match[side + "_team"];
-
-    return team || null;
-}
-
-
-// ======================================================
-// 🏠 TEAM NAME
-// ======================================================
-
-function getTeamName(
-    match,
-    side
-) {
-
-    const team =
-        getTeam(
-            match,
-            side
-        );
-
-    if (!team) {
-        return "Équipe";
-    }
-
-    return (
-        team.name ||
-        team.team_name ||
-        team.short_name ||
-        team.short_code ||
-        "Équipe"
-    );
-
-}
-
-
-// ======================================================
-// ⚽ SCORE
-// ======================================================
-
-function getScore(
-    match,
-    side
-) {
-
-    const team =
-        getTeam(
-            match,
-            side
-        );
-
-    if (!team) {
-        return 0;
-    }
-
-    return Number(
-        team.score ??
-        team.goals ??
-        match?.score?.[side] ??
-        0
-    );
-
-}
-
-
-// ======================================================
-// 📅 DATE
-// ======================================================
-
-function getMatchDate(match) {
-
-    return (
-        match?.starting_at ||
-        match?.start_time ||
-        match?.date ||
-        match?.timestamp ||
-        ""
-    );
-
-}
-
-
-// ======================================================
-// 📊 STATUS
-// ======================================================
-
-function getMatchStatus(match) {
-
-    return (
-        match?.status ||
-        match?.state ||
-        match?.match_status ||
-        ""
-    );
-
-}
-
-
-// ======================================================
-// 🔄 NORMALIZE STATUS
-// ======================================================
-
-function normalizedStatus(match) {
-
-    return String(
-        getMatchStatus(match)
-    )
-    .toLowerCase()
-    .trim();
-
-}
-
-
-// ======================================================
-// 🔴 LIVE
-// ======================================================
-
-function isLiveMatch(match) {
-
-    const status =
-        normalizedStatus(match);
-
-    return [
-
-        "live",
-        "inplay",
-        "in play",
-        "1h",
-        "2h",
-        "ht",
-        "et",
-        "break",
-        "playing"
-
-    ].includes(status);
-
-}
-
-
-// ======================================================
-// ✅ FINISHED
-// ======================================================
-
-function isFinishedMatch(match) {
-
-    const status =
-        normalizedStatus(match);
-
-    return [
-
-        "finished",
-        "finish",
-        "ft",
-        "ended",
-        "complete",
-        "completed"
-
-    ].includes(status);
-
-}
-
-
-// ======================================================
-// 📅 UPCOMING
-// ======================================================
-
-function isUpcomingMatch(match) {
-
-    if (
-        isLiveMatch(match)
-    ) {
-        return false;
-    }
-
-    if (
-        isFinishedMatch(match)
-    ) {
-        return false;
-    }
-
-    const value =
-        getMatchDate(match);
-
-    if (!value) {
-        return false;
-    }
-
-    const date =
-        new Date(value);
-
-    if (
-        isNaN(date.getTime())
-    ) {
-        return false;
-    }
-
-    return (
-        date.getTime() >
-        Date.now()
-    );
-
-}
-
-
-// ======================================================
-// 🏆 COMPETITION
-// ======================================================
-
-function getCompetition(match) {
-
-    return (
-        match?.competition?.name ||
-        match?.league?.name ||
-        match?.tournament?.name ||
-        match?.competition_name ||
-        ""
-    );
-
-}
-
-
-// ======================================================
 // ⏱️ LIVE MINUTE
 // ======================================================
 
@@ -365,8 +296,8 @@ function getLiveMinute(match) {
 
     return (
         match?.minute ??
-        match?.elapsed ??
-        match?.timer?.minute ??
+        match?.clock ??
+        match?.time ??
         ""
     );
 
@@ -383,14 +314,20 @@ function formatDate(value) {
         return "";
     }
 
+
     const date =
         new Date(value);
 
+
     if (
-        isNaN(date.getTime())
+        isNaN(
+            date.getTime()
+        )
     ) {
+
         return "";
     }
+
 
     return date.toLocaleString(
         "fr-FR",
@@ -404,260 +341,440 @@ function formatDate(value) {
 
 
 // ======================================================
-// 🔗 OPEN MATCH
-// ======================================================
-
-function openMatch(slug) {
-
-    if (!slug) {
-        return;
-    }
-
-    window.location.href =
-        "match-details.html?slug=" +
-        encodeURIComponent(slug);
-
-}
-
-
-// ======================================================
-// 🚀 READY
+// 🚀 API READY
 // ======================================================
 
 console.log(
-    "⚽ PreziScore — SportScore PART 1 OK"
+    "⚽ PreziScore SportScore — PART 1 READY"
+);
+
+console.log(
+    "🌐 API sans clé"
 );
 
 console.log(
     "🔴 LIVE | ✅ FINISHED | 📅 UPCOMING"
 );
 
-    
 // ======================================================
-// ⚽ PREZISCORE — SPORTScore API
+// ⚽ PREZISCORE — SPORTScore
 // API.JS — PATI 2/4
-// MATCHS LIVE • TERMINÉS • À VENIR
+// LIVE • TERMINÉS • À VENIR
 // ======================================================
 
 
 // ======================================================
-// 🧩 EXTRAIRE MATCHS
+// 📊 NORMALIZE STATUS
 // ======================================================
 
-function extractMatches(data) {
+function normalizedStatus(match) {
 
-    if (!data) return [];
+    return String(
+        getMatchStatus(match)
+    )
+    .toLowerCase()
+    .trim();
 
-    if (Array.isArray(data)) {
-        return data;
-    }
-
-    if (Array.isArray(data.matches)) {
-        return data.matches;
-    }
-
-    if (Array.isArray(data.data)) {
-        return data.data;
-    }
-
-    if (Array.isArray(data.results)) {
-        return data.results;
-    }
-
-    return [];
 }
 
 
 // ======================================================
-// 🔴 CHARGE TOUS MATCHS
+// 🔴 LIVE MATCH
+// ======================================================
+
+function isLiveMatch(match) {
+
+    const status =
+        normalizedStatus(match);
+
+
+    const liveWords = [
+        "live",
+        "inplay",
+        "in play",
+        "1h",
+        "2h",
+        "ht",
+        "half time",
+        "halftime",
+        "et",
+        "extra time",
+        "pen",
+        "playing"
+    ];
+
+
+    return liveWords.some(
+        word =>
+            status.includes(word)
+    );
+
+}
+
+
+// ======================================================
+// ✅ FINISHED MATCH
+// ======================================================
+
+function isFinishedMatch(match) {
+
+    const status =
+        normalizedStatus(match);
+
+
+    const finishedWords = [
+        "finished",
+        "ft",
+        "full time",
+        "ended",
+        "complete",
+        "completed",
+        "after extra time",
+        "after penalties"
+    ];
+
+
+    return finishedWords.some(
+        word =>
+            status.includes(word)
+    );
+
+}
+
+
+// ======================================================
+// 📅 UPCOMING MATCH
+// ======================================================
+
+function isUpcomingMatch(match) {
+
+    if (
+        isLiveMatch(match)
+    ) {
+        return false;
+    }
+
+
+    if (
+        isFinishedMatch(match)
+    ) {
+        return false;
+    }
+
+
+    const value =
+        getMatchDate(match);
+
+
+    if (!value) {
+        return false;
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+        return false;
+    }
+
+
+    return (
+        date.getTime() >
+        Date.now()
+    );
+
+}
+
+
+// ======================================================
+// 🧩 GET ALL MATCHES
 // ======================================================
 
 async function getFootballMatches() {
 
-    const response = await sportScoreRequest(
-        "/matches/?sport=football&limit=100"
+    const response =
+        await sportScoreRequest(
+            "/matches/?sport=football&limit=100"
+        );
+
+
+    if (!response) {
+
+        return [];
+
+    }
+
+
+    const matches =
+        extractMatches(response);
+
+
+    preziMatches =
+        matches;
+
+
+    console.log(
+        "⚽ MATCHES:",
+        matches
     );
 
-    return extractMatches(response);
+
+    return matches;
+
 }
 
 
 // ======================================================
-// 🔴 MATCHS LIVE
+// 🔴 LOAD LIVE
 // ======================================================
 
-async function loadLiveMatches(containerId) {
+async function loadLiveMatches(
+    containerId
+) {
 
-    const box = getElement(containerId);
+    const box =
+        getElement(containerId);
 
-    if (!box) return;
 
-    box.innerHTML =
-        "<p>🔄 Chargement des matchs live...</p>";
+    if (!box) {
+        return;
+    }
+
+
+    box.innerHTML = `
+        <p>
+            🔄 Chargement des matchs live...
+        </p>
+    `;
+
 
     const matches =
         await getFootballMatches();
 
-    if (!matches.length) {
-
-        box.innerHTML =
-            "<p>🔴 Aucun match live actuellement.</p>";
-
-        return;
-    }
 
     const liveMatches =
-        matches.filter(match =>
-            isLiveMatch(match)
+        matches.filter(
+            match =>
+                isLiveMatch(match)
         );
+
 
     box.innerHTML = "";
 
-    if (!liveMatches.length) {
 
-        box.innerHTML =
-            "<p>🔴 Aucun match live actuellement.</p>";
+    if (
+        liveMatches.length === 0
+    ) {
+
+        box.innerHTML = `
+            <p>
+                Aucun match en direct actuellement.
+            </p>
+        `;
 
         return;
+
     }
 
-    liveMatches.forEach(match => {
 
-        renderMatchCard(
-            box,
-            match,
-            "live"
+    liveMatches
+        .slice(0, 50)
+        .forEach(
+            match => {
+
+                renderMatchCard(
+                    box,
+                    match,
+                    "live"
+                );
+
+            }
         );
-
-    });
 
 }
 
 
 // ======================================================
-// ✅ MATCHS TERMINÉS
+// 📅 LOAD UPCOMING
 // ======================================================
 
-async function loadFinishedMatches(containerId) {
+async function loadUpcomingMatches(
+    containerId
+) {
 
-    const box = getElement(containerId);
+    const box =
+        getElement(containerId);
 
-    if (!box) return;
 
-    box.innerHTML =
-        "<p>🔄 Chargement des résultats...</p>";
+    if (!box) {
+        return;
+    }
+
+
+    box.innerHTML = `
+        <p>
+            🔄 Chargement des matchs à venir...
+        </p>
+    `;
+
 
     const matches =
         await getFootballMatches();
 
-    if (!matches.length) {
-
-        box.innerHTML =
-            "<p>⚠️ Aucun résultat reçu.</p>";
-
-        return;
-    }
-
-    const finishedMatches =
-        matches.filter(match =>
-            isFinishedMatch(match)
-        );
-
-    box.innerHTML = "";
-
-    if (!finishedMatches.length) {
-
-        box.innerHTML =
-            "<p>✅ Aucun match terminé trouvé.</p>";
-
-        return;
-    }
-
-    finishedMatches.forEach(match => {
-
-        renderMatchCard(
-            box,
-            match,
-            "finished"
-        );
-
-    });
-
-}
-
-
-// ======================================================
-// 📅 MATCHS À VENIR
-// ======================================================
-
-async function loadUpcomingMatches(containerId) {
-
-    const box = getElement(containerId);
-
-    if (!box) return;
-
-    box.innerHTML =
-        "<p>🔄 Chargement du calendrier...</p>";
-
-    const matches =
-        await getFootballMatches();
-
-    if (!matches.length) {
-
-        box.innerHTML =
-            "<p>⚠️ Aucun calendrier reçu.</p>";
-
-        return;
-    }
 
     const upcomingMatches =
         matches
 
-        .filter(match =>
-            isUpcomingMatch(match)
-        )
+            .filter(
+                match =>
+                    isUpcomingMatch(match)
+            )
 
-        .sort((a, b) => {
+            .sort(
+                (a, b) => {
 
-            return (
-                new Date(getMatchDate(a)) -
-                new Date(getMatchDate(b))
+                    return (
+                        new Date(
+                            getMatchDate(a)
+                        )
+                        -
+                        new Date(
+                            getMatchDate(b)
+                        )
+                    );
+
+                }
             );
 
-        });
 
     box.innerHTML = "";
 
-    if (!upcomingMatches.length) {
 
-        box.innerHTML =
-            "<p>📅 Aucun match à venir trouvé.</p>";
+    if (
+        upcomingMatches.length === 0
+    ) {
+
+        box.innerHTML = `
+            <p>
+                📅 Aucun match à venir trouvé.
+            </p>
+        `;
 
         return;
+
     }
+
 
     upcomingMatches
         .slice(0, 50)
-        .forEach(match => {
+        .forEach(
+            match => {
 
-            renderMatchCard(
-                box,
-                match,
-                "upcoming"
-            );
+                renderMatchCard(
+                    box,
+                    match,
+                    "upcoming"
+                );
 
-        });
+            }
+        );
 
 }
 
 
 // ======================================================
-// 🔄 REFRESH LIVE
+// ✅ LOAD FINISHED
+// ======================================================
+
+async function loadFinishedMatches(
+    containerId
+) {
+
+    const box =
+        getElement(containerId);
+
+
+    if (!box) {
+        return;
+    }
+
+
+    box.innerHTML = `
+        <p>
+            🔄 Chargement des matchs terminés...
+        </p>
+    `;
+
+
+    const matches =
+        await getFootballMatches();
+
+
+    const finishedMatches =
+        matches.filter(
+            match =>
+                isFinishedMatch(match)
+        );
+
+
+    box.innerHTML = "";
+
+
+    if (
+        finishedMatches.length === 0
+    ) {
+
+        box.innerHTML = `
+            <p>
+                Aucun match terminé trouvé.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    finishedMatches
+        .slice(0, 50)
+        .forEach(
+            match => {
+
+                renderMatchCard(
+                    box,
+                    match,
+                    "finished"
+                );
+
+            }
+        );
+
+}
+
+
+// ======================================================
+// 🔄 AUTO REFRESH LIVE
 // ======================================================
 
 function refreshLiveMatches() {
 
-    if (getElement("liveMatches")) {
+    const live =
+        getElement("liveMatches");
+
+
+    const homeLive =
+        getElement(
+            "homeLiveMatches"
+        );
+
+
+    if (live) {
 
         loadLiveMatches(
             "liveMatches"
@@ -665,7 +782,8 @@ function refreshLiveMatches() {
 
     }
 
-    if (getElement("homeLiveMatches")) {
+
+    if (homeLive) {
 
         loadLiveMatches(
             "homeLiveMatches"
@@ -677,7 +795,7 @@ function refreshLiveMatches() {
 
 
 // ======================================================
-// ⏱️ ACTUALISATION LIVE
+// ⏱️ REFRESH EVERY 30 SECONDS
 // ======================================================
 
 setInterval(
@@ -687,485 +805,856 @@ setInterval(
 
 
 // ======================================================
-// 🚀 READY
+// 🚀 PART 2 READY
 // ======================================================
 
 console.log(
-    "⚽ PreziScore API — PART 2 OK"
+    "⚽ PreziScore — PART 2 READY"
 );
 
 console.log(
-    "🔴 LIVE | ✅ TERMINÉS | 📅 À VENIR"
+    "🔴 LIVE"
+);
+
+console.log(
+    "✅ FINISHED"
+);
+
+console.log(
+    "📅 UPCOMING"
 );
 
 // ======================================================
-// ⚽ PREZISCORE — SPORTScore API
+// ⚽ PREZISCORE — SPORTScore
 // API.JS — PATI 3/4
-// STATISTIQUES • CLASSEMENT • BUTEURS
+// MATCH CARDS • SCORE • STATISTIQUES DE BASE
 // ======================================================
 
 
 // ======================================================
-// 🏆 CHARGE CLASSEMENT
+// 🧩 GET TEAM OBJECT
 // ======================================================
 
-async function loadStandings(
-    leagueId,
-    containerId
+function getTeamObject(match, side) {
+
+    const team =
+        match?.[side] ||
+        match?.teams?.[side] ||
+        match?.[`${side}_team`] ||
+        null;
+
+    return team;
+}
+
+
+// ======================================================
+// 🖼️ TEAM LOGO
+// ======================================================
+
+function getTeamLogo(match, side) {
+
+    const team =
+        getTeamObject(match, side);
+
+    return (
+        team?.logo ||
+        team?.logo_url ||
+        team?.image ||
+        team?.image_url ||
+        ""
+    );
+}
+
+
+// ======================================================
+// 🏆 MATCH CARD
+// ======================================================
+
+function renderMatchCard(
+    box,
+    match,
+    type
 ) {
 
-    const box =
-        getElement(containerId);
-
-    if (!box) return;
-
-
-    box.innerHTML =
-        "<p>🔄 Chargement du classement...</p>";
-
-
-    const response =
-        await sportScoreRequest(
-            `/standings/?sport=football&league=${leagueId}`
-        );
-
-
-    const standings =
-        extractMatches(response);
-
-
-    box.innerHTML = "";
-
-
-    if (!standings.length) {
-
-        box.innerHTML =
-            "<p>⚠️ Classement indisponible.</p>";
-
+    if (!box || !match) {
         return;
     }
 
 
-    const table =
-        document.createElement("div");
-
-    table.className =
-        "standings-table";
-
-
-    standings.forEach((team, index) => {
-
-        const name =
-            escapeHTML(
-                team.name ||
-                team.team_name ||
-                team.team?.name ||
-                "Équipe"
-            );
+    const home =
+        escapeHTML(
+            getTeamName(
+                match,
+                "home"
+            )
+        );
 
 
-        const played =
-            team.played ??
-            team.matches ??
-            team.games ??
-            0;
+    const away =
+        escapeHTML(
+            getTeamName(
+                match,
+                "away"
+            )
+        );
 
 
-        const wins =
-            team.wins ??
-            team.won ??
-            0;
+    const homeScore =
+        getScore(
+            match,
+            "home"
+        );
 
 
-        const draws =
-            team.draws ??
-            team.draw ??
-            0;
+    const awayScore =
+        getScore(
+            match,
+            "away"
+        );
 
 
-        const losses =
-            team.losses ??
-            team.lost ??
-            0;
+    const competition =
+        escapeHTML(
+            getCompetition(match)
+        );
 
 
-        const points =
-            team.points ??
-            team.pts ??
-            0;
+    const status =
+        escapeHTML(
+            getMatchStatus(match)
+        );
 
 
-        table.innerHTML += `
+    const minute =
+        getLiveMinute(match);
 
-            <div class="standing-row">
 
-                <strong>
-                    ${index + 1}
-                </strong>
+    const date =
+        formatDate(
+            getMatchDate(match)
+        );
 
-                <span class="standing-team">
-                    ${name}
-                </span>
 
-                <span>
-                    ${played} MJ
-                </span>
+    const homeLogo =
+        getTeamLogo(
+            match,
+            "home"
+        );
 
-                <span>
-                    ${wins} V
-                </span>
 
-                <span>
-                    ${draws} N
-                </span>
+    const awayLogo =
+        getTeamLogo(
+            match,
+            "away"
+        );
 
-                <span>
-                    ${losses} D
-                </span>
 
-                <strong>
-                    ${points} pts
-                </strong>
+    let badge = "";
+    let score = "";
+    let info = "";
 
-            </div>
 
+    // ==================================================
+    // 🔴 LIVE
+    // ==================================================
+
+    if (type === "live") {
+
+        badge = `
+            <span class="live-badge">
+                🔴 LIVE
+            </span>
         `;
 
-    });
 
+        score = `
+            <div class="match-score">
 
-    box.appendChild(table);
+                <strong>
+                    ${homeScore}
+                </strong>
 
-}
+                <span>-</span>
 
+                <strong>
+                    ${awayScore}
+                </strong>
 
-// ======================================================
-// ⚽ STATISTIQUES D'UNE ÉQUIPE
-// ======================================================
-
-async function loadTeamStats(
-    teamId,
-    containerId
-) {
-
-    const box =
-        getElement(containerId);
-
-    if (!box) return;
-
-
-    box.innerHTML =
-        "<p>🔄 Chargement des statistiques...</p>";
-
-
-    const response =
-        await sportScoreRequest(
-            `/team/${teamId}/?sport=football`
-        );
-
-
-    if (!response) {
-
-        box.innerHTML =
-            "<p>⚠️ Statistiques indisponibles.</p>";
-
-        return;
-    }
-
-
-    const data =
-        response.data ||
-        response.team ||
-        response;
-
-
-    const played =
-        data.played ??
-        data.matches ??
-        data.games ??
-        0;
-
-
-    const wins =
-        data.wins ??
-        data.won ??
-        0;
-
-
-    const draws =
-        data.draws ??
-        data.draw ??
-        0;
-
-
-    const losses =
-        data.losses ??
-        data.lost ??
-        0;
-
-
-    const goals =
-        data.goals ??
-        data.goals_for ??
-        0;
-
-
-    box.innerHTML = `
-
-        <div class="team-stats">
-
-            <div class="stat-box">
-                <strong>${played}</strong>
-                <span>Matchs joués</span>
             </div>
-
-            <div class="stat-box">
-                <strong>${wins}</strong>
-                <span>Victoires</span>
-            </div>
-
-            <div class="stat-box">
-                <strong>${draws}</strong>
-                <span>Nuls</span>
-            </div>
-
-            <div class="stat-box">
-                <strong>${losses}</strong>
-                <span>Défaites</span>
-            </div>
-
-            <div class="stat-box">
-                <strong>${goals}</strong>
-                <span>Buts</span>
-            </div>
-
-        </div>
-
-    `;
-
-}
+        `;
 
 
-// ======================================================
-// 🥅 BUTEURS
-// ======================================================
+        info = `
+            <div class="match-live-status">
 
-async function loadTopScorers(
-    leagueId,
-    containerId
-) {
+                🔴 ${
+                    status || "LIVE"
+                }
 
-    const box =
-        getElement(containerId);
-
-    if (!box) return;
-
-
-    box.innerHTML =
-        "<p>🔄 Chargement des buteurs...</p>";
-
-
-    const response =
-        await sportScoreRequest(
-            `/topscorers/?sport=football&league=${leagueId}`
-        );
-
-
-    const scorers =
-        extractMatches(response);
-
-
-    box.innerHTML = "";
-
-
-    if (!scorers.length) {
-
-        box.innerHTML =
-            "<p>⚠️ Buteurs indisponibles.</p>";
-
-        return;
-    }
-
-
-    scorers
-        .slice(0, 20)
-        .forEach((player, index) => {
-
-            const name =
-                escapeHTML(
-                    player.name ||
-                    player.player?.name ||
-                    player.player_name ||
-                    "Joueur"
-                );
-
-
-            const team =
-                escapeHTML(
-                    player.team?.name ||
-                    player.team_name ||
+                ${
+                    minute !== ""
+                    ?
+                    ` • ${escapeHTML(minute)}'`
+                    :
                     ""
-                );
+                }
+
+            </div>
+        `;
+
+    }
 
 
-            const goals =
-                player.goals ??
-                player.total_goals ??
-                player.score ??
-                0;
+    // ==================================================
+    // ✅ FINISHED
+    // ==================================================
+
+    else if (type === "finished") {
+
+        badge = `
+            <span class="finished-badge">
+                ✅ TERMINÉ
+            </span>
+        `;
 
 
-            box.innerHTML += `
+        score = `
+            <div class="match-score">
 
-                <div class="scorer-row">
+                <strong>
+                    ${homeScore}
+                </strong>
 
-                    <strong>
-                        ${index + 1}
-                    </strong>
+                <span>-</span>
 
-                    <span>
-                        ⚽ ${name}
-                    </span>
+                <strong>
+                    ${awayScore}
+                </strong>
 
-                    <small>
-                        ${team}
-                    </small>
+            </div>
+        `;
 
-                    <strong>
-                        ${goals} buts
-                    </strong>
+
+        info = `
+            <div class="match-status">
+                ${status || "Finished"}
+            </div>
+        `;
+
+    }
+
+
+    // ==================================================
+    // 📅 UPCOMING
+    // ==================================================
+
+    else {
+
+        badge = `
+            <span class="upcoming-badge">
+                📅 À VENIR
+            </span>
+        `;
+
+
+        score = `
+            <div class="match-score upcoming-score">
+                VS
+            </div>
+        `;
+
+
+        info = `
+            <div class="match-date">
+                📅 ${date}
+            </div>
+        `;
+
+    }
+
+
+    // ==================================================
+    // 🖼️ LOGO HOME
+    // ==================================================
+
+    const homeImage =
+        homeLogo
+        ?
+        `
+        <img
+            src="${escapeHTML(homeLogo)}"
+            alt="${home}"
+            class="team-logo"
+        >
+        `
+        :
+        `
+        <div class="team-logo-placeholder">
+            ⚽
+        </div>
+        `;
+
+
+    // ==================================================
+    // 🖼️ LOGO AWAY
+    // ==================================================
+
+    const awayImage =
+        awayLogo
+        ?
+        `
+        <img
+            src="${escapeHTML(awayLogo)}"
+            alt="${away}"
+            class="team-logo"
+        >
+        `
+        :
+        `
+        <div class="team-logo-placeholder">
+            ⚽
+        </div>
+        `;
+
+
+    // ==================================================
+    // 🆔 MATCH ID
+    // ==================================================
+
+    const slug =
+        getMatchSlug(match);
+
+
+    const matchButton =
+        slug
+        ?
+        `
+        <button
+            type="button"
+            class="match-button"
+            onclick="openMatch('${encodeURIComponent(slug)}')"
+        >
+            Voir détails →
+        </button>
+        `
+        :
+        "";
+
+
+    // ==================================================
+    // CARD
+    // ==================================================
+
+    box.innerHTML += `
+
+        <article class="match-card">
+
+            <div class="match-header">
+
+                ${badge}
+
+            </div>
+
+
+            <div class="match-teams">
+
+
+                <!-- HOME -->
+
+                <div class="team">
+
+                    ${homeImage}
+
+                    <h3>
+                        ${home}
+                    </h3>
 
                 </div>
 
-            `;
 
-        });
+                <!-- SCORE -->
+
+                <div class="score-area">
+
+                    ${score}
+
+                </div>
+
+
+                <!-- AWAY -->
+
+                <div class="team">
+
+                    ${awayImage}
+
+                    <h3>
+                        ${away}
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            ${info}
+
+
+            ${
+                competition
+                ?
+                `
+                <div class="match-competition">
+
+                    🏆 ${competition}
+
+                </div>
+                `
+                :
+                ""
+            }
+
+
+            ${matchButton}
+
+        </article>
+
+    `;
 
 }
 
 
 // ======================================================
-// ⚔️ HISTORIQUE FACE À FACE
+// 📊 BASIC MATCH STATISTICS
 // ======================================================
 
-async function loadHeadToHead(
-    team1,
-    team2,
-    containerId
-) {
+function getMatchStatistics(match) {
 
-    const box =
-        getElement(containerId);
+    return {
 
-    if (!box) return;
+        homeScore:
+            Number(
+                getScore(
+                    match,
+                    "home"
+                )
+            ) || 0,
+
+        awayScore:
+            Number(
+                getScore(
+                    match,
+                    "away"
+                )
+            ) || 0,
+
+        status:
+            getMatchStatus(match),
+
+        competition:
+            getCompetition(match),
+
+        date:
+            getMatchDate(match)
+
+    };
+
+}
 
 
-    box.innerHTML =
-        "<p>🔄 Chargement des confrontations...</p>";
+// ======================================================
+// 🏆 MATCH RESULT
+// ======================================================
+
+function getMatchResult(match) {
+
+    const home =
+        Number(
+            getScore(
+                match,
+                "home"
+            )
+        ) || 0;
 
 
-    const response =
-        await sportScoreRequest(
-            `/head-to-head/?sport=football&team1=${team1}&team2=${team2}`
-        );
+    const away =
+        Number(
+            getScore(
+                match,
+                "away"
+            )
+        ) || 0;
 
 
-    const matches =
-        extractMatches(response);
-
-
-    box.innerHTML = "";
-
-
-    if (!matches.length) {
-
-        box.innerHTML =
-            "<p>⚠️ Aucune confrontation trouvée.</p>";
-
-        return;
+    if (home > away) {
+        return "HOME_WIN";
     }
 
 
-    let wins1 = 0;
-    let wins2 = 0;
-    let draws = 0;
+    if (away > home) {
+        return "AWAY_WIN";
+    }
 
 
-    matches.forEach(match => {
+    return "DRAW";
 
-        const home =
-            getTeamId(match, "home");
-
-
-        const away =
-            getTeamId(match, "away");
+}
 
 
-        const homeScore =
-            getScore(match, "home");
+// ======================================================
+// 📈 TEAM RESULT
+// ======================================================
+
+function getTeamResult(
+    match,
+    teamSide
+) {
+
+    const result =
+        getMatchResult(match);
 
 
-        const awayScore =
-            getScore(match, "away");
+    if (
+        result === "DRAW"
+    ) {
+
+        return "DRAW";
+
+    }
 
 
-        if (
-            homeScore === awayScore
-        ) {
+    if (
+        teamSide === "home"
+        &&
+        result === "HOME_WIN"
+    ) {
 
-            draws++;
+        return "WIN";
+
+    }
+
+
+    if (
+        teamSide === "away"
+        &&
+        result === "AWAY_WIN"
+    ) {
+
+        return "WIN";
+
+    }
+
+
+    return "LOSS";
+
+}
+
+
+// ======================================================
+// 📊 HEAD TO HEAD
+// ======================================================
+
+function calculateHeadToHead(
+    matches,
+    homeTeam,
+    awayTeam
+) {
+
+    const result = {
+
+        matches: 0,
+
+        homeWins: 0,
+
+        awayWins: 0,
+
+        draws: 0
+
+    };
+
+
+    if (
+        !Array.isArray(matches)
+    ) {
+
+        return result;
+
+    }
+
+
+    matches.forEach(
+        match => {
+
+            const home =
+                getTeamName(
+                    match,
+                    "home"
+                )
+                .toLowerCase();
+
+
+            const away =
+                getTeamName(
+                    match,
+                    "away"
+                )
+                .toLowerCase();
+
+
+            const h =
+                String(
+                    homeTeam
+                )
+                .toLowerCase();
+
+
+            const a =
+                String(
+                    awayTeam
+                )
+                .toLowerCase();
+
+
+            const sameTeams =
+                (
+                    home === h &&
+                    away === a
+                )
+                ||
+                (
+                    home === a &&
+                    away === h
+                );
+
+
+            if (!sameTeams) {
+                return;
+            }
+
+
+            result.matches++;
+
+
+            const matchResult =
+                getMatchResult(
+                    match
+                );
+
+
+            if (
+                matchResult === "DRAW"
+            ) {
+
+                result.draws++;
+
+            }
+
+            else if (
+                home === h
+                &&
+                matchResult === "HOME_WIN"
+            ) {
+
+                result.homeWins++;
+
+            }
+
+            else if (
+                away === h
+                &&
+                matchResult === "AWAY_WIN"
+            ) {
+
+                result.homeWins++;
+
+            }
+
+            else {
+
+                result.awayWins++;
+
+            }
 
         }
+    );
 
-        else if (
-            home === Number(team1) &&
-            homeScore > awayScore
-        ) {
 
-            wins1++;
+    return result;
+
+}
+
+
+// ======================================================
+// 🧮 TEAM SUMMARY
+// ======================================================
+
+function calculateTeamSummary(
+    matches,
+    teamName
+) {
+
+    const summary = {
+
+        matches: 0,
+
+        wins: 0,
+
+        draws: 0,
+
+        losses: 0,
+
+        goalsFor: 0,
+
+        goalsAgainst: 0
+
+    };
+
+
+    if (
+        !Array.isArray(matches)
+    ) {
+
+        return summary;
+
+    }
+
+
+    const name =
+        String(
+            teamName
+        )
+        .toLowerCase();
+
+
+    matches.forEach(
+        match => {
+
+            const home =
+                getTeamName(
+                    match,
+                    "home"
+                )
+                .toLowerCase();
+
+
+            const away =
+                getTeamName(
+                    match,
+                    "away"
+                )
+                .toLowerCase();
+
+
+            const isHome =
+                home === name;
+
+
+            const isAway =
+                away === name;
+
+
+            if (
+                !isHome &&
+                !isAway
+            ) {
+
+                return;
+
+            }
+
+
+            const homeScore =
+                Number(
+                    getScore(
+                        match,
+                        "home"
+                    )
+                ) || 0;
+
+
+            const awayScore =
+                Number(
+                    getScore(
+                        match,
+                        "away"
+                    )
+                ) || 0;
+
+
+            summary.matches++;
+
+
+            if (isHome) {
+
+                summary.goalsFor +=
+                    homeScore;
+
+                summary.goalsAgainst +=
+                    awayScore;
+
+
+                if (
+                    homeScore > awayScore
+                ) {
+
+                    summary.wins++;
+
+                }
+
+                else if (
+                    homeScore === awayScore
+                ) {
+
+                    summary.draws++;
+
+                }
+
+                else {
+
+                    summary.losses++;
+
+                }
+
+            }
+
+
+            if (isAway) {
+
+                summary.goalsFor +=
+                    awayScore;
+
+                summary.goalsAgainst +=
+                    homeScore;
+
+
+                if (
+                    awayScore > homeScore
+                ) {
+
+                    summary.wins++;
+
+                }
+
+                else if (
+                    awayScore === homeScore
+                ) {
+
+                    summary.draws++;
+
+                }
+
+                else {
+
+                    summary.losses++;
+
+                }
+
+            }
 
         }
-
-        else if (
-            away === Number(team1) &&
-            awayScore > homeScore
-        ) {
-
-            wins1++;
-
-        }
-
-        else {
-
-            wins2++;
-
-        }
-
-    });
+    );
 
 
-    box.innerHTML = `
-
-        <div class="h2h-stats">
-
-            <div>
-                <strong>${wins1}</strong>
-                <span>Victoires équipe 1</span>
-            </div>
-
-            <div>
-                <strong>${draws}</strong>
-                <span>Nuls</span>
-            </div>
-
-            <div>
-                <strong>${wins2}</strong>
-                <span>Victoires équipe 2</span>
-            </div>
-
-        </div>
-
-    `;
+    return summary;
 
 }
 
@@ -1175,70 +1664,306 @@ async function loadHeadToHead(
 // ======================================================
 
 console.log(
-    "⚽ PreziScore API — PART 3 OK"
+    "⚽ PreziScore — PART 3 READY"
 );
 
 console.log(
-    "📊 Statistiques | 🏆 Classement | ⚽ Buteurs"
+    "🎴 Match Cards"
+);
+
+console.log(
+    "📊 Statistiques"
+);
+
+console.log(
+    "🏆 Head To Head"
 );
 
 // ======================================================
-// ⚽ PREZISCORE — SPORTScore API
+// ⚽ PREZISCORE — SPORTScore
 // API.JS — PATI 4/4
-// MATCH DETAILS • STATS • COMPOSITION • CLASSEMENT
-// BUTEURS • HISTORIQUE
+// CONNEXION • MATCH DETAILS • H2H • COMPOSITION
 // ======================================================
 
 
 // ======================================================
-// 🔎 LOAD MATCH DETAILS
+// 🔗 OPEN MATCH DETAILS
 // ======================================================
 
-async function loadMatchDetails(
-    slug,
-    containerId
-) {
+function openMatch(slug) {
 
-    const box =
-        getElement(containerId);
-
-    if (!box || !slug) {
+    if (!slug) {
         return;
     }
 
-    box.innerHTML = `
-        <p>🔄 Chargement des informations du match...</p>
-    `;
 
-    const response =
-        await sportScoreRequest(
-            "/match/?sport=football&slug=" +
-            encodeURIComponent(slug)
+    window.location.href =
+        "match-details.html?slug=" +
+        encodeURIComponent(slug);
+
+}
+
+
+// ======================================================
+// 📊 SHOW TEAM SUMMARY
+// ======================================================
+
+function renderTeamSummary(
+    box,
+    matches,
+    teamName
+) {
+
+    if (!box) {
+        return;
+    }
+
+
+    const summary =
+        calculateTeamSummary(
+            matches,
+            teamName
         );
 
-    if (!response) {
+
+    box.innerHTML = `
+
+        <div class="team-summary">
+
+            <h3>
+                ${escapeHTML(teamName)}
+            </h3>
+
+            <div class="summary-grid">
+
+                <div>
+                    <strong>
+                        ${summary.matches}
+                    </strong>
+                    <span>Matchs</span>
+                </div>
+
+                <div>
+                    <strong>
+                        ${summary.wins}
+                    </strong>
+                    <span>Victoires</span>
+                </div>
+
+                <div>
+                    <strong>
+                        ${summary.draws}
+                    </strong>
+                    <span>Nuls</span>
+                </div>
+
+                <div>
+                    <strong>
+                        ${summary.losses}
+                    </strong>
+                    <span>Défaites</span>
+                </div>
+
+                <div>
+                    <strong>
+                        ${summary.goalsFor}
+                    </strong>
+                    <span>Buts marqués</span>
+                </div>
+
+                <div>
+                    <strong>
+                        ${summary.goalsAgainst}
+                    </strong>
+                    <span>Buts encaissés</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// ======================================================
+// 🤝 HEAD TO HEAD
+// ======================================================
+
+function renderHeadToHead(
+    box,
+    matches,
+    homeTeam,
+    awayTeam
+) {
+
+    if (!box) {
+        return;
+    }
+
+
+    const h2h =
+        calculateHeadToHead(
+            matches,
+            homeTeam,
+            awayTeam
+        );
+
+
+    box.innerHTML = `
+
+        <div class="head-to-head">
+
+            <h3>
+                🤝 Face à face
+            </h3>
+
+            <div class="summary-grid">
+
+                <div>
+                    <strong>
+                        ${h2h.matches}
+                    </strong>
+                    <span>
+                        Matchs
+                    </span>
+                </div>
+
+                <div>
+                    <strong>
+                        ${h2h.homeWins}
+                    </strong>
+                    <span>
+                        ${escapeHTML(homeTeam)}
+                    </span>
+                </div>
+
+                <div>
+                    <strong>
+                        ${h2h.draws}
+                    </strong>
+                    <span>
+                        Nuls
+                    </span>
+                </div>
+
+                <div>
+                    <strong>
+                        ${h2h.awayWins}
+                    </strong>
+                    <span>
+                        ${escapeHTML(awayTeam)}
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// ======================================================
+// 👥 COMPOSITION / LINEUPS
+// ======================================================
+
+function getLineups(match) {
+
+    return (
+        match?.lineups ||
+        match?.lineup ||
+        match?.formations ||
+        []
+    );
+
+}
+
+
+function renderLineups(
+    box,
+    match
+) {
+
+    if (!box || !match) {
+        return;
+    }
+
+
+    const lineups =
+        getLineups(match);
+
+
+    if (
+        !Array.isArray(lineups) ||
+        lineups.length === 0
+    ) {
 
         box.innerHTML = `
-            <p>⚠️ Impossible de charger le match.</p>
+            <p>
+                👥 Composition non disponible.
+            </p>
         `;
 
         return;
+
     }
 
-    const match =
-        response.match ||
-        response.data ||
-        response;
 
-    console.log(
-        "⚽ MATCH DETAILS:",
-        match
+    box.innerHTML = "";
+
+
+    lineups.forEach(
+        player => {
+
+            const name =
+                escapeHTML(
+                    player?.player?.name ||
+                    player?.name ||
+                    player?.player_name ||
+                    "Joueur"
+                );
+
+
+            const number =
+                player?.jersey_number ||
+                player?.number ||
+                "";
+
+
+            const position =
+                escapeHTML(
+                    player?.position?.name ||
+                    player?.position ||
+                    ""
+                );
+
+
+            box.innerHTML += `
+
+                <div class="player-row">
+
+                    <strong>
+                        ${number}
+                    </strong>
+
+                    <span>
+                        ${name}
+                    </span>
+
+                    <small>
+                        ${position}
+                    </small>
+
+                </div>
+
+            `;
+
+        }
     );
 
-    renderMatchDetails(
-        box,
-        match
-    );
 }
 
 
@@ -1251,902 +1976,411 @@ function renderMatchDetails(
     match
 ) {
 
+    if (!box || !match) {
+        return;
+    }
+
+
     const home =
-        escapeHTML(
-            getTeamName(
-                match,
-                "home"
-            )
-        );
-
-    const away =
-        escapeHTML(
-            getTeamName(
-                match,
-                "away"
-            )
-        );
-
-    const homeScore =
-        getScore(
+        getTeamName(
             match,
             "home"
         );
 
-    const awayScore =
-        getScore(
+
+    const away =
+        getTeamName(
             match,
             "away"
         );
 
-    const status =
-        escapeHTML(
-            getMatchStatus(match)
+
+    const stats =
+        getMatchStatistics(
+            match
         );
+
 
     box.innerHTML = `
 
         <div class="match-details">
 
-            <div class="match-details-header">
-
-                <span>
-                    ⚽ MATCH
-                </span>
-
-                <span>
-                    ${status}
-                </span>
-
-            </div>
-
-
-            <div class="match-details-teams">
-
-                <div class="details-team">
-
-                    <h2>
-                        ${home}
-                    </h2>
-
-                </div>
-
-
-                <div class="details-score">
-
-                    <strong>
-                        ${homeScore}
-                    </strong>
-
-                    <span>
-                        -
-                    </span>
-
-                    <strong>
-                        ${awayScore}
-                    </strong>
-
-                </div>
-
-
-                <div class="details-team">
-
-                    <h2>
-                        ${away}
-                    </h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    `;
-}
-
-
-// ======================================================
-// 📊 MATCH STATISTICS
-// ======================================================
-
-async function loadMatchStatistics(
-    slug,
-    containerId
-) {
-
-    const box =
-        getElement(containerId);
-
-    if (!box || !slug) {
-        return;
-    }
-
-    box.innerHTML = `
-        <p>🔄 Chargement des statistiques...</p>
-    `;
-
-    const response =
-        await sportScoreRequest(
-            "/match/?sport=football&slug=" +
-            encodeURIComponent(slug)
-        );
-
-    if (!response) {
-
-        box.innerHTML = `
-            <p>⚠️ Statistiques indisponibles.</p>
-        `;
-
-        return;
-    }
-
-    const match =
-        response.match ||
-        response.data ||
-        response;
-
-    const statistics =
-        match.statistics ||
-        match.stats ||
-        [];
-
-    console.log(
-        "📊 STATISTICS:",
-        statistics
-    );
-
-    if (!statistics.length) {
-
-        box.innerHTML = `
-            <p>
-                📊 Aucune statistique disponible
-                pour ce match.
-            </p>
-        `;
-
-        return;
-    }
-
-    box.innerHTML = `
-        <div class="statistics-box">
-
             <h2>
-                📊 Statistiques
+                ${escapeHTML(home)}
+                ${stats.homeScore}
+                -
+                ${stats.awayScore}
+                ${escapeHTML(away)}
             </h2>
 
-            ${statistics.map(stat => {
+            <p>
+                🏆
+                ${escapeHTML(
+                    stats.competition
+                )}
+            </p>
 
-                const name =
-                    escapeHTML(
-                        stat.name ||
-                        stat.type ||
-                        stat.label ||
-                        "Statistique"
-                    );
+            <p>
+                📅
+                ${formatDate(
+                    stats.date
+                )}
+            </p>
 
-                const homeValue =
-                    escapeHTML(
-                        stat.home ??
-                        stat.home_value ??
-                        stat.values?.home ??
-                        "-"
-                    );
-
-                const awayValue =
-                    escapeHTML(
-                        stat.away ??
-                        stat.away_value ??
-                        stat.values?.away ??
-                        "-"
-                    );
-
-                return `
-
-                    <div class="stat-row">
-
-                        <strong>
-                            ${homeValue}
-                        </strong>
-
-                        <span>
-                            ${name}
-                        </span>
-
-                        <strong>
-                            ${awayValue}
-                        </strong>
-
-                    </div>
-
-                `;
-
-            }).join("")}
+            <p>
+                📊
+                ${escapeHTML(
+                    stats.status
+                )}
+            </p>
 
         </div>
+
     `;
+
 }
 
 
 // ======================================================
-// 👥 COMPOSITION / LINEUPS
+// 🔎 FIND MATCH BY SLUG
 // ======================================================
 
-async function loadLineups(
-    slug,
-    containerId
+function findMatchBySlug(
+    slug
+) {
+
+    if (!slug) {
+        return null;
+    }
+
+
+    return preziMatches.find(
+        match =>
+            String(
+                getMatchSlug(match)
+            ) === String(slug)
+    ) || null;
+
+}
+
+
+// ======================================================
+// 🔄 LOAD MATCH DETAILS
+// ======================================================
+
+async function loadMatchDetails(
+    containerId,
+    slug
 ) {
 
     const box =
-        getElement(containerId);
+        getElement(
+            containerId
+        );
 
-    if (!box || !slug) {
+
+    if (!box) {
         return;
     }
 
+
     box.innerHTML = `
-        <p>🔄 Chargement des compositions...</p>
+        <p>
+            🔄 Chargement du match...
+        </p>
     `;
 
-    const response =
-        await sportScoreRequest(
-            "/match/?sport=football&slug=" +
-            encodeURIComponent(slug)
+
+    let match =
+        findMatchBySlug(
+            slug
         );
 
-    if (!response) {
+
+    if (!match) {
+
+        const matches =
+            await getFootballMatches();
+
+
+        match =
+            matches.find(
+                item =>
+                    String(
+                        getMatchSlug(item)
+                    ) === String(slug)
+            );
+
+    }
+
+
+    if (!match) {
 
         box.innerHTML = `
             <p>
-                ⚠️ Impossible de charger
-                les compositions.
+                ⚠️ Match introuvable.
             </p>
         `;
 
         return;
+
     }
 
-    const match =
-        response.match ||
-        response.data ||
-        response;
 
-    const lineups =
-        match.lineups ||
-        match.lineup ||
-        [];
-
-    console.log(
-        "👥 LINEUPS:",
-        lineups
+    renderMatchDetails(
+        box,
+        match
     );
 
-    if (!lineups.length) {
 
-        box.innerHTML = `
-            <p>
-                👥 Composition non disponible.
-            </p>
-        `;
-
-        return;
-    }
-
-    const homePlayers =
-        lineups.filter(
-            player =>
-                player.team === "home" ||
-                player.location === "home" ||
-                player.side === "home"
+    const home =
+        getTeamName(
+            match,
+            "home"
         );
 
-    const awayPlayers =
-        lineups.filter(
-            player =>
-                player.team === "away" ||
-                player.location === "away" ||
-                player.side === "away"
+
+    const away =
+        getTeamName(
+            match,
+            "away"
         );
 
-    function playersHTML(players) {
 
-        if (!players.length) {
+    const h2hBox =
+        getElement(
+            "headToHead"
+        );
 
-            return `
-                <p>
-                    Composition indisponible.
-                </p>
-            `;
 
-        }
+    if (h2hBox) {
 
-        return players.map(player => {
-
-            const name =
-                escapeHTML(
-                    player.player?.name ||
-                    player.name ||
-                    "Joueur"
-                );
-
-            const number =
-                escapeHTML(
-                    player.number ??
-                    player.jersey_number ??
-                    ""
-                );
-
-            const position =
-                escapeHTML(
-                    player.position ||
-                    ""
-                );
-
-            return `
-
-                <div class="player-row">
-
-                    <span>
-                        ${number}
-                    </span>
-
-                    <strong>
-                        ${name}
-                    </strong>
-
-                    <small>
-                        ${position}
-                    </small>
-
-                </div>
-
-            `;
-
-        }).join("");
+        renderHeadToHead(
+            h2hBox,
+            preziMatches,
+            home,
+            away
+        );
 
     }
 
-    box.innerHTML = `
 
-        <div class="lineups-box">
-
-            <h2>
-                👥 Composition des équipes
-            </h2>
+    const lineupBox =
+        getElement(
+            "lineups"
+        );
 
 
-            <div class="lineups-grid">
+    if (lineupBox) {
 
-                <div class="lineup-team">
+        renderLineups(
+            lineupBox,
+            match
+        );
 
-                    <h3>
-                        🏠 ${escapeHTML(
-                            getTeamName(
-                                match,
-                                "home"
-                            )
-                        )}
-                    </h3>
+    }
 
-                    ${playersHTML(
-                        homePlayers
-                    )}
-
-                </div>
-
-
-                <div class="lineup-team">
-
-                    <h3>
-                        ✈️ ${escapeHTML(
-                            getTeamName(
-                                match,
-                                "away"
-                            )
-                        )}
-                    </h3>
-
-                    ${playersHTML(
-                        awayPlayers
-                    )}
-
-                </div>
-
-            </div>
-
-        </div>
-
-    `;
 }
 
 
 // ======================================================
-// 🏆 CLASSEMENT
+// 🚀 INITIALIZE PREZISCORE
 // ======================================================
 
-async function loadStandings(
-    competitionSlug,
-    containerId
-) {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    const box =
-        getElement(containerId);
+        console.log(
+            "⚽ PreziScore initializing..."
+        );
 
-    if (!box || !competitionSlug) {
-        return;
-    }
 
-    box.innerHTML = `
-        <p>🔄 Chargement du classement...</p>
-    `;
+        // -------------------------------
+        // HOME LIVE
+        // -------------------------------
 
-    const response =
-        await sportScoreRequest(
-            "/standings/?sport=football&slug=" +
-            encodeURIComponent(
-                competitionSlug
+        if (
+            getElement(
+                "homeLiveMatches"
             )
-        );
-
-    if (!response) {
-
-        box.innerHTML = `
-            <p>
-                ⚠️ Impossible de charger
-                le classement.
-            </p>
-        `;
-
-        return;
-    }
-
-    const standings =
-        extractMatches(
-            response.standings ||
-            response
-        );
-
-    console.log(
-        "🏆 STANDINGS:",
-        standings
-    );
-
-    if (!standings.length) {
-
-        box.innerHTML = `
-            <p>
-                Aucun classement disponible.
-            </p>
-        `;
-
-        return;
-    }
-
-    box.innerHTML = `
-
-        <div class="standings-box">
-
-            <h2>
-                🏆 Classement
-            </h2>
-
-            <div class="standing-header">
-
-                <span>#</span>
-                <span>Équipe</span>
-                <span>MJ</span>
-                <span>V</span>
-                <span>N</span>
-                <span>D</span>
-                <span>PTS</span>
-
-            </div>
-
-
-            ${standings.map(
-                (team, index) => {
-
-                    const name =
-                        escapeHTML(
-                            team.team?.name ||
-                            team.name ||
-                            "Équipe"
-                        );
-
-                    const played =
-                        team.played ??
-                        team.matches_played ??
-                        team.mp ??
-                        0;
-
-                    const wins =
-                        team.wins ??
-                        team.won ??
-                        team.w ??
-                        0;
-
-                    const draws =
-                        team.draws ??
-                        team.draw ??
-                        team.d ??
-                        0;
-
-                    const losses =
-                        team.losses ??
-                        team.lost ??
-                        team.l ??
-                        0;
-
-                    const points =
-                        team.points ??
-                        team.pts ??
-                        0;
-
-                    return `
-
-                        <div class="standing-row">
-
-                            <span>
-                                ${index + 1}
-                            </span>
-
-                            <strong>
-                                ${name}
-                            </strong>
-
-                            <span>
-                                ${played}
-                            </span>
-
-                            <span>
-                                ${wins}
-                            </span>
-
-                            <span>
-                                ${draws}
-                            </span>
-
-                            <span>
-                                ${losses}
-                            </span>
-
-                            <strong>
-                                ${points}
-                            </strong>
-
-                        </div>
-
-                    `;
-
-                }
-            ).join("")}
-
-        </div>
-
-    `;
-}
-
-
-// ======================================================
-// 🥇 BUTEURS
-// ======================================================
-
-async function loadTopScorers(
-    competitionSlug,
-    containerId
-) {
-
-    const box =
-        getElement(containerId);
-
-    if (!box || !competitionSlug) {
-        return;
-    }
-
-    box.innerHTML = `
-        <p>🔄 Chargement des buteurs...</p>
-    `;
-
-    const response =
-        await sportScoreRequest(
-            "/topscorers/?sport=football&slug=" +
-            encodeURIComponent(
-                competitionSlug
-            ) +
-            "&limit=20&stat=goals"
-        );
-
-    if (!response) {
-
-        box.innerHTML = `
-            <p>
-                ⚠️ Impossible de charger
-                les buteurs.
-            </p>
-        `;
-
-        return;
-    }
-
-    const scorers =
-        extractMatches(
-            response.topscorers ||
-            response
-        );
-
-    console.log(
-        "🥇 TOP SCORERS:",
-        scorers
-    );
-
-    if (!scorers.length) {
-
-        box.innerHTML = `
-            <p>
-                Aucun buteur disponible.
-            </p>
-        `;
-
-        return;
-    }
-
-    box.innerHTML = `
-
-        <div class="scorers-box">
-
-            <h2>
-                🥇 Meilleurs buteurs
-            </h2>
-
-            ${scorers.map(
-                (player, index) => {
-
-                    const name =
-                        escapeHTML(
-                            player.player?.name ||
-                            player.name ||
-                            "Joueur"
-                        );
-
-                    const team =
-                        escapeHTML(
-                            player.team?.name ||
-                            player.team_name ||
-                            ""
-                        );
-
-                    const goals =
-                        player.goals ??
-                        player.value ??
-                        player.total ??
-                        0;
-
-                    return `
-
-                        <div class="scorer-row">
-
-                            <span>
-                                ${index + 1}
-                            </span>
-
-                            <strong>
-                                ${name}
-                            </strong>
-
-                            <small>
-                                ${team}
-                            </small>
-
-                            <b>
-                                ⚽ ${goals}
-                            </b>
-
-                        </div>
-
-                    `;
-
-                }
-            ).join("")}
-
-        </div>
-
-    `;
-}
-
-
-// ======================================================
-// 🔥 HISTORIQUE ÉQUIPE
-// ======================================================
-
-async function loadTeamHistory(
-    teamSlug,
-    containerId
-) {
-
-    const box =
-        getElement(containerId);
-
-    if (!box || !teamSlug) {
-        return;
-    }
-
-    box.innerHTML = `
-        <p>🔄 Chargement de l'historique...</p>
-    `;
-
-    const response =
-        await sportScoreRequest(
-            "/team/?sport=football&slug=" +
-            encodeURIComponent(
-                teamSlug
-            ) +
-            "&limit=30"
-        );
-
-    if (!response) {
-
-        box.innerHTML = `
-            <p>
-                ⚠️ Historique indisponible.
-            </p>
-        `;
-
-        return;
-    }
-
-    const matches =
-        extractMatches(
-            response.matches ||
-            response
-        );
-
-    if (!matches.length) {
-
-        box.innerHTML = `
-            <p>
-                Aucun match trouvé.
-            </p>
-        `;
-
-        return;
-    }
-
-    let wins = 0;
-    let draws = 0;
-    let losses = 0;
-
-    matches.forEach(
-        match => {
-
-            if (
-                isFinishedMatch(match)
-            ) {
-
-                const homeScore =
-                    getScore(
-                        match,
-                        "home"
-                    );
-
-                const awayScore =
-                    getScore(
-                        match,
-                        "away"
-                    );
-
-                const home =
-                    getTeamName(
-                        match,
-                        "home"
-                    );
-
-                const isHome =
-                    home.toLowerCase() ===
-                    teamSlug.toLowerCase();
-
-                if (
-                    homeScore ===
-                    awayScore
-                ) {
-
-                    draws++;
-
-                }
-
-                else if (
-                    isHome &&
-                    homeScore > awayScore
-                ) {
-
-                    wins++;
-
-                }
-
-                else if (
-                    !isHome &&
-                    awayScore > homeScore
-                ) {
-
-                    wins++;
-
-                }
-
-                else {
-
-                    losses++;
-
-                }
-
-            }
+        ) {
+
+            loadLiveMatches(
+                "homeLiveMatches"
+            );
 
         }
-    );
 
-    box.innerHTML = `
 
-        <div class="team-history">
+        // -------------------------------
+        // HOME UPCOMING
+        // -------------------------------
 
-            <h2>
-                📊 Statistiques de l'équipe
-            </h2>
+        if (
+            getElement(
+                "homeUpcomingMatches"
+            )
+        ) {
 
-            <div class="history-grid">
+            loadUpcomingMatches(
+                "homeUpcomingMatches"
+            );
 
-                <div>
-                    <strong>
-                        ${matches.length}
-                    </strong>
-                    <span>
-                        Matchs
-                    </span>
-                </div>
+        }
 
-                <div>
-                    <strong>
-                        ${wins}
-                    </strong>
-                    <span>
-                        Victoires
-                    </span>
-                </div>
 
-                <div>
-                    <strong>
-                        ${draws}
-                    </strong>
-                    <span>
-                        Nuls
-                    </span>
-                </div>
+        // -------------------------------
+        // MATCHES PAGE
+        // -------------------------------
 
-                <div>
-                    <strong>
-                        ${losses}
-                    </strong>
-                    <span>
-                        Défaites
-                    </span>
-                </div>
+        if (
+            getElement(
+                "liveMatches"
+            )
+        ) {
 
-            </div>
+            loadLiveMatches(
+                "liveMatches"
+            );
 
-        </div>
+        }
 
-    `;
-}
+
+        if (
+            getElement(
+                "finishedMatches"
+            )
+        ) {
+
+            loadFinishedMatches(
+                "finishedMatches"
+            );
+
+        }
+
+
+        if (
+            getElement(
+                "upcomingMatches"
+            )
+        ) {
+
+            loadUpcomingMatches(
+                "upcomingMatches"
+            );
+
+        }
+
+
+        // -------------------------------
+        // MATCH DETAILS
+        // -------------------------------
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const slug =
+            params.get(
+                "slug"
+            );
+
+
+        if (
+            slug &&
+            getElement(
+                "matchDetails"
+            )
+        ) {
+
+            loadMatchDetails(
+                "matchDetails",
+                slug
+            );
+
+        }
+
+    }
+);
 
 
 // ======================================================
-// ⚽ PREZISCORE READY
+// 🔄 LIVE REFRESH
+// ======================================================
+
+setInterval(
+    function () {
+
+        if (
+            getElement(
+                "liveMatches"
+            )
+        ) {
+
+            loadLiveMatches(
+                "liveMatches"
+            );
+
+        }
+
+
+        if (
+            getElement(
+                "homeLiveMatches"
+            )
+        ) {
+
+            loadLiveMatches(
+                "homeLiveMatches"
+            );
+
+        }
+
+    },
+    30000
+);
+
+
+// ======================================================
+// 🚀 FINAL
 // ======================================================
 
 console.log(
-    "⚽ PreziScore SportScore API — PART 4 loaded"
+    "======================================"
 );
 
 console.log(
-    "📊 Stats | 👥 Composition | 🏆 Classement | 🥇 Buteurs"
+    "⚽ PREZISCORE API COMPLETE"
 );
 
 console.log(
-    "🔥 Historique équipe"
+    "🔴 LIVE"
+);
+
+console.log(
+    "✅ FINISHED"
+
+);
+
+console.log(
+    "📅 UPCOMING"
+);
+
+console.log(
+    "📊 STATISTICS"
+);
+
+console.log(
+    "🤝 HEAD TO HEAD"
+);
+
+console.log(
+    "👥 LINEUPS"
+);
+
+console.log(
+    "======================================"
 );
