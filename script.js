@@ -1,3 +1,6 @@
+console.log("PREZISCORE SCRIPT OK");
+console.log("PreziAPI =", window.PreziAPI);
+
 <script>
 
 /* =====================================================
