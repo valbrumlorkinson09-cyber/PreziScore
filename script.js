@@ -139,59 +139,99 @@ async function loadMatches() {
 
 }
 
-
 /* =====================================================
    FILTER MATCHES
 ===================================================== */
 
 function getFilteredMatches() {
 
-    let result =
-        allMatches.filter(match => {
+    let result = allMatches.filter(match => {
+
+        /*
+         * API yo pa toujou itilize menm non
+         * pou yon match ki LIVE.
+         */
+
+        const status =
+            String(
+                match.status ||
+                match.raw?.status ||
+                match.raw?.state ||
+                ""
+            )
+            .toLowerCase()
+            .trim();
 
 
-            /* LIVE */
-
-            if (
-                currentFilter === "live"
-            ) {
-
-                return (
-                    match.status === "live"
-                );
-
-            }
-
-
-            /* UPCOMING */
-
-            if (
-                currentFilter === "upcoming"
-            ) {
-
-                return (
-                    match.status === "upcoming"
-                );
-
-            }
+        const isLive =
+            status === "live" ||
+            status === "in_progress" ||
+            status === "in progress" ||
+            status === "ongoing" ||
+            status === "playing" ||
+            status === "started" ||
+            status === "1st_half" ||
+            status === "2nd_half" ||
+            status === "1st half" ||
+            status === "2nd half" ||
+            status.includes("live") ||
+            status.includes("progress") ||
+            status.includes("playing");
 
 
-            /* FINISHED */
-
-            if (
-                currentFilter === "finished"
-            ) {
-
-                return (
-                    match.status === "finished"
-                );
-
-            }
+        const isFinished =
+            status === "finished" ||
+            status === "finish" ||
+            status === "ft" ||
+            status === "ended" ||
+            status === "completed" ||
+            status.includes("finished");
 
 
-            return true;
+        const isUpcoming =
+            status === "upcoming" ||
+            status === "scheduled" ||
+            status === "not_started" ||
+            status === "not started" ||
+            status === "pending";
 
-        });
+
+        /* LIVE */
+
+        if (
+            currentFilter === "live"
+        ) {
+
+            return isLive;
+
+        }
+
+
+        /* TERMINÉS */
+
+        if (
+            currentFilter === "finished"
+        ) {
+
+            return isFinished;
+
+        }
+
+
+        /* À VENIR */
+
+        if (
+            currentFilter === "upcoming"
+        ) {
+
+            return isUpcoming;
+
+        }
+
+
+        return true;
+
+    });
 
 
     /* =================================================
@@ -208,49 +248,40 @@ function getFilteredMatches() {
 
     if (query) {
 
-        result =
-            result.filter(match => {
+        result = result.filter(match => {
+
+            const home =
+                String(
+                    match.home?.name || ""
+                ).toLowerCase();
 
 
-                const home =
-                    String(
-                        match.home?.name || ""
-                    )
-                    .toLowerCase();
+            const away =
+                String(
+                    match.away?.name || ""
+                ).toLowerCase();
 
 
-                const away =
-                    String(
-                        match.away?.name || ""
-                    )
-                    .toLowerCase();
+            const competition =
+                String(
+                    match.competition || ""
+                ).toLowerCase();
 
 
-                const competition =
-                    String(
-                        match.competition || ""
-                    )
-                    .toLowerCase();
+            return (
+                home.includes(query) ||
+                away.includes(query) ||
+                competition.includes(query)
+            );
 
-
-                return (
-
-                    home.includes(query) ||
-
-                    away.includes(query) ||
-
-                    competition.includes(query)
-
-                );
-
-            });
+        });
 
     }
 
 
     return result;
 
-}
+               }
 
 
 /* =====================================================
