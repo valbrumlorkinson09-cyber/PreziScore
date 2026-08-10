@@ -1,1 +1,647 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080b10">
 
+    <title>PreziScore — Matchs</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =========================
+           MATCH PAGE
+        ========================= */
+
+        .page-head {
+            padding: 22px 0 15px;
+        }
+
+        .page-head h2 {
+            font-size: 25px;
+            letter-spacing: -0.7px;
+        }
+
+        .page-head p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* SEARCH */
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 12px 14px;
+
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: 15px;
+        }
+
+        .search-box span {
+            font-size: 16px;
+        }
+
+        .search-box input {
+            width: 100%;
+
+            border: 0;
+            outline: 0;
+
+            background: transparent;
+
+            color: white;
+
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        .search-box input::placeholder {
+            color: #68717f;
+        }
+
+        /* TABS */
+
+        .match-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 7px;
+
+            margin-top: 14px;
+        }
+
+        .match-tab {
+            height: 40px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+
+            background: var(--card);
+
+            color: var(--muted);
+
+            font-family: inherit;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .match-tab.active {
+            background: rgba(0,230,118,0.10);
+
+            border-color: rgba(0,230,118,0.25);
+
+            color: var(--primary);
+        }
+
+        /* DATE */
+
+        .date-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-top: 22px;
+            margin-bottom: 10px;
+        }
+
+        .date-bar h3 {
+            font-size: 13px;
+        }
+
+        .date-bar span {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        /* COMPETITION */
+
+        .competition {
+            margin-top: 17px;
+        }
+
+        .competition-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 9px 4px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .competition-icon {
+            width: 26px;
+            height: 26px;
+
+            display: grid;
+            place-items: center;
+
+            background: var(--card-2);
+
+            border-radius: 8px;
+
+            font-size: 13px;
+        }
+
+        /* MATCH */
+
+        .match-item {
+            display: block;
+
+            padding: 14px;
+
+            margin-bottom: 7px;
+
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: 16px;
+
+            transition: 0.2s;
+        }
+
+        .match-item:active {
+            transform: scale(0.985);
+        }
+
+        .match-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 12px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        .status.live {
+            color: #ff304f;
+        }
+
+        .status.finished {
+            color: #778291;
+        }
+
+        .status.upcoming {
+            color: var(--primary);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: currentColor;
+        }
+
+        .match-time {
+            color: var(--muted);
+
+            font-size: 9px;
+        }
+
+        .match-body {
+            display: grid;
+
+            grid-template-columns: 1fr 70px 1fr;
+
+            align-items: center;
+
+            gap: 5px;
+
+            text-align: center;
+        }
+
+        .club {
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            gap: 7px;
+
+            min-width: 0;
+        }
+
+        .club-logo {
+            width: 42px;
+            height: 42px;
+
+            display: grid;
+            place-items: center;
+
+            background: var(--card-2);
+
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+
+            font-size: 18px;
+        }
+
+        .club-name {
+            width: 100%;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+
+            font-size: 10px;
+            font-weight: 650;
+        }
+
+        .score {
+            font-size: 19px;
+            font-weight: 850;
+            letter-spacing: -0.5px;
+        }
+
+        .score small {
+            display: block;
+
+            margin-top: 3px;
+
+            color: var(--muted);
+
+            font-size: 8px;
+
+            font-weight: 500;
+        }
+
+        /* EMPTY */
+
+        .no-matches {
+            display: none;
+
+            padding: 38px 15px;
+
+            text-align: center;
+
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: var(--radius);
+        }
+
+        .no-matches.show {
+            display: block;
+        }
+
+        .no-matches div {
+            font-size: 30px;
+        }
+
+        .no-matches h3 {
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .no-matches p {
+            margin-top: 5px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+        }
+
+        /* LOADING */
+
+        .loading {
+            padding: 35px 10px;
+
+            text-align: center;
+
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .loader {
+            width: 25px;
+            height: 25px;
+
+            margin: 0 auto 10px;
+
+            border: 3px solid rgba(255,255,255,0.08);
+
+            border-top-color: var(--primary);
+
+            border-radius: 50%;
+
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* DESKTOP */
+
+        @media (min-width: 768px) {
+
+            .match-tabs {
+                max-width: 500px;
+            }
+
+            .match-item {
+                padding: 17px;
+            }
+
+            .club-name {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="top-header">
+
+    <div class="brand">
+
+        <div class="brand-ball">⚽</div>
+
+        <div>
+            <h1>Prezi<span>Score</span></h1>
+            <p>Football en direct</p>
+        </div>
+
+    </div>
+
+    <button class="search-btn" onclick="focusSearch()">
+        🔍
+    </button>
+
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main-content">
+
+    <section class="page-head">
+
+        <h2>Matchs</h2>
+
+        <p>
+            Suivez les résultats football partout dans le monde.
+        </p>
+
+    </section>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <span>🔍</span>
+
+        <input
+            id="searchInput"
+            type="search"
+            placeholder="Rechercher une équipe..."
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <!-- TABS -->
+
+    <div class="match-tabs">
+
+        <button
+            class="match-tab active"
+            data-filter="live"
+        >
+            🔴 LIVE
+        </button>
+
+        <button
+            class="match-tab"
+            data-filter="upcoming"
+        >
+            📅 À VENIR
+        </button>
+
+        <button
+            class="match-tab"
+            data-filter="finished"
+        >
+            ✅ TERMINÉS
+        </button>
+
+    </div>
+
+
+    <!-- DATE -->
+
+    <div class="date-bar">
+
+        <h3 id="dateTitle">
+            Aujourd'hui
+        </h3>
+
+        <span id="matchCount">
+            0 matchs
+        </span>
+
+    </div>
+
+
+    <!-- MATCH CONTAINER -->
+
+    <section id="matchesContainer">
+
+        <!-- API ap ranpli pati sa a -->
+
+        <div class="loading" id="loading">
+
+            <div class="loader"></div>
+
+            Chargement des matchs...
+
+        </div>
+
+    </section>
+
+
+    <!-- EMPTY -->
+
+    <div class="no-matches" id="noMatches">
+
+        <div>⚽</div>
+
+        <h3>Aucun match trouvé</h3>
+
+        <p>
+            Aucun match ne correspond à votre recherche.
+        </p>
+
+    </div>
+
+</main>
+
+
+<!-- ================= BOTTOM NAV ================= -->
+
+<nav class="bottom-nav">
+
+    <a href="index.html" class="nav-item">
+        <span>⌂</span>
+        <small>Accueil</small>
+    </a>
+
+    <a href="match.html" class="nav-item active">
+        <span>⚽</span>
+        <small>Matchs</small>
+    </a>
+
+    <a href="competitions.html" class="nav-item">
+        <span>🏆</span>
+        <small>Compétitions</small>
+    </a>
+
+    <a href="news.html" class="nav-item">
+        <span>📰</span>
+        <small>News</small>
+    </a>
+
+    <a href="profile.html" class="nav-item">
+        <span>👤</span>
+        <small>Profil</small>
+    </a>
+
+</nav>
+
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+
+const tabs = document.querySelectorAll(".match-tab");
+const searchInput = document.getElementById("searchInput");
+const loading = document.getElementById("loading");
+const noMatches = document.getElementById("noMatches");
+
+let currentFilter = "live";
+
+
+/* =========================
+   TAB SYSTEM
+========================= */
+
+tabs.forEach(tab => {
+
+    tab.addEventListener("click", () => {
+
+        tabs.forEach(item =>
+            item.classList.remove("active")
+        );
+
+        tab.classList.add("active");
+
+        currentFilter = tab.dataset.filter;
+
+        loadMatches();
+    });
+
+});
+
+
+/* =========================
+   SEARCH
+========================= */
+
+searchInput.addEventListener("input", () => {
+    loadMatches();
+});
+
+
+function focusSearch() {
+
+    searchInput.focus();
+
+}
+
+
+/* =========================
+   MATCH ENGINE
+========================= */
+
+function loadMatches() {
+
+    loading.style.display = "block";
+
+    noMatches.classList.remove("show");
+
+    /*
+       API ap antre isit la.
+
+       Pwochen etap la:
+       api.js
+       ↓
+       Live
+       À venir
+       Terminés
+       ↓
+       PreziScore Match Engine
+    */
+
+    setTimeout(() => {
+
+        loading.style.display = "none";
+
+        noMatches.classList.add("show");
+
+        document.getElementById("matchCount").textContent =
+            "0 matchs";
+
+    }, 500);
+
+}
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+loadMatches();
+
+</script>
+
+</body>
+  </html>
