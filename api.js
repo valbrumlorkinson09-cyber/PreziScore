@@ -1,5 +1,6 @@
 /* =========================================================
-   PREZISCORE — GLOBAL FOOTBALL ENGINE
+   PREZISCORE API ENGINE
+   SportScore Football
    LIVE + UPCOMING + FINISHED
 ========================================================= */
 
@@ -7,10 +8,13 @@
 
 const PreziAPI = (() => {
 
-    const BASE_URL = "https://sportscore.com/api/widget";
+    const BASE =
+        "https://sportscore.com/api/widget";
+
     const SPORT = "football";
 
-    const CACHE_TIME = 30 * 1000;
+    const CACHE_TIME = 15000;
+
     const cache = new Map();
 
 
@@ -20,9 +24,7 @@ const PreziAPI = (() => {
 
     async function request(endpoint, params = {}) {
 
-        const url = new URL(
-            BASE_URL + endpoint
-        );
+        const url = new URL(BASE + endpoint);
 
         url.searchParams.set("sport", SPORT);
 
@@ -38,14 +40,9 @@ const PreziAPI = (() => {
 
         });
 
-        url.searchParams.set(
-            "src",
-            "preziscore"
-        );
+        const key = url.toString();
 
-        const cacheKey = url.toString();
-
-        const old = cache.get(cacheKey);
+        const old = cache.get(key);
 
         if (
             old &&
@@ -55,363 +52,61 @@ const PreziAPI = (() => {
         }
 
 
-        const controller =
-            new AbortController();
-
-        const timeout =
-            setTimeout(
-                () => controller.abort(),
-                10000
-            );
-
-
-        try {
-
-            const response =
-                await fetch(
-                    cacheKey,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Accept":
-                                "application/json"
-                        },
-                        signal:
-                            controller.signal
-                    }
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    `HTTP ${response.status}`
-                );
-
+        const response = await fetch(key, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
             }
+        });
 
 
-            const data =
-                await response.json();
-
-
-            cache.set(
-                cacheKey,
-                {
-                    time: Date.now(),
-                    data: data
-                }
+        if (!response.ok) {
+            throw new Error(
+                "SportScore HTTP " + response.status
             );
-
-
-            return data;
-
         }
 
-        finally {
 
-            clearTimeout(timeout);
+        const data = await response.json();
 
-        }
 
+        cache.set(key, {
+            time: Date.now(),
+            data
+        });
+
+
+        return data;
     }
 
 
     /* =====================================================
-       EXTRACT MATCHES
+       GET MATCHES
     ===================================================== */
 
-    function extractMatches(data) {
+    async function getMatches(limit = 100) {
 
-        if (Array.isArray(data)) {
-            return data;
-        }
-
-        if (Array.isArray(data?.matches)) {
-            return data.matches;
-        }
-
-        if (Array.isArray(data?.events)) {
-            return data.events;
-        }
-
-        if (Array.isArray(data?.data)) {
-            return data.data;
-        }
-
-        if (Array.isArray(data?.data?.matches)) {
-            return data.data.matches;
-        }
-
-        if (Array.isArray(data?.data?.events)) {
-            return data.data.events;
-        }
-
-        return [];
-
-    }
-
-
-    /* =====================================================
-       FIRST VALID VALUE
-    ===================================================== */
-
-    function first(...values) {
-
-        for (const value of values) {
-
-            if (
-                value !== undefined &&
-                value !== null &&
-                value !== ""
-            ) {
-                return value;
+        const data = await request(
+            "/matches/",
+            {
+                limit: limit
             }
-
-        }
-
-        return null;
-
-    }
-
-
-    /* =====================================================
-       TEAM OBJECT
-    ===================================================== */
-
-    function getTeam(match, side) {
-
-        if (side === "home") {
-
-            return first(
-                match.home_team,
-                match.homeTeam,
-                match.home,
-                match.teams?.home,
-                match.teams?.[0]
-            ) || {};
-
-        }
-
-
-        return first(
-            match.away_team,
-            match.awayTeam,
-            match.away,
-            match.teams?.away,
-            match.teams?.[1]
-        ) || {};
-
-    }
-
-
-    /* =====================================================
-       TEAM NAME
-    ===================================================== */
-
-    function getTeamName(
-        match,
-        side
-    ) {
-
-        const team =
-            getTeam(
-                match,
-                side
-            );
-
-
-        return first(
-
-            team.name,
-            team.title,
-            team.team_name,
-            team.display_name,
-
-            side === "home"
-                ? match.home_name
-                : match.away_name,
-
-            side === "home"
-                ? match.homeTeamName
-                : match.awayTeamName
-
-        ) ||
-
-        (
-            side === "home"
-                ? "Équipe domicile"
-                : "Équipe visiteuse"
         );
 
+
+        return Array.isArray(data.matches)
+            ? data.matches
+            : [];
     }
 
 
     /* =====================================================
-       TEAM LOGO
+       DATE
     ===================================================== */
 
-    function getTeamLogo(
-        match,
-        side
-    ) {
+    function getTime(match) {
 
-        const team =
-            getTeam(
-                match,
-                side
-            );
-
-
-        return first(
-
-            team.logo,
-            team.logo_url,
-            team.image,
-            team.image_url,
-
-            side === "home"
-                ? match.home_logo
-                : match.away_logo,
-
-            side === "home"
-                ? match.home_logo_url
-                : match.away_logo
-
-        );
-
-    }
-
-
-    /* =====================================================
-       SCORE
-    ===================================================== */
-
-    function getScore(
-        match,
-        side
-    ) {
-
-        const team =
-            getTeam(
-                match,
-                side
-            );
-
-
-        const score =
-            side === "home"
-                ? first(
-                    team.score,
-                    team.goals,
-                    team.current_score,
-                    match.home_score,
-                    match.homeScore,
-                    match.scores?.home
-                )
-                : first(
-                    team.score,
-                    team.goals,
-                    team.current_score,
-                    match.away_score,
-                    match.awayScore,
-                    match.scores?.away
-                );
-
-
-        /*
-         * Kenbe 0 kòm score valid.
-         */
-
-        if (
-            score === 0 ||
-            score === "0"
-        ) {
-            return 0;
-        }
-
-
-        if (
-            score !== null &&
-            score !== undefined &&
-            score !== ""
-        ) {
-            return Number.isNaN(
-                Number(score)
-            )
-                ? score
-                : Number(score);
-        }
-
-
-        return null;
-
-    }
-
-
-    /* =====================================================
-       COMPETITION
-    ===================================================== */
-
-    function getCompetition(match) {
-
-        return first(
-
-            match.competition?.name,
-            match.competition?.title,
-
-            match.league?.name,
-            match.league?.title,
-
-            match.tournament?.name,
-            match.tournament?.title,
-
-            match.competition_name,
-            match.league_name,
-            match.tournament_name
-
-        ) || "Football";
-
-    }
-
-
-    /* =====================================================
-       RAW STATUS
-    ===================================================== */
-
-    function getRawStatus(match) {
-
-        const values = [
-
-            match.status,
-            match.state,
-            match.match_status,
-            match.game_status,
-            match.event_status,
-
-            match.status?.type,
-            match.status?.name,
-            match.status?.short,
-
-            match.state?.type,
-            match.state?.name
-
-        ];
-
-
-        return values
-            .filter(
-                value =>
-                    value !== undefined &&
-                    value !== null
-            )
-            .map(
-                value =>
-                    String(value)
-                        .toLowerCase()
-                        .trim()
-            )
-            .join(" ");
+        return match.time || null;
 
     }
 
@@ -422,76 +117,50 @@ const PreziAPI = (() => {
 
     function normalizeStatus(match) {
 
-        const raw =
-            getRawStatus(match);
+        const status =
+            String(
+                match.status || ""
+            ).toLowerCase();
+
+        const text =
+            String(
+                match.status_text || ""
+            ).toLowerCase();
 
 
         /* LIVE */
 
-        const liveWords = [
-
-            "live",
-            "in_progress",
-            "in progress",
-            "progress",
-            "playing",
-            "ongoing",
-            "started",
-            "1st half",
-            "2nd half",
-            "first half",
-            "second half",
-            "halftime",
-            "half time"
-
-        ];
-
-
         if (
-            liveWords.some(
-                word =>
-                    raw.includes(word)
-            )
+            status === "live" ||
+            status === "in_progress" ||
+            status === "playing" ||
+            status === "progress" ||
+            text.includes("live") ||
+            text.includes("progress") ||
+            text.includes("playing")
         ) {
-
             return "live";
-
         }
 
 
         /* FINISHED */
 
-        const finishedWords = [
-
-            "finished",
-            "finish",
-            "ended",
-            "completed",
-            "full time",
-            "fulltime",
-            "final",
-            "ft"
-
-        ];
-
-
         if (
-            finishedWords.some(
-                word =>
-                    raw === word ||
-                    raw.includes(word)
-            )
+            status === "finished" ||
+            status === "finish" ||
+            status === "ended" ||
+            status === "completed" ||
+            text.includes("finished") ||
+            text.includes("ended") ||
+            text.includes("full time")
         ) {
-
             return "finished";
-
         }
 
 
         /* UPCOMING */
 
         return "upcoming";
-
     }
 
 
@@ -501,80 +170,18 @@ const PreziAPI = (() => {
 
     function getMinute(match) {
 
-        return first(
-
-            match.minute,
-            match.elapsed,
-            match.elapsed_time,
-            match.match_time,
-
-            match.time?.elapsed,
-            match.timer?.minute
-
+        return (
+            match.minute ??
+            match.elapsed ??
+            match.match_time ??
+            null
         );
 
     }
 
 
     /* =====================================================
-       START TIME
-    ===================================================== */
-
-    function getStartTime(match) {
-
-        return first(
-
-            match.start_time,
-            match.startTime,
-            match.start_date,
-            match.datetime,
-            match.date,
-            match.kickoff,
-            match.kickoff_time
-
-        );
-
-    }
-
-
-    /* =====================================================
-       ID
-    ===================================================== */
-
-    function getID(match) {
-
-        return first(
-
-            match.id,
-            match.match_id,
-            match.event_id,
-            match.game_id
-
-        );
-
-    }
-
-
-    /* =====================================================
-       SLUG
-    ===================================================== */
-
-    function getSlug(match) {
-
-        return first(
-
-            match.slug,
-            match.match_slug,
-            match.event_slug,
-            match.url_slug
-
-        );
-
-    }
-
-
-    /* =====================================================
-       NORMALIZE MATCH
+       NORMALIZE
     ===================================================== */
 
     function normalizeMatch(match) {
@@ -584,35 +191,36 @@ const PreziAPI = (() => {
         }
 
 
+        const status =
+            normalizeStatus(match);
+
+
         return {
 
             id:
-                getID(match),
+                match.id ||
+                match.match_id ||
+                match.url,
 
 
             slug:
-                getSlug(match),
+                match.url || null,
 
 
             home: {
 
                 name:
-                    getTeamName(
-                        match,
-                        "home"
-                    ),
+                    match.home ||
+                    "Équipe domicile",
 
                 logo:
-                    getTeamLogo(
-                        match,
-                        "home"
-                    ),
+                    match.home_logo ||
+                    null,
 
                 score:
-                    getScore(
-                        match,
-                        "home"
-                    )
+                    match.home_score !== undefined
+                        ? Number(match.home_score)
+                        : null
 
             },
 
@@ -620,46 +228,45 @@ const PreziAPI = (() => {
             away: {
 
                 name:
-                    getTeamName(
-                        match,
-                        "away"
-                    ),
+                    match.away ||
+                    "Équipe visiteuse",
 
                 logo:
-                    getTeamLogo(
-                        match,
-                        "away"
-                    ),
+                    match.away_logo ||
+                    null,
 
                 score:
-                    getScore(
-                        match,
-                        "away"
-                    )
+                    match.away_score !== undefined
+                        ? Number(match.away_score)
+                        : null
 
             },
 
 
             competition:
-                getCompetition(match),
+                match.competition ||
+                "Football",
+
+
+            competitionLogo:
+                match.competition_logo ||
+                null,
 
 
             status:
-                normalizeStatus(match),
+                status,
+
+
+            statusText:
+                match.status_text ||
+                "",
 
 
             minute:
                 getMinute(match),
 
 
-            raw: {
-
-                ...match,
-
-                start_time:
-                    getStartTime(match)
-
-            }
+            raw: match
 
         };
 
@@ -667,45 +274,25 @@ const PreziAPI = (() => {
 
 
     /* =====================================================
-       GET ALL MATCHES
+       ALL
     ===================================================== */
 
     async function getNormalizedMatches() {
 
-        const data =
-            await request(
-                "/matches/",
-                {
-                    limit: 50
-                }
-            );
-
-
-        console.log(
-            "📦 PreziScore API:",
-            data
-        );
-
-
         const matches =
-            extractMatches(data);
+            await getMatches(100);
 
 
         console.log(
-            "⚽ Matchs reçus:",
-            matches.length
+            "⚽ PreziScore:",
+            matches.length,
+            "matchs reçus"
         );
 
 
         return matches
-
-            .map(
-                normalizeMatch
-            )
-
-            .filter(
-                Boolean
-            );
+            .map(normalizeMatch)
+            .filter(Boolean);
 
     }
 
@@ -771,11 +358,9 @@ const PreziAPI = (() => {
     async function getMatch(slug) {
 
         if (!slug) {
-
             throw new Error(
-                "Match slug is required"
+                "Match slug manke"
             );
-
         }
 
 
@@ -793,25 +378,12 @@ const PreziAPI = (() => {
        TEAM
     ===================================================== */
 
-    async function getTeam(
-        slug,
-        limit = 20
-    ) {
-
-        if (!slug) {
-
-            throw new Error(
-                "Team slug is required"
-            );
-
-        }
-
+    async function getTeam(slug) {
 
         return await request(
             "/team/",
             {
-                slug: slug,
-                limit: limit
+                slug: slug
             }
         );
 
@@ -822,15 +394,12 @@ const PreziAPI = (() => {
        STANDINGS
     ===================================================== */
 
-    async function getStandings(
-        competitionSlug
-    ) {
+    async function getStandings(slug) {
 
         return await request(
             "/standings/",
             {
-                slug:
-                    competitionSlug
+                slug: slug
             }
         );
 
@@ -841,19 +410,12 @@ const PreziAPI = (() => {
        TOP SCORERS
     ===================================================== */
 
-    async function getTopScorers(
-        competitionSlug,
-        limit = 20
-    ) {
+    async function getTopScorers(slug) {
 
         return await request(
             "/topscorers/",
             {
-                slug:
-                    competitionSlug,
-
-                limit:
-                    limit
+                slug: slug
             }
         );
 
@@ -880,15 +442,12 @@ const PreziAPI = (() => {
        BRACKET
     ===================================================== */
 
-    async function getBracket(
-        competitionSlug
-    ) {
+    async function getBracket(slug) {
 
         return await request(
             "/bracket/",
             {
-                slug:
-                    competitionSlug
+                slug: slug
             }
         );
 
@@ -899,15 +458,12 @@ const PreziAPI = (() => {
        TRACKER
     ===================================================== */
 
-    async function getTracker(
-        matchId
-    ) {
+    async function getTracker(id) {
 
         return await request(
             "/tracker/",
             {
-                id:
-                    matchId
+                id: id
             }
         );
 
@@ -933,13 +489,7 @@ const PreziAPI = (() => {
 
         request,
 
-        getMatches: async () =>
-            request(
-                "/matches/",
-                {
-                    limit: 50
-                }
-            ),
+        getMatches,
 
         getNormalizedMatches,
 
@@ -983,22 +533,16 @@ const PreziLive = {
     timer: null,
 
 
-    start(
-        callback,
-        seconds = 30
-    ) {
+    start(callback, seconds = 30) {
 
         this.stop();
 
-
         callback();
 
-
-        this.timer =
-            setInterval(
-                callback,
-                seconds * 1000
-            );
+        this.timer = setInterval(
+            callback,
+            seconds * 1000
+        );
 
     },
 
@@ -1033,5 +577,5 @@ window.PreziLive =
 
 
 console.log(
-    "✅ PREZISCORE API ENGINE READY"
+    "✅ PREZISCORE API READY"
 );
