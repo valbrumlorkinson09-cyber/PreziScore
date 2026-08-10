@@ -1,287 +1,118 @@
 /* =========================================================
-   PREZISCORE — GLOBAL API ENGINE
-   Version 1.0
+   PREZISCORE — SPORTSSCORE API ENGINE
 ========================================================= */
 
 const PreziAPI = {
 
-    /* =====================================================
-       CONFIGURATION
-    ===================================================== */
+    baseURL: "https://sportscore.com/api/widget",
 
-    config: {
-        /*
-         * Lè nou chwazi API final la,
-         * se sèlman URL sa a n ap chanje.
-         */
-        baseURL: "https://www.sportscore.com/api",
+    async request(endpoint, params = {}) {
 
-        timeout: 10000,
+        const url = new URL(this.baseURL + endpoint);
 
-        cacheTime: 30000
-    },
-
-
-    /* =====================================================
-       INTERNAL REQUEST
-    ===================================================== */
-
-    async request(endpoint, options = {}) {
-
-        const controller = new AbortController();
-
-        const timeout = setTimeout(() => {
-            controller.abort();
-        }, this.config.timeout);
-
-
-        try {
-
-            const response = await fetch(
-                this.config.baseURL + endpoint,
-                {
-                    ...options,
-                    signal: controller.signal,
-
-                    headers: {
-                        "Accept": "application/json",
-
-                        ...(options.headers || {})
-                    }
-                }
-            );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    `API Error ${response.status}`
-                );
-
+        Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                url.searchParams.set(key, value);
             }
+        });
 
+        const response = await fetch(url);
 
-            return await response.json();
-
+        if (!response.ok) {
+            throw new Error("Erreur API : " + response.status);
         }
 
-        catch (error) {
+        return await response.json();
+    },
 
-            console.error(
-                "PreziScore API:",
-                error
-            );
 
-            throw error;
+    /* =========================
+       MATCHS
+    ========================= */
 
-        }
+    async getMatches(limit = 50) {
 
-        finally {
-
-            clearTimeout(timeout);
-
-        }
+        return await this.request("/matches/", {
+            sport: "football",
+            limit: limit
+        });
 
     },
 
 
-    /* =====================================================
-       TODAY MATCHES
-    ===================================================== */
+    /* =========================
+       MATCH DETAIL
+    ========================= */
 
-    async getTodayMatches() {
+    async getMatch(slug) {
 
-        return await this.request(
-            "/matches/today"
-        );
-
-    },
-
-
-    /* =====================================================
-       LIVE MATCHES
-    ===================================================== */
-
-    async getLiveMatches() {
-
-        return await this.request(
-            "/matches/live"
-        );
+        return await this.request("/match/", {
+            sport: "football",
+            slug: slug
+        });
 
     },
 
 
-    /* =====================================================
-       UPCOMING MATCHES
-    ===================================================== */
-
-    async getUpcomingMatches() {
-
-        return await this.request(
-            "/matches/upcoming"
-        );
-
-    },
-
-
-    /* =====================================================
-       FINISHED MATCHES
-    ===================================================== */
-
-    async getFinishedMatches() {
-
-        return await this.request(
-            "/matches/finished"
-        );
-
-    },
-
-
-    /* =====================================================
-       COMPETITIONS
-    ===================================================== */
-
-    async getCompetitions() {
-
-        return await this.request(
-            "/competitions"
-        );
-
-    },
-
-
-    /* =====================================================
-       STANDINGS
-    ===================================================== */
-
-    async getStandings(competitionId) {
-
-        return await this.request(
-            `/competitions/${competitionId}/standings`
-        );
-
-    },
-
-
-    /* =====================================================
+    /* =========================
        TEAM
-    ===================================================== */
+    ========================= */
 
-    async getTeam(teamId) {
+    async getTeam(slug, limit = 10) {
 
-        return await this.request(
-            `/teams/${teamId}`
-        );
-
-    },
-
-
-    /* =====================================================
-       TEAM MATCHES
-    ===================================================== */
-
-    async getTeamMatches(teamId) {
-
-        return await this.request(
-            `/teams/${teamId}/matches`
-        );
+        return await this.request("/team/", {
+            sport: "football",
+            slug: slug,
+            limit: limit
+        });
 
     },
 
 
-    /* =====================================================
-       PLAYERS
-    ===================================================== */
+    /* =========================
+       STANDINGS
+    ========================= */
 
-    async getPlayers(teamId) {
+    async getStandings(slug) {
 
-        return await this.request(
-            `/teams/${teamId}/players`
-        );
-
-    },
-
-
-    /* =====================================================
-       MATCH DETAILS
-    ===================================================== */
-
-    async getMatch(matchId) {
-
-        return await this.request(
-            `/matches/${matchId}`
-        );
+        return await this.request("/standings/", {
+            sport: "football",
+            slug: slug
+        });
 
     },
 
 
-    /* =====================================================
-       MATCH EVENTS
-    ===================================================== */
+    /* =========================
+       TOP SCORERS
+    ========================= */
 
-    async getMatchEvents(matchId) {
+    async getTopScorers(
+        slug,
+        limit = 20,
+        stat = "goals"
+    ) {
 
-        return await this.request(
-            `/matches/${matchId}/events`
-        );
-
-    },
-
-
-    /* =====================================================
-       MATCH STATISTICS
-    ===================================================== */
-
-    async getMatchStats(matchId) {
-
-        return await this.request(
-            `/matches/${matchId}/statistics`
-        );
+        return await this.request("/topscorers/", {
+            sport: "football",
+            slug: slug,
+            limit: limit,
+            stat: stat
+        });
 
     },
 
 
-    /* =====================================================
-       SEARCH
-    ===================================================== */
+    /* =========================
+       PLAYER
+    ========================= */
 
-    async search(query) {
+    async getPlayer(slug) {
 
-        if (!query || query.trim().length < 2) {
-
-            return [];
-
-        }
-
-        return await this.request(
-            `/search?q=${encodeURIComponent(query)}`
-        );
-
-    },
-
-
-    /* =====================================================
-       SAFE REQUEST
-       Evite sit la kraze si API a pa disponib.
-    ===================================================== */
-
-    async safeRequest(method, ...args) {
-
-        try {
-
-            return await this[method](...args);
-
-        }
-
-        catch (error) {
-
-            return {
-                success: false,
-                data: [],
-                error: error.message
-            };
-
-        }
+        return await this.request("/player/", {
+            sport: "football",
+            slug: slug
+        });
 
     }
 
@@ -289,12 +120,12 @@ const PreziAPI = {
 
 
 /* =========================================================
-   AUTO REFRESH
+   LIVE AUTO REFRESH
 ========================================================= */
 
 const PreziLive = {
 
-    interval: null,
+    timer: null,
 
     start(callback, seconds = 30) {
 
@@ -302,7 +133,7 @@ const PreziLive = {
 
         callback();
 
-        this.interval = setInterval(
+        this.timer = setInterval(
             callback,
             seconds * 1000
         );
@@ -311,11 +142,11 @@ const PreziLive = {
 
     stop() {
 
-        if (this.interval) {
+        if (this.timer) {
 
-            clearInterval(this.interval);
+            clearInterval(this.timer);
 
-            this.interval = null;
+            this.timer = null;
 
         }
 
@@ -325,7 +156,7 @@ const PreziLive = {
 
 
 /* =========================================================
-   GLOBAL ACCESS
+   GLOBAL
 ========================================================= */
 
 window.PreziAPI = PreziAPI;
