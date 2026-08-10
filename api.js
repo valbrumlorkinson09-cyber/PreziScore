@@ -1,91 +1,114 @@
-/* =========================================================
-   PREZISCORE — SPORTSSCORE API ENGINE
-========================================================= */
+/* =====================================================
+   PREZISCORE — GLOBAL FOOTBALL API
+===================================================== */
 
 const PreziAPI = {
 
-    baseURL: "https://sportscore.com/api/widget",
+    BASE_URL: "https://sportscore.com/api/widget",
 
     async request(endpoint, params = {}) {
 
-        const url = new URL(this.baseURL + endpoint);
+        const url = new URL(
+            this.BASE_URL + endpoint
+        );
 
         Object.entries(params).forEach(([key, value]) => {
-            if (value !== undefined && value !== null) {
+
+            if (
+                value !== undefined &&
+                value !== null &&
+                value !== ""
+            ) {
                 url.searchParams.set(key, value);
+            }
+
+        });
+
+        const response = await fetch(url.toString(), {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
             }
         });
 
-        const response = await fetch(url);
-
         if (!response.ok) {
-            throw new Error("Erreur API : " + response.status);
+            throw new Error(
+                `SportScore API error: ${response.status}`
+            );
         }
 
         return await response.json();
     },
 
 
-    /* =========================
-       MATCHS
-    ========================= */
+    /* ================================
+       FOOTBALL MATCHES
+    ================================= */
 
     async getMatches(limit = 50) {
 
-        return await this.request("/matches/", {
-            sport: "football",
-            limit: limit
-        });
-
+        return await this.request(
+            "/matches/",
+            {
+                sport: "football",
+                limit: limit
+            }
+        );
     },
 
 
-    /* =========================
-       MATCH DETAIL
-    ========================= */
+    /* ================================
+       MATCH DETAILS
+    ================================= */
 
     async getMatch(slug) {
 
-        return await this.request("/match/", {
-            sport: "football",
-            slug: slug
-        });
-
+        return await this.request(
+            "/match/",
+            {
+                sport: "football",
+                slug: slug
+            }
+        );
     },
 
 
-    /* =========================
+    /* ================================
        TEAM
-    ========================= */
+    ================================= */
 
     async getTeam(slug, limit = 10) {
 
-        return await this.request("/team/", {
-            sport: "football",
-            slug: slug,
-            limit: limit
-        });
-
+        return await this.request(
+            "/team/",
+            {
+                sport: "football",
+                slug: slug,
+                limit: limit
+            }
+        );
     },
 
 
-    /* =========================
+    /* ================================
        STANDINGS
-    ========================= */
+    ================================= */
 
     async getStandings(slug) {
 
-        return await this.request("/standings/", {
-            sport: "football",
-            slug: slug
-        });
-
+        return await this.request(
+            "/standings/",
+            {
+                sport: "football",
+                slug: slug
+            }
+        );
     },
 
 
-    /* =========================
+    /* ================================
        TOP SCORERS
-    ========================= */
+    ================================= */
 
     async getTopScorers(
         slug,
@@ -93,41 +116,29 @@ const PreziAPI = {
         stat = "goals"
     ) {
 
-        return await this.request("/topscorers/", {
-            sport: "football",
-            slug: slug,
-            limit: limit,
-            stat: stat
-        });
-
-    },
-
-
-    /* =========================
-       PLAYER
-    ========================= */
-
-    async getPlayer(slug) {
-
-        return await this.request("/player/", {
-            sport: "football",
-            slug: slug
-        });
-
+        return await this.request(
+            "/topscorers/",
+            {
+                sport: "football",
+                slug: slug,
+                limit: limit,
+                stat: stat
+            }
+        );
     }
 
 };
 
 
-/* =========================================================
-   LIVE AUTO REFRESH
-========================================================= */
+/* =====================================================
+   LIVE REFRESH
+===================================================== */
 
 const PreziLive = {
 
     timer: null,
 
-    start(callback, seconds = 30) {
+    start(callback, seconds = 60) {
 
         this.stop();
 
@@ -137,7 +148,6 @@ const PreziLive = {
             callback,
             seconds * 1000
         );
-
     },
 
     stop() {
@@ -147,17 +157,14 @@ const PreziLive = {
             clearInterval(this.timer);
 
             this.timer = null;
-
         }
-
     }
-
 };
 
 
-/* =========================================================
+/* =====================================================
    GLOBAL
-========================================================= */
+===================================================== */
 
 window.PreziAPI = PreziAPI;
 window.PreziLive = PreziLive;
