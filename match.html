@@ -1,18 +1,37 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#080b10">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#080b10"
+    >
+
+    <meta
+        name="description"
+        content="PreziScore — Scores football en direct"
+    >
 
     <title>PreziScore — Matchs</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
     <style>
-        /* =========================
+
+        /* =================================================
            MATCH PAGE
-        ========================= */
+        ================================================= */
 
         .page-head {
             padding: 22px 0 15px;
@@ -29,9 +48,13 @@
             font-size: 11px;
         }
 
-        /* SEARCH */
+
+        /* =================================================
+           SEARCH
+        ================================================= */
 
         .search-box {
+
             display: flex;
             align-items: center;
             gap: 9px;
@@ -50,6 +73,7 @@
         }
 
         .search-box input {
+
             width: 100%;
 
             border: 0;
@@ -60,6 +84,7 @@
             color: white;
 
             font-family: inherit;
+
             font-size: 12px;
         }
 
@@ -67,11 +92,17 @@
             color: #68717f;
         }
 
-        /* TABS */
+
+        /* =================================================
+           TABS
+        ================================================= */
 
         .match-tabs {
+
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+
+            grid-template-columns:
+                repeat(3, 1fr);
 
             gap: 7px;
 
@@ -79,6 +110,7 @@
         }
 
         .match-tab {
+
             height: 40px;
 
             border: 1px solid var(--border);
@@ -92,27 +124,38 @@
             font-family: inherit;
 
             font-size: 10px;
+
             font-weight: 700;
 
             cursor: pointer;
         }
 
         .match-tab.active {
-            background: rgba(0,230,118,0.10);
 
-            border-color: rgba(0,230,118,0.25);
+            background:
+                rgba(0,230,118,0.10);
+
+            border-color:
+                rgba(0,230,118,0.25);
 
             color: var(--primary);
         }
 
-        /* DATE */
+
+        /* =================================================
+           DATE
+        ================================================= */
 
         .date-bar {
+
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
 
             margin-top: 22px;
+
             margin-bottom: 10px;
         }
 
@@ -121,19 +164,27 @@
         }
 
         .date-bar span {
+
             color: var(--muted);
+
             font-size: 10px;
         }
 
-        /* COMPETITION */
+
+        /* =================================================
+           COMPETITION
+        ================================================= */
 
         .competition {
             margin-top: 17px;
         }
 
         .competition-head {
+
             display: flex;
+
             align-items: center;
+
             gap: 8px;
 
             padding: 9px 4px;
@@ -141,14 +192,17 @@
             color: var(--muted);
 
             font-size: 10px;
+
             font-weight: 700;
         }
 
         .competition-icon {
+
             width: 26px;
             height: 26px;
 
             display: grid;
+
             place-items: center;
 
             background: var(--card-2);
@@ -158,9 +212,13 @@
             font-size: 13px;
         }
 
-        /* MATCH */
+
+        /* =================================================
+           MATCH CARD
+        ================================================= */
 
         .match-item {
+
             display: block;
 
             padding: 14px;
@@ -174,28 +232,39 @@
             border-radius: 16px;
 
             transition: 0.2s;
+
         }
 
         .match-item:active {
             transform: scale(0.985);
         }
 
+
         .match-top {
+
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
 
             margin-bottom: 12px;
         }
 
+
         .status {
+
             display: flex;
+
             align-items: center;
+
             gap: 5px;
 
             font-size: 8px;
+
             font-weight: 800;
         }
+
 
         .status.live {
             color: #ff304f;
@@ -209,7 +278,9 @@
             color: var(--primary);
         }
 
+
         .status-dot {
+
             width: 6px;
             height: 6px;
 
@@ -218,16 +289,21 @@
             background: currentColor;
         }
 
+
         .match-time {
+
             color: var(--muted);
 
             font-size: 9px;
         }
 
+
         .match-body {
+
             display: grid;
 
-            grid-template-columns: 1fr 70px 1fr;
+            grid-template-columns:
+                1fr 70px 1fr;
 
             align-items: center;
 
@@ -236,7 +312,9 @@
             text-align: center;
         }
 
+
         .club {
+
             display: flex;
 
             flex-direction: column;
@@ -248,11 +326,14 @@
             min-width: 0;
         }
 
+
         .club-logo {
+
             width: 42px;
             height: 42px;
 
             display: grid;
+
             place-items: center;
 
             background: var(--card-2);
@@ -262,9 +343,22 @@
             border-radius: 12px;
 
             font-size: 18px;
+
+            overflow: hidden;
         }
 
+
+        .club-logo img {
+
+            width: 32px;
+            height: 32px;
+
+            object-fit: contain;
+        }
+
+
         .club-name {
+
             width: 100%;
 
             overflow: hidden;
@@ -274,16 +368,23 @@
             white-space: nowrap;
 
             font-size: 10px;
+
             font-weight: 650;
         }
 
+
         .score {
+
             font-size: 19px;
+
             font-weight: 850;
+
             letter-spacing: -0.5px;
         }
 
+
         .score small {
+
             display: block;
 
             margin-top: 3px;
@@ -295,9 +396,13 @@
             font-weight: 500;
         }
 
-        /* EMPTY */
+
+        /* =================================================
+           EMPTY
+        ================================================= */
 
         .no-matches {
+
             display: none;
 
             padding: 38px 15px;
@@ -311,20 +416,27 @@
             border-radius: var(--radius);
         }
 
+
         .no-matches.show {
             display: block;
         }
+
 
         .no-matches div {
             font-size: 30px;
         }
 
+
         .no-matches h3 {
+
             margin-top: 10px;
+
             font-size: 13px;
         }
 
+
         .no-matches p {
+
             margin-top: 5px;
 
             color: var(--muted);
@@ -332,9 +444,13 @@
             font-size: 10px;
         }
 
-        /* LOADING */
+
+        /* =================================================
+           LOADING
+        ================================================= */
 
         .loading {
+
             padding: 35px 10px;
 
             text-align: center;
@@ -344,28 +460,39 @@
             font-size: 11px;
         }
 
+
         .loader {
+
             width: 25px;
             height: 25px;
 
             margin: 0 auto 10px;
 
-            border: 3px solid rgba(255,255,255,0.08);
+            border: 3px solid
+                rgba(255,255,255,0.08);
 
-            border-top-color: var(--primary);
+            border-top-color:
+                var(--primary);
 
             border-radius: 50%;
 
-            animation: spin 0.8s linear infinite;
+            animation:
+                spin 0.8s linear infinite;
         }
 
+
         @keyframes spin {
+
             to {
                 transform: rotate(360deg);
             }
+
         }
 
-        /* DESKTOP */
+
+        /* =================================================
+           DESKTOP
+        ================================================= */
 
         @media (min-width: 768px) {
 
@@ -380,54 +507,90 @@
             .club-name {
                 font-size: 11px;
             }
+
         }
+
+
     </style>
+
 </head>
+
 
 <body>
 
-<!-- ================= HEADER ================= -->
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header class="top-header">
 
     <div class="brand">
 
-        <div class="brand-ball">⚽</div>
+        <div class="brand-ball">
+            ⚽
+        </div>
+
 
         <div>
-            <h1>Prezi<span>Score</span></h1>
-            <p>Football en direct</p>
+
+            <h1>
+                Prezi<span>Score</span>
+            </h1>
+
+            <p>
+                Football en direct
+            </p>
+
         </div>
 
     </div>
 
-    <button class="search-btn" onclick="focusSearch()">
+
+    <button
+        class="search-btn"
+        onclick="focusSearch()"
+        aria-label="Rechercher"
+    >
         🔍
     </button>
 
 </header>
 
 
-<!-- ================= MAIN ================= -->
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
 <main class="main-content">
 
+
+    <!-- PAGE TITLE -->
+
     <section class="page-head">
 
-        <h2>Matchs</h2>
+        <h2>
+            Matchs
+        </h2>
 
         <p>
-            Suivez les résultats football partout dans le monde.
+            Suivez les résultats football
+            partout dans le monde.
         </p>
 
     </section>
+
 
 
     <!-- SEARCH -->
 
     <div class="search-box">
 
-        <span>🔍</span>
+        <span>
+            🔍
+        </span>
+
 
         <input
             id="searchInput"
@@ -439,9 +602,11 @@
     </div>
 
 
-    <!-- TABS -->
+
+    <!-- FILTERS -->
 
     <div class="match-tabs">
+
 
         <button
             class="match-tab active"
@@ -450,12 +615,14 @@
             🔴 LIVE
         </button>
 
+
         <button
             class="match-tab"
             data-filter="upcoming"
         >
             📅 À VENIR
         </button>
+
 
         <button
             class="match-tab"
@@ -464,7 +631,9 @@
             ✅ TERMINÉS
         </button>
 
+
     </div>
+
 
 
     <!-- DATE -->
@@ -475,6 +644,7 @@
             Aujourd'hui
         </h3>
 
+
         <span id="matchCount">
             0 matchs
         </span>
@@ -482,13 +652,20 @@
     </div>
 
 
-    <!-- MATCH CONTAINER -->
 
-    <section id="matchesContainer">
+    <!-- =================================================
+         MATCHES
+    ================================================= -->
 
-        <!-- API ap ranpli pati sa a -->
+    <section
+        id="matchesContainer"
+    >
 
-        <div class="loading" id="loading">
+
+        <div
+            class="loading"
+            id="loading"
+        >
 
             <div class="loader"></div>
 
@@ -496,152 +673,146 @@
 
         </div>
 
+
     </section>
 
 
-    <!-- EMPTY -->
 
-    <div class="no-matches" id="noMatches">
+    <!-- =================================================
+         EMPTY
+    ================================================= -->
 
-        <div>⚽</div>
+    <div
+        class="no-matches"
+        id="noMatches"
+    >
 
-        <h3>Aucun match trouvé</h3>
+        <div>
+            ⚽
+        </div>
+
+
+        <h3>
+            Aucun match trouvé
+        </h3>
+
 
         <p>
-            Aucun match ne correspond à votre recherche.
+            Aucun match ne correspond
+            à votre recherche.
         </p>
 
     </div>
 
+
 </main>
 
 
-<!-- ================= BOTTOM NAV ================= -->
+
+<!-- =====================================================
+     BOTTOM NAV
+===================================================== -->
 
 <nav class="bottom-nav">
 
-    <a href="index.html" class="nav-item">
-        <span>⌂</span>
-        <small>Accueil</small>
+
+    <a
+        href="index.html"
+        class="nav-item"
+    >
+
+        <span>
+            ⌂
+        </span>
+
+        <small>
+            Accueil
+        </small>
+
     </a>
 
-    <a href="match.html" class="nav-item active">
-        <span>⚽</span>
-        <small>Matchs</small>
+
+
+    <a
+        href="match.html"
+        class="nav-item active"
+    >
+
+        <span>
+            ⚽
+        </span>
+
+        <small>
+            Matchs
+        </small>
+
     </a>
 
-    <a href="competitions.html" class="nav-item">
-        <span>🏆</span>
-        <small>Compétitions</small>
+
+
+    <a
+        href="competitions.html"
+        class="nav-item"
+    >
+
+        <span>
+            🏆
+        </span>
+
+        <small>
+            Compétitions
+        </small>
+
     </a>
 
-    <a href="news.html" class="nav-item">
-        <span>📰</span>
-        <small>News</small>
+
+
+    <a
+        href="news.html"
+        class="nav-item"
+    >
+
+        <span>
+            📰
+        </span>
+
+        <small>
+            News
+        </small>
+
     </a>
 
-    <a href="profile.html" class="nav-item">
-        <span>👤</span>
-        <small>Profil</small>
+
+
+    <a
+        href="profile.html"
+        class="nav-item"
+    >
+
+        <span>
+            👤
+        </span>
+
+        <small>
+            Profil
+        </small>
+
     </a>
+
 
 </nav>
 
 
-<!-- ================= SCRIPT ================= -->
 
-<script>
+<!-- =====================================================
+     API + JAVASCRIPT
+===================================================== -->
 
-const tabs = document.querySelectorAll(".match-tab");
-const searchInput = document.getElementById("searchInput");
-const loading = document.getElementById("loading");
-const noMatches = document.getElementById("noMatches");
+<script src="api.js"></script>
 
-let currentFilter = "live";
+<script src="script.js"></script>
 
-
-/* =========================
-   TAB SYSTEM
-========================= */
-
-tabs.forEach(tab => {
-
-    tab.addEventListener("click", () => {
-
-        tabs.forEach(item =>
-            item.classList.remove("active")
-        );
-
-        tab.classList.add("active");
-
-        currentFilter = tab.dataset.filter;
-
-        loadMatches();
-    });
-
-});
-
-
-/* =========================
-   SEARCH
-========================= */
-
-searchInput.addEventListener("input", () => {
-    loadMatches();
-});
-
-
-function focusSearch() {
-
-    searchInput.focus();
-
-}
-
-
-/* =========================
-   MATCH ENGINE
-========================= */
-
-function loadMatches() {
-
-    loading.style.display = "block";
-
-    noMatches.classList.remove("show");
-
-    /*
-       API ap antre isit la.
-
-       Pwochen etap la:
-       api.js
-       ↓
-       Live
-       À venir
-       Terminés
-       ↓
-       PreziScore Match Engine
-    */
-
-    setTimeout(() => {
-
-        loading.style.display = "none";
-
-        noMatches.classList.add("show");
-
-        document.getElementById("matchCount").textContent =
-            "0 matchs";
-
-    }, 500);
-
-}
-
-
-/* =========================
-   INITIAL LOAD
-========================= */
-
-loadMatches();
-
-</script>
 
 </body>
-  </html>
+
+            </html>
