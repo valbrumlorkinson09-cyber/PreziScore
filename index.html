@@ -1,1 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="theme-color" content="#080b10">
+    <meta name="description" content="PreziScore - Scores football en direct partout dans le monde">
+
+    <title>PreziScore — Football Live</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="top-header">
+
+    <div class="brand">
+        <div class="brand-ball">⚽</div>
+
+        <div>
+            <h1>Prezi<span>Score</span></h1>
+            <p>Football en direct</p>
+        </div>
+    </div>
+
+    <button class="search-btn" aria-label="Rechercher">
+        🔍
+    </button>
+
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main-content">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div>
+            <span class="hero-label">🌍 FOOTBALL MONDIAL</span>
+
+            <h2>
+                Tous les scores.<br>
+                <strong>En un seul endroit.</strong>
+            </h2>
+
+            <p>
+                Suivez les matchs en direct, les résultats,
+                les compétitions et les classements.
+            </p>
+        </div>
+
+        <div class="hero-ball">⚽</div>
+
+    </section>
+
+
+    <!-- QUICK MENU -->
+
+    <section class="quick-menu">
+
+        <a href="match.html" class="quick-card">
+            <span>🔴</span>
+            <div>
+                <strong>Matchs Live</strong>
+                <small>Voir les matchs</small>
+            </div>
+            <b>›</b>
+        </a>
+
+        <a href="competitions.html" class="quick-card">
+            <span>🏆</span>
+            <div>
+                <strong>Compétitions</strong>
+                <small>Ligues & championnats</small>
+            </div>
+            <b>›</b>
+        </a>
+
+    </section>
+
+
+    <!-- LIVE -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <div>
+                <span class="live-dot"></span>
+                <h3>En direct</h3>
+            </div>
+
+            <a href="match.html">Voir tout ›</a>
+        </div>
+
+        <div class="empty-card">
+
+            <div class="empty-icon">⚽</div>
+
+            <h4>Aucun match en direct</h4>
+
+            <p>
+                Les matchs en cours apparaîtront ici
+                automatiquement.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- UPCOMING -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <div>
+                <span class="calendar-icon">📅</span>
+                <h3>À venir</h3>
+            </div>
+
+            <a href="match.html">Tous ›</a>
+        </div>
+
+        <div class="match-card">
+
+            <div class="match-info">
+                <span>⚽</span>
+                <small>Football Mondial</small>
+            </div>
+
+            <div class="teams">
+
+                <div class="team">
+                    <div class="team-logo">⚽</div>
+                    <span>À déterminer</span>
+                </div>
+
+                <div class="match-time">
+                    <strong>-- : --</strong>
+                    <small>À venir</small>
+                </div>
+
+                <div class="team">
+                    <div class="team-logo">⚽</div>
+                    <span>À déterminer</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <div>
+                <h3>PreziScore</h3>
+            </div>
+        </div>
+
+        <div class="features">
+
+            <div class="feature">
+                <span>⚡</span>
+                <strong>Rapide</strong>
+                <small>Scores actualisés</small>
+            </div>
+
+            <div class="feature">
+                <span>🌍</span>
+                <strong>Mondial</strong>
+                <small>Football partout</small>
+            </div>
+
+            <div class="feature">
+                <span>📊</span>
+                <strong>Complet</strong>
+                <small>Stats & classements</small>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= BOTTOM NAV ================= -->
+
+<nav class="bottom-nav">
+
+    <a href="index.html" class="nav-item active">
+        <span>⌂</span>
+        <small>Accueil</small>
+    </a>
+
+    <a href="match.html" class="nav-item">
+        <span>⚽</span>
+        <small>Matchs</small>
+    </a>
+
+    <a href="competitions.html" class="nav-item">
+        <span>🏆</span>
+        <small>Compétitions</small>
+    </a>
+
+    <a href="news.html" class="nav-item">
+        <span>📰</span>
+        <small>News</small>
+    </a>
+
+    <a href="profile.html" class="nav-item">
+        <span>👤</span>
+        <small>Profil</small>
+    </a>
+
+</nav>
+
+
+<script>
+
+    /*
+        PreziScore
+        Navigation globale
+    */
+
+    document.querySelectorAll(".nav-item").forEach(item => {
+
+        item.addEventListener("click", () => {
+
+            document.querySelectorAll(".nav-item")
+                .forEach(nav => nav.classList.remove("active"));
+
+            item.classList.add("active");
+
+        });
+
+    });
+
+</script>
+
+</body>
+  </html>
