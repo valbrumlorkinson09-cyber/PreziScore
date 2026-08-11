@@ -1,48 +1,45 @@
 "use strict";
 
 /* =========================================================
-   PREZISCORE — API.JS
-   PART 1 / 3
+   PREZISCORE API — PARTIE 1
+   SportScore
+   LIVE + SCORE + TEAMS + LOGOS
 ========================================================= */
 
-const PreziAPI = (() => {
+const SPORT = "football";
 
-    const BASE_URL =
-        "https://sportscore.com/api/widget";
+const BASE_URL =
+    "https://sportscore.com/api/widget";
 
-    const SPORT =
-        "football";
+const CACHE_TIME = 10000;
 
-    const CACHE_TIME =
-        30000;
-
-    const cache =
-        new Map();
+const apiCache = new Map();
 
 
-    /* =====================================================
-       REQUEST
-    ===================================================== */
+/* =========================================================
+   REQUEST
+========================================================= */
 
-    async function request(
-        endpoint,
-        params = {}
-    ) {
+async function sportRequest(
+    endpoint,
+    params = {}
+) {
 
-        const url =
-            new URL(
-                BASE_URL + endpoint
-            );
-
-
-        url.searchParams.set(
-            "sport",
-            SPORT
+    const url =
+        new URL(
+            BASE_URL + endpoint
         );
 
 
-        Object.entries(params)
-            .forEach(([key, value]) => {
+    url.searchParams.set(
+        "sport",
+        SPORT
+    );
+
+
+    Object.entries(params)
+        .forEach(
+            ([key, value]) => {
 
                 if (
                     value !== undefined &&
@@ -57,578 +54,173 @@ const PreziAPI = (() => {
 
                 }
 
-            });
-
-
-        const key =
-            url.toString();
-
-
-        const old =
-            cache.get(key);
-
-
-        if (
-            old &&
-            Date.now() - old.time <
-            CACHE_TIME
-        ) {
-
-            return old.data;
-
-        }
-
-
-        const response =
-            await fetch(
-                key,
-                {
-                    method: "GET",
-
-                    headers: {
-                        "Accept":
-                            "application/json"
-                    }
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "SportScore HTTP " +
-                response.status
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        cache.set(
-            key,
-            {
-                time:
-                    Date.now(),
-
-                data:
-                    data
             }
         );
 
+
+    const cacheKey =
+        url.toString();
+
+
+    const cached =
+        apiCache.get(cacheKey);
+
+
+    if (
+        cached &&
+        Date.now() - cached.time <
+        CACHE_TIME
+    ) {
+
+        return cached.data;
+
+    }
+
+
+    console.log(
+        "📡 SportScore:",
+        url.toString()
+    );
+
+
+    const response =
+        await fetch(
+            url.toString(),
+            {
+                method: "GET",
+
+                headers: {
+                    "Accept":
+                        "application/json"
+                }
+            }
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "SportScore HTTP " +
+            response.status
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    apiCache.set(
+        cacheKey,
+        {
+            time:
+                Date.now(),
+
+            data:
+                data
+        }
+    );
+
+
+    return data;
+
+}
+
+
+/* =========================================================
+   GET RAW MATCHES
+========================================================= */
+
+async function getMatches(
+    limit = 50
+) {
+
+    const data =
+        await sportRequest(
+            "/matches/",
+            {
+                limit:
+                    Math.min(
+                        Math.max(
+                            Number(limit) || 50,
+                            1
+                        ),
+                        50
+                    )
+            }
+        );
+
+
+    console.log(
+        "📦 RAW SPORTDATA:",
+        data
+    );
+
+
+    if (
+        Array.isArray(
+            data?.matches
+        )
+    ) {
+
+        return data.matches;
+
+    }
+
+
+    if (
+        Array.isArray(
+            data?.data
+        )
+    ) {
+
+        return data.data;
+
+    }
+
+
+    if (
+        Array.isArray(data)
+    ) {
 
         return data;
 
     }
 
 
-    /* =====================================================
-       FIRST VALUE
-    ===================================================== */
+    return [];
 
-    function first(
-        ...values
-    ) {
-
-        for (
-            const value of values
-        ) {
-
-            if (
-                value !== undefined &&
-                value !== null &&
-                value !== ""
-            ) {
-
-                return value;
-
-            }
-
-        }
-
-
-        return null;
-
-    }
-
-
-    /* =====================================================
-       GET MATCHES
-    ===================================================== */
-
-    async function getMatches(
-        limit = 50
-    ) {
-
-        const data =
-            await request(
-                "/matches/",
-                {
-                    limit:
-                        Math.min(
-                            Math.max(
-                                limit,
-                                1
-                            ),
-                            50
-                        )
-                }
-            );
-
-
-        if (
-            Array.isArray(
-                data?.matches
-            )
-        ) {
-
-            return data.matches;
-
-        }
-
-
-        if (
-            Array.isArray(data)
-        ) {
-
-            return data;
-
-        }
-
-
-        return [];
-
-    }
-
-
-    /* =====================================================
-       TEAM OBJECT
-    ===================================================== */
-
-    function getTeam(
-        match,
-        side
-    ) {
-
-        if (
-            side === "home"
-        ) {
-
-            return (
-
-                match.home_team ||
-
-                match.homeTeam ||
-
-                (
-                    typeof match.home ===
-                    "object"
-                        ? match.home
-                        : null
-                ) ||
-
-                {}
-
-            );
-
-        }
-
-
-        return (
-
-            match.away_team ||
-
-            match.awayTeam ||
-
-            (
-                typeof match.away ===
-                "object"
-                    ? match.away
-                    : null
-            ) ||
-
-            {}
-
-        );
-
-    }
-
-
-    /* =====================================================
-       TEAM NAME
-    ===================================================== */
-
-    function getTeamName(
-        match,
-        side
-    ) {
-
-        const team =
-            getTeam(
-                match,
-                side
-            );
-
-
-        const direct =
-            side === "home"
-
-                ? first(
-                    typeof match.home ===
-                    "string"
-                        ? match.home
-                        : null,
-
-                    match.home_name,
-
-                    match.homeName
-                )
-
-                : first(
-                    typeof match.away ===
-                    "string"
-                        ? match.away
-                        : null,
-
-                    match.away_name,
-
-                    match.awayName
-                );
-
-
-        return (
-
-            direct ||
-
-            team.name ||
-
-            team.title ||
-
-            team.team_name ||
-
-            team.display_name ||
-
-            team.short_name ||
-
-            (
-                side === "home"
-                    ? "Équipe domicile"
-                    : "Équipe visiteuse"
-            )
-
-        );
-
-    }
-
-
-    /* =====================================================
-       TEAM LOGO
-    ===================================================== */
-
-    function getTeamLogo(
-        match,
-        side
-    ) {
-
-        const team =
-            getTeam(
-                match,
-                side
-            );
-
-
-        const direct =
-            side === "home"
-
-                ? first(
-                    match.home_logo,
-                    match.homeLogo,
-                    match.home_image,
-                    match.homeImage,
-                    match.home_badge,
-                    match.homeBadge
-                )
-
-                : first(
-                    match.away_logo,
-                    match.awayLogo,
-                    match.away_image,
-                    match.awayImage,
-                    match.away_badge,
-                    match.awayBadge
-                );
-
-
-        return (
-
-            direct ||
-
-            team.logo ||
-
-            team.image ||
-
-            team.photo ||
-
-            team.icon ||
-
-            team.badge ||
-
-            team.logo_url ||
-
-            team.image_url ||
-
-            team.photo_url ||
-
-            team.badge_url ||
-
-            null
-
-        );
-
-    }
-
-
-    /* =====================================================
-       SCORE
-    ===================================================== */
-
-    function getScore(
-        match,
-        side
-    ) {
-
-        const team =
-            getTeam(
-                match,
-                side
-            );
-
-
-        let value = null;
-
-
-        if (
-            side === "home"
-        ) {
-
-            value =
-                first(
-                    match.home_score,
-                    match.homeScore,
-                    match.home_goals,
-                    match.homeGoals,
-                    team.score,
-                    team.goals
-                );
-
-        }
-
-
-        else {
-
-            value =
-                first(
-                    match.away_score,
-                    match.awayScore,
-                    match.away_goals,
-                    match.awayGoals,
-                    team.score,
-                    team.goals
-                );
-
-        }
-
-
-        if (
-            value === null
-        ) {
-
-            return null;
-
-        }
-
-
-        const number =
-            Number(value);
-
-
-        return Number.isNaN(
-            number
-        )
-            ? value
-            : number;
-
-    }
-
-
-    /* =====================================================
-       MATCH ID
-    ===================================================== */
-
-    function getMatchId(
-        match
-    ) {
-
-        return first(
-
-            match.id,
-
-            match.match_id,
-
-            match.event_id,
-
-            match.eventId,
-
-            match.game_id,
-
-            match.gameId
-
-        );
-
-    }
-
-
-    /* =====================================================
-       MATCH SLUG
-    ===================================================== */
-
-    function getMatchSlug(
-        match
-    ) {
-
-        return first(
-
-            match.slug,
-
-            match.match_slug,
-
-            match.matchSlug,
-
-            match.url,
-
-            match.link
-
-        );
-
-    }
-
-
-    /* =====================================================
-       COMPETITION
-    ===================================================== */
-
-    function getCompetition(
-        match
-    ) {
-
-        const value =
-            first(
-
-                match.competition,
-
-                match.league,
-
-                match.tournament,
-
-                match.competition_name,
-
-                match.league_name,
-
-                match.tournament_name
-
-            );
-
-
-        if (
-            typeof value ===
-            "string"
-        ) {
-
-            return value;
-
-        }
-
-
-        if (
-            value &&
-            typeof value ===
-            "object"
-        ) {
-
-            return (
-
-                first(
-                    value.name,
-                    value.title,
-                    value.league_name
-                ) ||
-
-                "Football"
-
-            );
-
-        }
-
-
-        return "Football";
-
-    }
-
-
-    /* =====================================================
-       START TIME
-    ===================================================== */
-
-    function getStartTime(
-        match
-    ) {
-
-        return first(
-
-            match.start_time,
-
-            match.startTime,
-
-            match.start_at,
-
-            match.startAt,
-
-            match.datetime,
-
-            match.date,
-
-            match.time
-
-        );
-
-    }
-/* =========================================================
-   PREZISCORE API — PARTIE 2
-   NORMALISATION + LIVE MINUTE + LOGOS
-========================================================= */
+}
 
 
 /* =========================================================
-   HELPERS
+   FIRST VALUE
 ========================================================= */
 
-function firstValue(...values) {
+function firstValue(
+    ...values
+) {
 
-    for (const value of values) {
+    for (
+        const value of values
+    ) {
 
         if (
             value !== undefined &&
             value !== null &&
             value !== ""
         ) {
+
             return value;
+
         }
 
     }
 
+
     return null;
+
 }
 
 
@@ -636,9 +228,14 @@ function firstValue(...values) {
    TEAM OBJECT
 ========================================================= */
 
-function getTeamObject(match, side) {
+function getTeam(
+    match,
+    side
+) {
 
-    if (side === "home") {
+    if (
+        side === "home"
+    ) {
 
         return (
             match.home_team ||
@@ -649,6 +246,7 @@ function getTeamObject(match, side) {
         );
 
     }
+
 
     return (
         match.away_team ||
@@ -665,17 +263,29 @@ function getTeamObject(match, side) {
    TEAM NAME
 ========================================================= */
 
-function getTeamName(match, side) {
+function getTeamName(
+    match,
+    side
+) {
 
     const team =
-        getTeamObject(match, side);
+        getTeam(
+            match,
+            side
+        );
+
+
+    if (
+        typeof team === "string"
+    ) {
+
+        return team;
+
+    }
+
 
     const name =
         firstValue(
-
-            typeof team === "string"
-                ? team
-                : null,
 
             team?.name,
             team?.title,
@@ -694,12 +304,14 @@ function getTeamName(match, side) {
         );
 
 
-    return name ||
+    return (
+        name ||
         (
             side === "home"
                 ? "Équipe domicile"
                 : "Équipe visiteuse"
-        );
+        )
+    );
 
 }
 
@@ -708,10 +320,16 @@ function getTeamName(match, side) {
    TEAM LOGO
 ========================================================= */
 
-function getTeamLogo(match, side) {
+function getTeamLogo(
+    match,
+    side
+) {
 
     const team =
-        getTeamObject(match, side);
+        getTeam(
+            match,
+            side
+        );
 
 
     const logo =
@@ -746,12 +364,7 @@ function getTeamLogo(match, side) {
         );
 
 
-    if (!logo) {
-        return null;
-    }
-
-
-    return String(logo);
+    return logo || null;
 
 }
 
@@ -760,10 +373,16 @@ function getTeamLogo(match, side) {
    SCORE
 ========================================================= */
 
-function getTeamScore(match, side) {
+function getScore(
+    match,
+    side
+) {
 
     const team =
-        getTeamObject(match, side);
+        getTeam(
+            match,
+            side
+        );
 
 
     const score =
@@ -794,11 +413,11 @@ function getTeamScore(match, side) {
 
 
     if (
-        score === null ||
-        score === undefined ||
-        score === ""
+        score === null
     ) {
+
         return null;
+
     }
 
 
@@ -817,7 +436,9 @@ function getTeamScore(match, side) {
    STATUS
 ========================================================= */
 
-function normalizeStatus(match) {
+function getStatus(
+    match
+) {
 
     const status =
         String(
@@ -827,8 +448,7 @@ function normalizeStatus(match) {
                 match.state,
                 match.match_status,
                 match.matchState,
-                match.status_code,
-                match.statusCode
+                match.status_code
 
             ) || ""
         )
@@ -852,70 +472,56 @@ function normalizeStatus(match) {
 
 
     const combined =
-        `${status} ${text}`;
+        status + " " + text;
 
 
-    /* =========================
-       LIVE
-    ========================= */
-
-    const live =
-        [
-
-            "live",
-            "in_progress",
-            "in progress",
-            "progress",
-            "playing",
-            "ongoing",
-            "started",
-            "first half",
-            "second half",
-            "1st half",
-            "2nd half",
-            "1st_half",
-            "2nd_half",
-            "half time",
-            "halftime"
-
-        ];
-
+    /* LIVE */
 
     if (
-        live.some(
-            word =>
-                combined.includes(word)
-        )
+
+        combined.includes("live") ||
+
+        combined.includes("progress") ||
+
+        combined.includes("playing") ||
+
+        combined.includes("ongoing") ||
+
+        combined.includes("started") ||
+
+        combined.includes("1st half") ||
+
+        combined.includes("2nd half") ||
+
+        combined.includes("first half") ||
+
+        combined.includes("second half")
+
     ) {
+
         return "live";
+
     }
 
 
-    /* =========================
-       FINISHED
-    ========================= */
-
-    const finished =
-        [
-
-            "finished",
-            "finish",
-            "ended",
-            "completed",
-            "full time",
-            "full_time",
-            "ft"
-
-        ];
-
+    /* FINISHED */
 
     if (
-        finished.some(
-            word =>
-                combined.includes(word)
-        )
+
+        combined.includes("finished") ||
+
+        combined.includes("ended") ||
+
+        combined.includes("completed") ||
+
+        combined.includes("full time") ||
+
+        combined === "ft"
+
     ) {
+
         return "finished";
+
     }
 
 
@@ -925,22 +531,14 @@ function normalizeStatus(match) {
 
 
 /* =========================================================
-   LIVE MINUTE
+   GET MINUTE
 ========================================================= */
 
-function getLiveMinute(match) {
+function getMinute(
+    match
+) {
 
-    /*
-       IMPORTANT:
-
-       Nou pa mete 2,
-       nou pa mete 0,
-       nou pa envante minit.
-
-       Nou pran sèlman sa API a bay.
-    */
-
-    const possible =
+    const value =
         firstValue(
 
             match.minute,
@@ -948,89 +546,55 @@ function getLiveMinute(match) {
             match.elapsed_time,
             match.elapsedTime,
 
-            match.match_time,
-            match.matchTime,
-
-            match.timer,
-            match.time_elapsed,
-            match.timeElapsed,
-
             match.live_minute,
             match.liveMinute,
 
             match.current_minute,
             match.currentMinute,
 
-            match.status_time,
-            match.statusTime,
+            match.match_time,
+            match.matchTime,
 
+            match.timer,
             match.clock,
-            match.game_time,
-            match.gameTime
+
+            match.status_time,
+            match.statusTime
 
         );
 
 
     if (
-        possible === null ||
-        possible === undefined ||
-        possible === ""
+        value === null
     ) {
+
         return null;
+
     }
 
 
-    /* Object */
-
     if (
-        typeof possible === "object"
+        typeof value === "object"
     ) {
 
-        return getObjectMinute(
-            possible
+        return cleanMinute(
+            firstValue(
+
+                value.minute,
+                value.elapsed,
+                value.current,
+                value.value,
+                value.time
+
+            )
         );
 
     }
 
 
     return cleanMinute(
-        possible
+        value
     );
-
-}
-
-
-/* =========================================================
-   OBJECT MINUTE
-========================================================= */
-
-function getObjectMinute(object) {
-
-    const value =
-        firstValue(
-
-            object.minute,
-            object.elapsed,
-            object.elapsed_time,
-            object.elapsedTime,
-            object.current,
-            object.value,
-            object.time,
-            object.clock
-
-        );
-
-
-    if (
-        value === null ||
-        value === undefined ||
-        value === ""
-    ) {
-        return null;
-    }
-
-
-    return cleanMinute(value);
 
 }
 
@@ -1039,51 +603,35 @@ function getObjectMinute(object) {
    CLEAN MINUTE
 ========================================================= */
 
-function cleanMinute(value) {
+function cleanMinute(
+    value
+) {
 
     if (
         value === null ||
         value === undefined ||
         value === ""
     ) {
+
         return null;
+
     }
 
 
-    let text =
+    const text =
         String(value)
-        .trim();
-
-
-    /*
-       Egzanp:
-       45
-       45'
-       45 min
-       45:30
-       45+2
-    */
-
-    text =
-        text
-        .replace(
-            /minutes?/gi,
-            ""
-        )
-        .replace(
-            /mins?/gi,
-            ""
-        )
         .trim();
 
 
     const found =
         text.match(
-            /^(\d+)(?:\s*'\s*|\s*min)?/
+            /^(\d+)/
         );
 
 
-    if (found) {
+    if (
+        found
+    ) {
 
         return Number(
             found[1]
@@ -1098,37 +646,12 @@ function cleanMinute(value) {
 
 
 /* =========================================================
-   START TIME
-========================================================= */
-
-function getStartTime(match) {
-
-    return firstValue(
-
-        match.start_time,
-        match.startTime,
-
-        match.start_at,
-        match.startAt,
-
-        match.date,
-        match.datetime,
-
-        match.utc_date,
-        match.utcDate,
-
-        match.time
-
-    );
-
-}
-
-
-/* =========================================================
    COMPETITION
 ========================================================= */
 
-function getCompetition(match) {
+function getCompetition(
+    match
+) {
 
     const competition =
         firstValue(
@@ -1162,8 +685,7 @@ function getCompetition(match) {
             firstValue(
 
                 competition.name,
-                competition.title,
-                competition.league_name
+                competition.title
 
             ) || "Football"
         );
@@ -1177,24 +699,625 @@ function getCompetition(match) {
 
 
 /* =========================================================
-   COMPETITION LOGO
+   START TIME
 ========================================================= */
 
-function getCompetitionLogo(match) {
+function getStartTime(
+    match
+) {
 
     return firstValue(
 
-        match.competition_logo,
-        match.competitionLogo,
+        match.start_time,
+        match.startTime,
 
-        match.league_logo,
-        match.leagueLogo,
+        match.start_at,
+        match.startAt,
 
-        match.tournament_logo,
-        match.tournamentLogo
+        match.date,
+        match.datetime,
+
+        match.time
 
     );
 
+       }
+/* =========================================================
+   PREZISCORE API — PART 2
+   STATUS + MINUTE + TEAM DATA
+========================================================= */
+
+
+/* =========================================================
+   FIRST VALUE
+========================================================= */
+
+function firstValue(...values) {
+
+    for (const value of values) {
+
+        if (
+            value !== undefined &&
+            value !== null &&
+            value !== ""
+        ) {
+            return value;
+        }
+
+    }
+
+    return null;
+}
+
+
+/* =========================================================
+   TEAM NAME
+========================================================= */
+
+function getTeamName(team, fallback) {
+
+    if (typeof team === "string") {
+        return team;
+    }
+
+    if (team && typeof team === "object") {
+
+        return firstValue(
+            team.name,
+            team.title,
+            team.team_name,
+            team.teamName,
+            team.display_name,
+            team.displayName,
+            team.short_name,
+            team.shortName
+        ) || fallback;
+
+    }
+
+    return fallback;
+}
+
+
+/* =========================================================
+   TEAM LOGO
+========================================================= */
+
+function getTeamLogo(team, directLogo) {
+
+    const logo = firstValue(
+        directLogo
+    );
+
+    if (logo) {
+        return logo;
+    }
+
+    if (team && typeof team === "object") {
+
+        return firstValue(
+            team.logo,
+            team.logo_url,
+            team.logoUrl,
+            team.image,
+            team.image_url,
+            team.imageUrl,
+            team.photo,
+            team.photo_url,
+            team.badge,
+            team.badge_url,
+            team.icon
+        );
+
+    }
+
+    return null;
+}
+
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+function getScore(match, side) {
+
+    const team =
+        side === "home"
+            ? (
+                match.home_team ||
+                match.homeTeam ||
+                match.home
+            )
+            : (
+                match.away_team ||
+                match.awayTeam ||
+                match.away
+            );
+
+
+    const directScore =
+        side === "home"
+            ? firstValue(
+                match.home_score,
+                match.homeScore,
+                match.home_goals,
+                match.homeGoals,
+                match.score_home,
+                match.scoreHome
+            )
+            : firstValue(
+                match.away_score,
+                match.awayScore,
+                match.away_goals,
+                match.awayGoals,
+                match.score_away,
+                match.scoreAway
+            );
+
+
+    if (directScore !== null) {
+
+        const number =
+            Number(directScore);
+
+        return Number.isNaN(number)
+            ? directScore
+            : number;
+
+    }
+
+
+    if (
+        team &&
+        typeof team === "object"
+    ) {
+
+        const teamScore =
+            firstValue(
+                team.score,
+                team.goals,
+                team.current_score,
+                team.currentScore,
+                team.result
+            );
+
+
+        if (teamScore !== null) {
+
+            const number =
+                Number(teamScore);
+
+            return Number.isNaN(number)
+                ? teamScore
+                : number;
+
+        }
+
+    }
+
+
+    return null;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function normalizeStatus(match) {
+
+    const status = String(
+        firstValue(
+            match.status,
+            match.state,
+            match.match_status,
+            match.matchStatus,
+            match.match_state,
+            match.matchState,
+            match.status_code,
+            match.statusCode
+        ) || ""
+    )
+    .toLowerCase()
+    .trim();
+
+
+    const text = String(
+        firstValue(
+            match.status_text,
+            match.statusText,
+            match.status_name,
+            match.statusName,
+            match.state_text,
+            match.stateText
+        ) || ""
+    )
+    .toLowerCase()
+    .trim();
+
+
+    /* =========================
+       LIVE
+    ========================= */
+
+    const liveWords = [
+        "live",
+        "playing",
+        "in_progress",
+        "in progress",
+        "progress",
+        "ongoing",
+        "started",
+        "1st_half",
+        "2nd_half",
+        "first_half",
+        "second_half",
+        "1st half",
+        "2nd half",
+        "half time",
+        "halftime"
+    ];
+
+
+    if (
+        liveWords.some(word =>
+            status.includes(word) ||
+            text.includes(word)
+        )
+    ) {
+        return "live";
+    }
+
+
+    /* =========================
+       FINISHED
+    ========================= */
+
+    const finishedWords = [
+        "finished",
+        "finish",
+        "ended",
+        "completed",
+        "full_time",
+        "full time",
+        "ft"
+    ];
+
+
+    if (
+        finishedWords.some(word =>
+            status === word ||
+            status.includes(word) ||
+            text.includes(word)
+        )
+    ) {
+        return "finished";
+    }
+
+
+    /* =========================
+       UPCOMING
+    ========================= */
+
+    return "upcoming";
+}
+
+
+/* =========================================================
+   MINUTE CLEANER
+========================================================= */
+
+function cleanMinute(value) {
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+        return null;
+    }
+
+
+    /* OBJECT */
+
+    if (
+        typeof value === "object"
+    ) {
+
+        value = firstValue(
+            value.minute,
+            value.elapsed,
+            value.elapsed_time,
+            value.elapsedTime,
+            value.current,
+            value.value,
+            value.time
+        );
+
+    }
+
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+        return null;
+    }
+
+
+    let text =
+        String(value)
+            .trim();
+
+
+    /*
+       Examples:
+       45
+       67'
+       67 min
+       67:30
+       45+2
+    */
+
+    text = text
+        .replace(/minutes?/gi, "")
+        .replace(/mins?/gi, "")
+        .trim();
+
+
+    const numberMatch =
+        text.match(/^(\d+)/);
+
+
+    if (numberMatch) {
+
+        return Number(
+            numberMatch[1]
+        );
+
+    }
+
+
+    return text;
+}
+
+
+/* =========================================================
+   MINUTE FROM MATCH
+========================================================= */
+
+function getMinute(match) {
+
+    /*
+       Nou chèche MINIT la nan anpil
+       non field diferan.
+    */
+
+    const direct = firstValue(
+
+        match.minute,
+
+        match.minutes,
+
+        match.elapsed,
+
+        match.elapsed_time,
+
+        match.elapsedTime,
+
+        match.match_time,
+
+        match.matchTime,
+
+        match.timer,
+
+        match.live_minute,
+
+        match.liveMinute,
+
+        match.current_minute,
+
+        match.currentMinute,
+
+        match.game_minute,
+
+        match.gameMinute,
+
+        match.status_time,
+
+        match.statusTime,
+
+        match.play_time,
+
+        match.playTime
+
+    );
+
+
+    if (direct !== null) {
+
+        return cleanMinute(
+            direct
+        );
+
+    }
+
+
+    /* =========================
+       CLOCK OBJECT
+    ========================= */
+
+    if (
+        match.clock &&
+        typeof match.clock === "object"
+    ) {
+
+        const clockMinute =
+            firstValue(
+
+                match.clock.minute,
+
+                match.clock.minutes,
+
+                match.clock.elapsed,
+
+                match.clock.current,
+
+                match.clock.value
+
+            );
+
+
+        if (
+            clockMinute !== null
+        ) {
+
+            return cleanMinute(
+                clockMinute
+            );
+
+        }
+
+    }
+
+
+    /* =========================
+       TIMER OBJECT
+    ========================= */
+
+    if (
+        match.timer &&
+        typeof match.timer === "object"
+    ) {
+
+        const timerMinute =
+            firstValue(
+
+                match.timer.minute,
+
+                match.timer.minutes,
+
+                match.timer.elapsed,
+
+                match.timer.current,
+
+                match.timer.value
+
+            );
+
+
+        if (
+            timerMinute !== null
+        ) {
+
+            return cleanMinute(
+                timerMinute
+            );
+
+        }
+
+    }
+
+
+    return null;
+}
+
+
+/* =========================================================
+   START TIME
+========================================================= */
+
+function getStartTime(match) {
+
+    return firstValue(
+
+        match.start_time,
+
+        match.startTime,
+
+        match.start_at,
+
+        match.startAt,
+
+        match.kickoff,
+
+        match.kick_off,
+
+        match.kickoff_time,
+
+        match.kickoffTime,
+
+        match.date,
+
+        match.datetime,
+
+        match.time
+
+    );
+}
+
+
+/* =========================================================
+   COMPETITION
+========================================================= */
+
+function getCompetition(match) {
+
+    const competition =
+        firstValue(
+
+            match.competition,
+
+            match.league,
+
+            match.tournament,
+
+            match.competition_name,
+
+            match.competitionName,
+
+            match.league_name,
+
+            match.leagueName,
+
+            match.tournament_name,
+
+            match.tournamentName
+
+        );
+
+
+    if (
+        typeof competition === "string"
+    ) {
+
+        return competition;
+
+    }
+
+
+    if (
+        competition &&
+        typeof competition === "object"
+    ) {
+
+        return firstValue(
+
+            competition.name,
+
+            competition.title,
+
+            competition.league_name,
+
+            competition.leagueName
+
+        ) || "Football";
+
+    }
+
+
+    return "Football";
 }
 
 
@@ -1207,17 +1330,20 @@ function getMatchId(match) {
     return firstValue(
 
         match.id,
+
         match.match_id,
+
         match.matchId,
 
         match.event_id,
+
         match.eventId,
 
         match.game_id,
+
         match.gameId
 
     );
-
 }
 
 
@@ -1230,14 +1356,16 @@ function getMatchSlug(match) {
     return firstValue(
 
         match.slug,
+
         match.match_slug,
+
         match.matchSlug,
 
         match.url,
+
         match.link
 
     );
-
 }
 
 
@@ -1252,36 +1380,98 @@ function normalizeMatch(match) {
     }
 
 
+    const homeTeam =
+        match.home_team ||
+        match.homeTeam ||
+        match.home ||
+        {};
+
+
+    const awayTeam =
+        match.away_team ||
+        match.awayTeam ||
+        match.away ||
+        {};
+
+
     const status =
-        normalizeStatus(match);
+        normalizeStatus(
+            match
+        );
 
 
-    const normalized = {
+    const homeName =
+        getTeamName(
+            homeTeam,
+            firstValue(
+                match.home_name,
+                match.homeName
+            ) || "Équipe domicile"
+        );
+
+
+    const awayName =
+        getTeamName(
+            awayTeam,
+            firstValue(
+                match.away_name,
+                match.awayName
+            ) || "Équipe visiteuse"
+        );
+
+
+    const homeLogo =
+        getTeamLogo(
+            homeTeam,
+            firstValue(
+                match.home_logo,
+                match.homeLogo,
+                match.home_image,
+                match.homeImage,
+                match.home_badge,
+                match.homeBadge
+            )
+        );
+
+
+    const awayLogo =
+        getTeamLogo(
+            awayTeam,
+            firstValue(
+                match.away_logo,
+                match.awayLogo,
+                match.away_image,
+                match.awayImage,
+                match.away_badge,
+                match.awayBadge
+            )
+        );
+
+
+    return {
 
         id:
-            getMatchId(match),
+            getMatchId(
+                match
+            ),
 
 
         slug:
-            getMatchSlug(match),
+            getMatchSlug(
+                match
+            ),
 
 
         home: {
 
             name:
-                getTeamName(
-                    match,
-                    "home"
-                ),
+                homeName,
 
             logo:
-                getTeamLogo(
-                    match,
-                    "home"
-                ),
+                homeLogo,
 
             score:
-                getTeamScore(
+                getScore(
                     match,
                     "home"
                 )
@@ -1292,19 +1482,13 @@ function normalizeMatch(match) {
         away: {
 
             name:
-                getTeamName(
-                    match,
-                    "away"
-                ),
+                awayName,
 
             logo:
-                getTeamLogo(
-                    match,
-                    "away"
-                ),
+                awayLogo,
 
             score:
-                getTeamScore(
+                getScore(
                     match,
                     "away"
                 )
@@ -1313,11 +1497,18 @@ function normalizeMatch(match) {
 
 
         competition:
-            getCompetition(match),
+            getCompetition(
+                match
+            ),
 
 
         competitionLogo:
-            getCompetitionLogo(match),
+            firstValue(
+                match.competition_logo,
+                match.competitionLogo,
+                match.league_logo,
+                match.leagueLogo
+            ),
 
 
         status:
@@ -1326,98 +1517,73 @@ function normalizeMatch(match) {
 
         statusText:
             firstValue(
-
                 match.status_text,
                 match.statusText,
                 match.status_name,
                 match.statusName
-
             ) || "",
 
 
-        /*
-           Minit sèlman si match LIVE.
-        */
-
         minute:
             status === "live"
-                ? getLiveMinute(match)
+                ? getMinute(match)
                 : null,
 
 
         startTime:
-            getStartTime(match),
+            getStartTime(
+                match
+            ),
 
 
         raw:
             match
 
     };
-
-
-    return normalized;
-
 }
-
-
 /* =========================================================
-   NORMALIZE LIST
+   PREZISCORE API — PART 3
+   GET + FILTER + AUTO REFRESH
 ========================================================= */
 
-function normalizeMatches(matches) {
-
-    if (
-        !Array.isArray(matches)
-    ) {
-        return [];
-    }
-
-
-    return matches
-        .map(
-            match =>
-                normalizeMatch(match)
-        )
-        .filter(Boolean);
-
-}
-
 
 /* =========================================================
-   GET NORMALIZED MATCHES
+   NORMALIZED MATCHES
 ========================================================= */
 
 async function getNormalizedMatches() {
 
     const matches =
-        await getMatches(50);
+        await getMatches(100);
 
 
     console.log(
-        "⚽ SportScore matches:",
-        matches.length
+        "⚽ PreziScore:",
+        matches.length,
+        "matchs reçus"
     );
 
 
     const normalized =
-        normalizeMatches(
-            matches
-        );
+        matches
+            .map(match =>
+                normalizeMatch(match)
+            )
+            .filter(Boolean);
 
 
     console.log(
-        "📊 PreziScore normalized:",
+        "📊 Matchs normalisés:",
         normalized
     );
 
 
     return normalized;
-
 }
 
 
 /* =========================================================
-   LIVE
+   LIVE MATCHES
 ========================================================= */
 
 async function getLiveMatches() {
@@ -1430,12 +1596,11 @@ async function getLiveMatches() {
         match =>
             match.status === "live"
     );
-
 }
 
 
 /* =========================================================
-   UPCOMING
+   UPCOMING MATCHES
 ========================================================= */
 
 async function getUpcomingMatches() {
@@ -1448,12 +1613,11 @@ async function getUpcomingMatches() {
         match =>
             match.status === "upcoming"
     );
-
 }
 
 
 /* =========================================================
-   FINISHED
+   FINISHED MATCHES
 ========================================================= */
 
 async function getFinishedMatches() {
@@ -1466,14 +1630,7 @@ async function getFinishedMatches() {
         match =>
             match.status === "finished"
     );
-
-       }
-
-   
-/* =========================================================
-   PREZISCORE API — PARTIE 3
-   DETAILS + TEAM + STANDINGS + CACHE + GLOBAL
-========================================================= */
+}
 
 
 /* =========================================================
@@ -1497,12 +1654,11 @@ async function getMatch(slug) {
             slug: slug
         }
     );
-
 }
 
 
 /* =========================================================
-   TEAM DETAILS
+   TEAM
 ========================================================= */
 
 async function getTeam(slug) {
@@ -1522,7 +1678,6 @@ async function getTeam(slug) {
             slug: slug
         }
     );
-
 }
 
 
@@ -1535,7 +1690,7 @@ async function getStandings(slug) {
     if (!slug) {
 
         throw new Error(
-            "Competition slug manke"
+            "League slug manke"
         );
 
     }
@@ -1547,7 +1702,6 @@ async function getStandings(slug) {
             slug: slug
         }
     );
-
 }
 
 
@@ -1560,7 +1714,7 @@ async function getTopScorers(slug) {
     if (!slug) {
 
         throw new Error(
-            "Competition slug manke"
+            "League slug manke"
         );
 
     }
@@ -1572,7 +1726,6 @@ async function getTopScorers(slug) {
             slug: slug
         }
     );
-
 }
 
 
@@ -1597,7 +1750,6 @@ async function getPlayer(slug) {
             slug: slug
         }
     );
-
 }
 
 
@@ -1610,7 +1762,7 @@ async function getBracket(slug) {
     if (!slug) {
 
         throw new Error(
-            "Competition slug manke"
+            "League slug manke"
         );
 
     }
@@ -1622,7 +1774,6 @@ async function getBracket(slug) {
             slug: slug
         }
     );
-
 }
 
 
@@ -1635,7 +1786,7 @@ async function getTracker(id) {
     if (!id) {
 
         throw new Error(
-            "Match ID manke"
+            "Tracker ID manke"
         );
 
     }
@@ -1647,12 +1798,11 @@ async function getTracker(id) {
             id: id
         }
     );
-
 }
 
 
 /* =========================================================
-   CACHE CLEAR
+   CLEAR CACHE
 ========================================================= */
 
 function clearCache() {
@@ -1660,237 +1810,59 @@ function clearCache() {
     cache.clear();
 
     console.log(
-        "🧹 PreziScore API cache cleared"
+        "🧹 PreziScore cache netwaye"
     );
-
 }
 
 
 /* =========================================================
-   FORCE REFRESH
-========================================================= */
-
-async function refreshMatches() {
-
-    clearCache();
-
-    return await getNormalizedMatches();
-
-}
-
-
-/* =========================================================
-   API TEST
-========================================================= */
-
-async function testAPI() {
-
-    try {
-
-        console.log(
-            "🔎 PreziScore API test..."
-        );
-
-
-        const matches =
-            await getMatches(10);
-
-
-        console.log(
-            "✅ API OK"
-        );
-
-
-        console.log(
-            "⚽ Matchs reçus:",
-            matches.length
-        );
-
-
-        return {
-
-            success: true,
-
-            count:
-                matches.length,
-
-            matches:
-                matches
-
-        };
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "❌ API TEST ERROR:",
-            error
-        );
-
-
-        return {
-
-            success: false,
-
-            count: 0,
-
-            matches: [],
-
-            error:
-                error.message
-
-        };
-
-    }
-
-}
-
-
-/* =========================================================
-   PUBLIC API OBJECT
+   API OBJECT
 ========================================================= */
 
 const PreziAPI = {
 
-    /* REQUEST */
+    request,
 
-    request:
+    getMatches,
 
+    getNormalizedMatches,
 
-        request,
+    getLiveMatches,
 
+    getUpcomingMatches,
 
-    /* MATCHES */
+    getFinishedMatches,
 
-    getMatches:
+    getMatch,
 
+    getTeam,
 
-        getMatches,
+    getStandings,
 
+    getTopScorers,
 
-    getNormalizedMatches:
+    getPlayer,
 
+    getBracket,
 
-        getNormalizedMatches,
+    getTracker,
 
+    normalizeMatch,
 
-    getLiveMatches:
+    normalizeStatus,
 
-
-        getLiveMatches,
-
-
-    getUpcomingMatches:
-
-
-        getUpcomingMatches,
-
-
-    getFinishedMatches:
-
-
-        getFinishedMatches,
-
-
-    refreshMatches:
-
-
-        refreshMatches,
-
-
-    /* DETAILS */
-
-    getMatch:
-
-
-        getMatch,
-
-
-    getTeam:
-
-
-        getTeam,
-
-
-    getStandings:
-
-
-        getStandings,
-
-
-    getTopScorers:
-
-
-        getTopScorers,
-
-
-    getPlayer:
-
-
-        getPlayer,
-
-
-    getBracket:
-
-
-        getBracket,
-
-
-    getTracker:
-
-
-        getTracker,
-
-
-    /* NORMALIZATION */
-
-    normalizeMatch:
-
-
-        normalizeMatch,
-
-
-    normalizeMatches:
-
-
-        normalizeMatches,
-
-
-    normalizeStatus:
-
-
-        normalizeStatus,
-
-
-    /* CACHE */
-
-    clearCache:
-
-
-        clearCache,
-
-
-    /* TEST */
-
-    testAPI:
-
-
-        testAPI
+    clearCache
 
 };
 
 
 /* =========================================================
-   AUTO REFRESH ENGINE
+   AUTO REFRESH
 ========================================================= */
 
 const PreziLive = {
 
     timer: null,
-
-
-    running: false,
 
 
     start(
@@ -1907,7 +1879,7 @@ const PreziLive = {
         ) {
 
             console.error(
-                "❌ PreziLive callback invalid"
+                "❌ PreziLive callback pa valid."
             );
 
             return;
@@ -1915,42 +1887,29 @@ const PreziLive = {
         }
 
 
-        this.running =
-            true;
-
-
-        /* Premye chaj */
+        /*
+         * Premye chaj la fèt touswit.
+         */
 
         callback();
 
 
-        /* Refresh */
+        /*
+         * Apre sa nou rafrechi
+         * otomatikman.
+         */
 
         this.timer =
             setInterval(
-
-                () => {
-
-                    if (
-                        typeof callback ===
-                        "function"
-                    ) {
-
-                        callback();
-
-                    }
-
-                },
-
+                callback,
                 seconds * 1000
-
             );
 
 
         console.log(
-            "🔄 PreziLive started:",
+            "🔴 PreziLive aktif — chak",
             seconds,
-            "seconds"
+            "segonn"
         );
 
     },
@@ -1958,27 +1917,21 @@ const PreziLive = {
 
     stop() {
 
-        if (
-            this.timer
-        ) {
+        if (this.timer) {
 
             clearInterval(
                 this.timer
             );
 
-            this.timer =
-                null;
+
+            this.timer = null;
+
+
+            console.log(
+                "⏹️ PreziLive kanpe"
+            );
 
         }
-
-
-        this.running =
-            false;
-
-
-        console.log(
-            "⏹️ PreziLive stopped"
-        );
 
     }
 
@@ -1989,18 +1942,6 @@ const PreziLive = {
    GLOBAL
 ========================================================= */
 
-/*
-   Sa yo enpòtan anpil.
-
-   script.js ap chèche:
-
-   window.PreziAPI
-
-   ak
-
-   window.PreziLive
-*/
-
 window.PreziAPI =
     PreziAPI;
 
@@ -2010,41 +1951,25 @@ window.PreziLive =
 
 
 /* =========================================================
-   READY MESSAGE
+   READY
 ========================================================= */
 
 console.log(
-    "===================================="
+    "✅ PREZISCORE API READY"
 );
 
 console.log(
-    "⚽ PREZISCORE API READY"
+    "⚽ getMatches() OK"
 );
 
 console.log(
-    "📡 SportScore Football"
+    "🔴 getLiveMatches() OK"
 );
 
 console.log(
-    "🔴 LIVE"
+    "📅 getUpcomingMatches() OK"
 );
 
 console.log(
-    "📅 UPCOMING"
+    "✅ getFinishedMatches() OK"
 );
-
-console.log(
-    "✅ FINISHED"
-);
-
-console.log(
-    "⏱️ Live minute detection enabled"
-);
-
-console.log(
-    "🖼️ Team logo detection enabled"
-);
-
-console.log(
-    "===================================="
-);                  
