@@ -6,255 +6,83 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0">
 
 <meta name="theme-color"
-      content="#080b10">
+content="#080b10">
 
 <meta name="description"
-      content="PreziScore — Détails du match">
+content="PreziScore — Football en direct">
 
-<title>PreziScore — Détails</title>
+<title>PreziScore — Accueil</title>
 
 <link rel="stylesheet" href="style.css">
 
 <style>
 
-/* =====================================================
-   MATCH DETAILS
-===================================================== */
+/* ================================
+   PREZISCORE HOME
+================================ */
 
-.details-page {
+.home-page {
     padding-bottom: 100px;
 }
 
-
-/* HEADER */
-
-.details-head {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 0;
+.hero {
+    padding: 25px 0 20px;
 }
 
-.back-btn {
-    width: 40px;
-    height: 40px;
-
-    border: 1px solid var(--border);
-    border-radius: 12px;
-
-    background: var(--card);
-    color: white;
-
-    font-size: 20px;
-    cursor: pointer;
+.hero h2 {
+    font-size: 27px;
+    line-height: 1.15;
+    letter-spacing: -1px;
 }
 
-.details-title {
-    font-size: 18px;
-    font-weight: 900;
-}
-
-
-/* COMPETITION */
-
-.details-competition {
-    text-align: center;
-    margin: 10px 0 20px;
-}
-
-.details-competition h2 {
-    font-size: 14px;
-}
-
-.details-competition p {
-    margin-top: 5px;
-    color: var(--muted);
-    font-size: 10px;
-}
-
-
-/* SCORE CARD */
-
-.score-card {
-    padding: 22px 14px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 20px;
-
-    text-align: center;
-}
-
-
-/* STATUS */
-
-.details-status {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    padding: 6px 10px;
-
-    border-radius: 8px;
-
-    background:
-        rgba(0,230,118,0.08);
-
+.hero h2 span {
     color: var(--primary);
-
-    font-size: 9px;
-
-    font-weight: 900;
 }
 
-.details-status.live {
-    color: #ff304f;
-
-    background:
-        rgba(255,48,79,0.10);
+.hero p {
+    margin-top: 9px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
 }
 
 
-/* TEAMS */
+/* ================================
+   SECTION
+================================ */
 
-.details-teams {
-    display: grid;
-
-    grid-template-columns:
-        1fr 100px 1fr;
-
-    align-items: center;
-
-    gap: 8px;
-
+.home-section {
     margin-top: 22px;
 }
 
-.details-team {
-    text-align: center;
-}
-
-.details-logo {
-    width: 62px;
-    height: 62px;
-
-    margin: 0 auto 10px;
-
-    display: grid;
-
-    place-items: center;
-
-    background: var(--card-2);
-
-    border: 1px solid var(--border);
-
-    border-radius: 16px;
-
-    font-size: 25px;
-
-    overflow: hidden;
-}
-
-.details-logo img {
-    width: 48px;
-    height: 48px;
-
-    object-fit: contain;
-}
-
-.details-team-name {
-    font-size: 11px;
-    font-weight: 800;
-}
-
-
-/* SCORE */
-
-.details-score {
-    font-size: 30px;
-    font-weight: 900;
-}
-
-.details-score small {
-    display: block;
-
-    margin-top: 6px;
-
-    color: var(--muted);
-
-    font-size: 9px;
-}
-
-
-/* INFO */
-
-.match-info {
-    margin-top: 14px;
-
-    padding: 15px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 16px;
-}
-
-.match-info-title {
-    font-size: 12px;
-    font-weight: 900;
-    margin-bottom: 12px;
-}
-
-.info-row {
+.section-head {
     display: flex;
-
+    align-items: center;
     justify-content: space-between;
+    margin-bottom: 11px;
+}
 
-    padding: 8px 0;
+.section-head h3 {
+    font-size: 14px;
+}
 
-    border-bottom: 1px solid var(--border);
-
+.section-head a {
+    color: var(--primary);
     font-size: 10px;
-}
-
-.info-row:last-child {
-    border-bottom: 0;
-}
-
-.info-row span:first-child {
-    color: var(--muted);
+    font-weight: 800;
+    text-decoration: none;
 }
 
 
-/* LOADING */
+/* ================================
+   LIVE BOX
+================================ */
 
-.details-loading {
-    padding: 60px 10px;
-
-    text-align: center;
-
-    color: var(--muted);
-
-    font-size: 11px;
-}
-
-
-/* ERROR */
-
-.details-error {
-    display: none;
-
-    padding: 35px 15px;
-
-    text-align: center;
+.live-box {
+    padding: 15px;
 
     background: var(--card);
 
@@ -263,23 +91,223 @@
     border-radius: 18px;
 }
 
-.details-error.show {
-    display: block;
-}
+.live-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
 
-.details-error div {
-    font-size: 32px;
-}
+    margin-bottom: 10px;
 
-.details-error h3 {
-    margin-top: 10px;
-    font-size: 14px;
-}
+    color: #ff304f;
 
-.details-error p {
-    margin-top: 6px;
-    color: var(--muted);
     font-size: 10px;
+    font-weight: 900;
+}
+
+.live-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #ff304f;
+
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+
+    50% {
+        opacity: .35;
+    }
+
+}
+
+
+/* ================================
+   LIVE MATCH
+================================ */
+
+.home-match {
+    display: grid;
+
+    grid-template-columns:
+        1fr 65px 1fr;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid var(--border);
+
+    cursor: pointer;
+}
+
+.home-match:last-child {
+    border-bottom: 0;
+}
+
+.home-team {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 6px;
+
+    text-align: center;
+}
+
+.home-team-icon {
+    width: 36px;
+    height: 36px;
+
+    display: grid;
+
+    place-items: center;
+
+    background: var(--card-2);
+
+    border-radius: 10px;
+
+    font-size: 17px;
+}
+
+.home-team-name {
+    max-width: 100%;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+.home-score {
+    text-align: center;
+
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+.home-score small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+}
+
+
+/* ================================
+   TODAY MATCHES
+================================ */
+
+.today-list {
+    display: grid;
+
+    gap: 8px;
+}
+
+.today-match {
+    display: grid;
+
+    grid-template-columns:
+        1fr 55px 1fr;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 13px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    cursor: pointer;
+}
+
+.today-team {
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+.today-team.away {
+    text-align: right;
+}
+
+.today-time {
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+/* ================================
+   EMPTY
+================================ */
+
+.home-empty {
+    padding: 22px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    font-size: 10px;
+}
+
+
+/* ================================
+   LOADING
+================================ */
+
+.home-loading {
+    padding: 22px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (min-width: 768px) {
+
+    .today-list {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
 }
 
 </style>
@@ -289,6 +317,10 @@
 
 <body>
 
+
+<!-- ================================
+     HEADER
+================================ -->
 
 <header class="top-header">
 
@@ -312,286 +344,401 @@
 
     </div>
 
+
+    <button
+        class="search-btn"
+        onclick="goMatches()"
+        aria-label="Rechercher"
+    >
+        🔍
+    </button>
+
 </header>
 
 
-<main class="main-content details-page">
+<!-- ================================
+     MAIN
+================================ -->
+
+<main class="main-content home-page">
 
 
-    <!-- BACK -->
+    <!-- HERO -->
 
-    <div class="details-head">
+    <section class="hero">
 
-        <button
-            class="back-btn"
-            onclick="history.back()"
-        >
-            ←
-        </button>
+        <h2>
+            Tout le football
+            <br>
 
-        <div class="details-title">
-            Détails du match
-        </div>
+            <span>
+                au même endroit ⚽
+            </span>
 
-    </div>
+        </h2>
 
-
-    <!-- LOADING -->
-
-    <div
-        id="detailsLoading"
-        class="details-loading"
-    >
-
-        Chargement du match...
-
-    </div>
-
-
-    <!-- ERROR -->
-
-    <div
-        id="detailsError"
-        class="details-error"
-    >
-
-        <div>⚠️</div>
-
-        <h3>
-            Match introuvable
-        </h3>
 
         <p>
-            Impossible de charger les détails
-            de ce match.
+            Suivez les matchs, scores,
+            compétitions et actualités
+            football facilement.
         </p>
 
-    </div>
+    </section>
 
 
-    <!-- CONTENT -->
+    <!-- ================================
+         LIVE
+    ================================= -->
 
-    <section
-        id="matchDetails"
-        style="display:none;"
-    >
+    <section class="home-section">
+
+        <div class="section-head">
+
+            <h3>
+                🔴 En direct
+            </h3>
 
 
-        <!-- COMPETITION -->
-
-        <div class="details-competition">
-
-            <h2 id="competitionName">
-                Football
-            </h2>
-
-            <p id="matchDate">
-                —
-            </p>
+            <a href="match.html">
+                Voir tout →
+            </a>
 
         </div>
 
 
-        <!-- SCORE -->
+        <div class="live-box">
 
-        <div class="score-card">
+            <div class="live-title">
 
+                <span class="live-dot"></span>
 
-            <div
-                id="matchStatus"
-                class="details-status"
-            >
-
-                À VENIR
+                Matchs en direct
 
             </div>
 
 
-            <div class="details-teams">
+            <div id="liveContent">
 
-
-                <!-- HOME -->
-
-                <div class="details-team">
-
-                    <div class="details-logo">
-
-                        <img
-                            id="homeLogo"
-                            style="display:none;"
-                            alt=""
-                        >
-
-                        <span id="homeLogoFallback">
-                            ⚽
-                        </span>
-
-                    </div>
-
-                    <div
-                        id="homeName"
-                        class="details-team-name"
-                    >
-                        Équipe domicile
-                    </div>
-
+                <div class="home-loading">
+                    Chargement...
                 </div>
-
-
-                <!-- SCORE -->
-
-                <div class="details-score">
-
-                    <span id="homeScore">
-                        -
-                    </span>
-
-                    <span>
-                        :
-                    </span>
-
-                    <span id="awayScore">
-                        -
-                    </span>
-
-                    <small id="scoreInfo">
-                        À venir
-                    </small>
-
-                </div>
-
-
-                <!-- AWAY -->
-
-                <div class="details-team">
-
-                    <div class="details-logo">
-
-                        <img
-                            id="awayLogo"
-                            style="display:none;"
-                            alt=""
-                        >
-
-                        <span id="awayLogoFallback">
-                            ⚽
-                        </span>
-
-                    </div>
-
-                    <div
-                        id="awayName"
-                        class="details-team-name"
-                    >
-                        Équipe visiteuse
-                    </div>
-
-                </div>
-
 
             </div>
 
         </div>
-
-
-        <!-- INFORMATION -->
-
-        <div class="match-info">
-
-            <div class="match-info-title">
-                Informations
-            </div>
-
-
-            <div class="info-row">
-
-                <span>
-                    Compétition
-                </span>
-
-                <span id="infoCompetition">
-                    Football
-                </span>
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span>
-                    Statut
-                </span>
-
-                <span id="infoStatus">
-                    À venir
-                </span>
-
-            </div>
-
-
-            <div class="info-row">
-
-                <span>
-                    Heure
-                </span>
-
-                <span id="infoTime">
-                    —
-                </span>
-
-            </div>
-
-        </div>
-
 
     </section>
-<!-- =====================================================
-     STATISTIQUES
-===================================================== -->
 
-<div class="match-info">
 
-    <div class="match-info-title">
-        📊 Statistiques du match
-    </div>
+    <!-- ================================
+         MATCHS DU JOUR
+    ================================= -->
 
-    <div class="info-row">
-        <span>Possession</span>
-        <span id="possession">—</span>
-    </div>
+    <section class="home-section">
 
-    <div class="info-row">
-        <span>Tirs</span>
-        <span id="shots">—</span>
-    </div>
+        <div class="section-head">
 
-    <div class="info-row">
-        <span>Tirs cadrés</span>
-        <span id="shotsOnTarget">—</span>
-    </div>
+            <h3>
+                📅 Matchs du jour
+            </h3>
 
-    <div class="info-row">
-        <span>Corners</span>
-        <span id="corners">—</span>
-    </div>
 
-    <div class="info-row">
-        <span>Cartons jaunes</span>
-        <span id="yellowCards">—</span>
-    </div>
+            <a href="match.html">
+                Tous les matchs →
+            </a>
 
-</div>
+        </div>
+
+
+        <div
+            id="todayContent"
+            class="today-list"
+        >
+
+            <div class="home-empty">
+
+                Chargement des matchs...
+
+            </div>
+
+        </div>
+
+    </section>
+    <!-- ================================
+         COMPÉTITIONS
+    ================================= -->
+
+    <section class="home-section">
+
+        <div class="section-head">
+
+            <h3>
+                🏆 Compétitions
+            </h3>
+
+            <a href="competitions.html">
+                Voir tout →
+            </a>
+
+        </div>
+
+
+        <div class="competition-grid">
+
+
+            <a
+                href="competitions.html"
+                class="competition-card"
+            >
+
+                <div>🇬🇧</div>
+
+                <strong>
+                    Premier League
+                </strong>
+
+                <small>
+                    Angleterre
+                </small>
+
+            </a>
+
+
+            <a
+                href="competitions.html"
+                class="competition-card"
+            >
+
+                <div>🇪🇸</div>
+
+                <strong>
+                    La Liga
+                </strong>
+
+                <small>
+                    Espagne
+                </small>
+
+            </a>
+
+
+            <a
+                href="competitions.html"
+                class="competition-card"
+            >
+
+                <div>🇮🇹</div>
+
+                <strong>
+                    Serie A
+                </strong>
+
+                <small>
+                    Italie
+                </small>
+
+            </a>
+
+
+            <a
+                href="competitions.html"
+                class="competition-card"
+            >
+
+                <div>🇩🇪</div>
+
+                <strong>
+                    Bundesliga
+                </strong>
+
+                <small>
+                    Allemagne
+                </small>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         ÉQUIPES POPULAIRES
+    ================================= -->
+
+    <section class="home-section">
+
+        <div class="section-head">
+
+            <h3>
+                ⭐ Équipes populaires
+            </h3>
+
+            <a href="match.html">
+                Explorer →
+            </a>
+
+        </div>
+
+
+        <div class="team-grid">
+
+
+            <a
+                href="match.html"
+                class="team-card"
+            >
+
+                <div>🔵</div>
+
+                <span>
+                    Chelsea
+                </span>
+
+            </a>
+
+
+            <a
+                href="match.html"
+                class="team-card"
+            >
+
+                <div>🔴</div>
+
+                <span>
+                    Arsenal
+                </span>
+
+            </a>
+
+
+            <a
+                href="match.html"
+                class="team-card"
+            >
+
+                <div>⚪</div>
+
+                <span>
+                    Real Madrid
+                </span>
+
+            </a>
+
+
+            <a
+                href="match.html"
+                class="team-card"
+            >
+
+                <div>🔴</div>
+
+                <span>
+                    Barcelona
+                </span>
+
+            </a>
+
+
+            <a
+                href="match.html"
+                class="team-card"
+            >
+
+                <div>🔴</div>
+
+                <span>
+                    Bayern
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         ACTUALITÉS
+    ================================= -->
+
+    <section class="home-section">
+
+        <div class="section-head">
+
+            <h3>
+                📰 Dernières actualités
+            </h3>
+
+            <a href="news.html">
+                Voir tout →
+            </a>
+
+        </div>
+
+
+        <article class="news-card">
+
+            <strong>
+                ⚽ FOOTBALL
+            </strong>
+
+            <p>
+                Toute l'actualité football
+                au même endroit.
+                Résultats, matchs et informations
+                football.
+            </p>
+
+        </article>
+
+
+        <article class="news-card">
+
+            <strong>
+                🏆 COMPÉTITIONS
+            </strong>
+
+            <p>
+                Suivez vos compétitions préférées
+                et retrouvez les grands championnats
+                du monde.
+            </p>
+
+        </article>
+
+
+        <article class="news-card">
+
+            <strong>
+                🔥 PREZISCORE
+            </strong>
+
+            <p>
+                Votre football, votre plateforme.
+                PreziScore évolue pour devenir
+                votre référence.
+            </p>
+
+        </article>
+
+    </section>
+
 
 </main>
 
 
-<!-- BOTTOM NAV -->
+<!-- ================================
+     BOTTOM NAVIGATION
+================================ -->
 
 <nav class="bottom-nav">
 
+
     <a
         href="index.html"
-        class="nav-item"
+        class="nav-item active"
     >
 
         <span>⌂</span>
@@ -605,7 +752,7 @@
 
     <a
         href="match.html"
-        class="nav-item active"
+        class="nav-item"
     >
 
         <span>⚽</span>
@@ -661,16 +808,451 @@
 </nav>
 
 
-<!-- API -->
+<!-- ================================
+     API
+================================ -->
 
 <script src="api.js"></script>
 
 
-<!-- DETAILS SCRIPT -->
+<script>
 
-<script src="match-details.js"></script>
+/* ================================
+   NAVIGATION
+================================ */
+
+function goMatches() {
+
+    window.location.href =
+        "match.html";
+
+}
+
+
+/* ================================
+   ELEMENTS
+================================ */
+
+const liveContent =
+    document.getElementById(
+        "liveContent"
+    );
+
+const todayContent =
+    document.getElementById(
+        "todayContent"
+    );
+
+
+/* ================================
+   TEAM NAME
+================================ */
+
+function getTeamName(
+    match,
+    side
+) {
+
+    const team =
+        side === "home"
+            ? match?.home
+            : match?.away;
+
+
+    return (
+        team?.name ||
+        "Équipe"
+    );
+
+}
+
+
+/* ================================
+   STATUS
+================================ */
+
+function getStatus(match) {
+
+    const status =
+        String(
+            match?.status || ""
+        ).toLowerCase();
+
+
+    if (
+        status.includes("live") ||
+        status.includes("progress") ||
+        status.includes("playing")
+    ) {
+
+        return "live";
+
+    }
+
+
+    if (
+        status.includes("finish") ||
+        status.includes("ended") ||
+        status === "ft"
+    ) {
+
+        return "finished";
+
+    }
+
+
+    return "upcoming";
+
+}
+
+
+/* ================================
+   ESCAPE
+================================ */
+
+function safe(text) {
+
+    return String(text || "")
+        .replace(
+            /[&<>"']/g,
+            function(char) {
+
+                return {
+
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+
+                }[char];
+
+            }
+        );
+
+}
+
+
+/* ================================
+   OPEN MATCH
+================================ */
+
+function openMatch(match) {
+
+    const id =
+        match?.id ||
+        match?.slug ||
+        match?.raw?.id ||
+        match?.raw?.slug;
+
+
+    if (!id) return;
+
+
+    window.location.href =
+        "match-details.html?match=" +
+        encodeURIComponent(id);
+
+}
+
+
+/* ================================
+   RENDER LIVE
+================================ */
+
+function renderLive(matches) {
+
+    if (!matches.length) {
+
+        liveContent.innerHTML = `
+
+            <div class="home-empty">
+                Aucun match en direct.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    liveContent.innerHTML =
+        matches
+        .slice(0, 3)
+        .map(function(match) {
+
+            const home =
+                getTeamName(
+                    match,
+                    "home"
+                );
+
+            const away =
+                getTeamName(
+                    match,
+                    "away"
+                );
+
+            const homeScore =
+                match?.home?.score ?? "-";
+
+            const awayScore =
+                match?.away?.score ?? "-";
+
+
+            return `
+
+                <div
+                    class="home-match"
+                    onclick='openMatch(${JSON.stringify(match)})'
+                >
+
+                    <div class="home-team">
+
+                        <div class="home-team-icon">
+                            ⚽
+                        </div>
+
+                        <div class="home-team-name">
+                            ${safe(home)}
+                        </div>
+
+                    </div>
+
+
+                    <div class="home-score">
+
+                        ${safe(homeScore)}
+                        :
+                        ${safe(awayScore)}
+
+                        <small>
+                            🔴 LIVE
+                        </small>
+
+                    </div>
+
+
+                    <div class="home-team">
+
+                        <div class="home-team-icon">
+                            ⚽
+                        </div>
+
+                        <div class="home-team-name">
+                            ${safe(away)}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* ================================
+   RENDER TODAY
+================================ */
+
+function renderToday(matches) {
+
+    if (!matches.length) {
+
+        todayContent.innerHTML = `
+
+            <div class="home-empty">
+
+                Aucun match disponible.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    todayContent.innerHTML =
+        matches
+        .slice(0, 6)
+        .map(function(match) {
+
+            const home =
+                getTeamName(
+                    match,
+                    "home"
+                );
+
+            const away =
+                getTeamName(
+                    match,
+                    "away"
+                );
+
+
+            const status =
+                getStatus(match);
+
+
+            let time = "--:--";
+
+
+            if (
+                status === "live"
+            ) {
+
+                time = "🔴 LIVE";
+
+            }
+
+
+            return `
+
+                <div
+                    class="today-match"
+                    onclick='openMatch(${JSON.stringify(match)})'
+                >
+
+                    <div class="today-team">
+
+                        ${safe(home)}
+
+                    </div>
+
+
+                    <div class="today-time">
+
+                        ${time}
+
+                    </div>
+
+
+                    <div
+                        class="today-team away"
+                    >
+
+                        ${safe(away)}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* ================================
+   LOAD HOME
+================================ */
+
+async function loadHome() {
+
+    if (!window.PreziAPI) {
+
+        liveContent.innerHTML = `
+
+            <div class="home-empty">
+                ⚠️ API indisponible
+            </div>
+
+        `;
+
+        todayContent.innerHTML = `
+
+            <div class="home-empty">
+                ⚠️ API indisponible
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    try {
+
+        const data =
+            await PreziAPI
+                .getNormalizedMatches();
+
+
+        const matches =
+            Array.isArray(data)
+                ? data
+                : [];
+
+
+        const live =
+            matches.filter(
+                function(match) {
+
+                    return (
+                        getStatus(match)
+                        === "live"
+                    );
+
+                }
+            );
+
+
+        renderLive(live);
+
+        renderToday(matches);
+
+    }
+
+
+    catch(error) {
+
+        console.error(
+            "PreziScore:",
+            error
+        );
+
+
+        liveContent.innerHTML = `
+
+            <div class="home-empty">
+                ⚠️ Erreur de chargement
+            </div>
+
+        `;
+
+
+        todayContent.innerHTML = `
+
+            <div class="home-empty">
+                ⚠️ Erreur de chargement
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* ================================
+   START
+================================ */
+
+loadHome();
+
+</script>
 
 
 </body>
 
-      </html>
+</html>
