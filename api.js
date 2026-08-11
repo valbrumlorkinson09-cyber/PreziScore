@@ -1,8 +1,7 @@
 "use strict";
 
 /* =====================================================
-   PREZISCORE API
-   API-FOOTBALL
+   PREZISCORE — API FOOTBALL
 ===================================================== */
 
 const API_KEY = "47f671279defefb2b169097f1062a2a6";
@@ -19,11 +18,15 @@ const cache = new Map();
    REQUEST
 ===================================================== */
 
-async function apiRequest(endpoint, params = {}) {
+async function apiRequest(
+    endpoint,
+    params = {}
+) {
 
-    const url = new URL(
-        API_URL + endpoint
-    );
+    const url =
+        new URL(
+            API_URL + endpoint
+        );
 
     Object.entries(params).forEach(
         ([key, value]) => {
@@ -45,32 +48,39 @@ async function apiRequest(endpoint, params = {}) {
     );
 
 
-    const key = url.toString();
+    const cacheKey =
+        url.toString();
 
-    const old = cache.get(key);
+    const cached =
+        cache.get(cacheKey);
 
 
     if (
-        old &&
-        Date.now() - old.time < CACHE_TIME
+        cached &&
+        Date.now() - cached.time <
+        CACHE_TIME
     ) {
 
-        return old.data;
+        return cached.data;
 
     }
 
 
-    const response = await fetch(
-        key,
-        {
-            method: "GET",
+    const response =
+        await fetch(
+            cacheKey,
+            {
+                method: "GET",
 
-            headers: {
-                "x-apisports-key": API_KEY,
-                "Accept": "application/json"
+                headers: {
+                    "x-apisports-key":
+                        API_KEY,
+
+                    "Accept":
+                        "application/json"
+                }
             }
-        }
-    );
+        );
 
 
     if (!response.ok) {
@@ -87,11 +97,26 @@ async function apiRequest(endpoint, params = {}) {
         await response.json();
 
 
+    if (
+        data?.errors &&
+        Object.keys(
+            data.errors
+        ).length
+    ) {
+
+        console.error(
+            "API Football errors:",
+            data.errors
+        );
+
+    }
+
+
     cache.set(
-        key,
+        cacheKey,
         {
             time: Date.now(),
-            data: data
+            data
         }
     );
 
@@ -102,7 +127,7 @@ async function apiRequest(endpoint, params = {}) {
 
 
 /* =====================================================
-   LIVE MATCHS
+   LIVE MATCHES
 ===================================================== */
 
 async function getLiveMatches() {
@@ -116,13 +141,17 @@ async function getLiveMatches() {
         );
 
 
-    return data?.response || [];
+    return Array.isArray(
+        data?.response
+    )
+        ? data.response
+        : [];
 
 }
 
 
 /* =====================================================
-   MATCHS DU JOUR
+   TODAY MATCHES
 ===================================================== */
 
 async function getTodayMatches() {
@@ -142,7 +171,76 @@ async function getTodayMatches() {
         );
 
 
-    return data?.response || [];
+    return Array.isArray(
+        data?.response
+    )
+        ? data.response
+        : [];
+
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function getStatus(
+    fixture
+) {
+
+    const short =
+        String(
+            fixture?.fixture?.status?.short ||
+            ""
+        )
+        .toUpperCase()
+        .trim();
+
+
+    /* LIVE */
+
+    const liveStatuses = [
+        "1H",
+        "2H",
+        "HT",
+        "ET",
+        "BT",
+        "P"
+    ];
+
+
+    if (
+        liveStatuses.includes(
+            short
+        )
+    ) {
+
+        return "live";
+
+    }
+
+
+    /* FINISHED */
+
+    const finishedStatuses = [
+        "FT",
+        "AET",
+        "PEN"
+    ];
+
+
+    if (
+        finishedStatuses.includes(
+            short
+        )
+    ) {
+
+        return "finished";
+
+    }
+
+
+    return "upcoming";
 
 }
 
@@ -151,7 +249,9 @@ async function getTodayMatches() {
    NORMALIZE MATCH
 ===================================================== */
 
-function normalizeMatch(match) {
+function normalizeMatch(
+    match
+) {
 
     const fixture =
         match?.fixture || {};
@@ -166,63 +266,82 @@ function normalizeMatch(match) {
         fixture?.status || {};
 
 
-    let state = "upcoming";
-
-
-    if (
-        status.short === "1H" ||
-        status.short === "2H" ||
-        status.short === "ET" ||
-        status.short === "BT" ||
-        status.short === "P"
-    ) {
-
-        state = "live";
-
-    }
-
-
-    if (
-        status.short === "FT" ||
-        status.short === "AET" ||
-        status.short === "PEN"
-    ) {
-
-        state = "finished";
-
-    }
-
-
     return {
 
-        id: fixture.id,
+        id:
+            fixture.id || null,
 
-        status: state,
 
-        minute:
-            status.elapsed ?? null,
+        slug:
+            fixture.id
+                ? String(
+                    fixture.id
+                )
+                : "",
+
+
+        status:
+            getStatus(match),
+
 
         statusShort:
             status.short || "",
 
+
         statusLong:
             status.long || "",
 
+
+        minute:
+            status.elapsed ??
+            null,
+
+
         time:
-            fixture.date || null,
+            fixture.date ||
+            null,
+
+
+        timestamp:
+            fixture.timestamp ||
+            null,
+
+
+        venue:
+            fixture.venue?.name ||
+            "",
+
+
+        referee:
+            fixture.referee ||
+            "",
+
 
         competition:
             match?.league?.name ||
             "Football",
 
+
+        leagueId:
+            match?.league?.id ||
+            null,
+
+
         leagueLogo:
             match?.league?.logo ||
             null,
 
+
+        country:
+            match?.league?.country ||
+            "",
+
+
         home: {
 
             id:
-                teams.home?.id || null,
+                teams.home?.id ||
+                null,
 
             name:
                 teams.home?.name ||
@@ -233,14 +352,17 @@ function normalizeMatch(match) {
                 null,
 
             score:
-                goals.home ?? null
+                goals.home ??
+                null
 
         },
+
 
         away: {
 
             id:
-                teams.away?.id || null,
+                teams.away?.id ||
+                null,
 
             name:
                 teams.away?.name ||
@@ -251,9 +373,14 @@ function normalizeMatch(match) {
                 null,
 
             score:
-                goals.away ?? null
+                goals.away ??
+                null
 
-        }
+        },
+
+
+        raw:
+            match
 
     };
 
@@ -261,17 +388,123 @@ function normalizeMatch(match) {
 
 
 /* =====================================================
-   NORMALIZED MATCHS
+   NORMALIZED MATCHES
 ===================================================== */
 
 async function getNormalizedMatches() {
 
-    const matches =
-        await getTodayMatches();
+    const results =
+        await Promise.allSettled([
+
+            getTodayMatches(),
+
+            getLiveMatches()
+
+        ]);
 
 
-    return matches.map(
-        normalizeMatch
+    const today =
+        results[0].status ===
+        "fulfilled"
+
+            ? results[0].value
+
+            : [];
+
+
+    const live =
+        results[1].status ===
+        "fulfilled"
+
+            ? results[1].value
+
+            : [];
+
+
+    /* COMBINE */
+
+    const all = [
+        ...today,
+        ...live
+    ];
+
+
+    /* REMOVE DUPLICATES */
+
+    const unique =
+        new Map();
+
+
+    all.forEach(
+        match => {
+
+            const id =
+                match?.fixture?.id;
+
+
+            if (id) {
+
+                unique.set(
+                    id,
+                    match
+                );
+
+            }
+
+        }
+    );
+
+
+    /* NORMALIZE */
+
+    return Array
+        .from(
+            unique.values()
+        )
+        .map(
+            normalizeMatch
+        );
+
+}
+
+
+/* =====================================================
+   FIND ONE MATCH
+===================================================== */
+
+async function getMatchById(
+    id
+) {
+
+    if (!id) {
+
+        return null;
+
+    }
+
+
+    const data =
+        await apiRequest(
+            "/fixtures",
+            {
+                id: id
+            }
+        );
+
+
+    const match =
+        data?.response?.[0];
+
+
+    if (!match) {
+
+        return null;
+
+    }
+
+
+    return normalizeMatch(
+        match
     );
 
 }
@@ -288,6 +521,8 @@ window.PreziAPI = {
     getTodayMatches,
 
     getNormalizedMatches,
+
+    getMatchById,
 
     normalizeMatch
 
