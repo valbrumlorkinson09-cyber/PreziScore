@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+      content="#080b10">
+
+<title>PreziScore — Profil</title>
+
+<link rel="stylesheet"
+      href="style.css">
+
+<style>
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+.profile-page {
+    padding-bottom: 100px;
+}
+
+
+/* =====================================================
+   PROFILE HEADER
+===================================================== */
+
+.profile-head {
+
+    text-align: center;
+
+    padding: 28px 0 20px;
+
+}
+
+
+.profile-avatar {
+
+    width: 78px;
+    height: 78px;
+
+    margin: auto;
+
+    display: grid;
+
+    place-items: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,230,118,.18),
+            rgba(0,230,118,.04)
+        );
+
+    border: 1px solid
+        rgba(0,230,118,.25);
+
+    border-radius: 50%;
+
+    font-size: 34px;
+
+}
+
+
+.profile-head h2 {
+
+    margin-top: 12px;
+
+    font-size: 20px;
+
+}
+
+
+.profile-head p {
+
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+}
+
+
+/* =====================================================
+   LOGIN CARD
+===================================================== */
+
+.profile-card {
+
+    padding: 17px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 17px;
+
+}
+
+
+.profile-card h3 {
+
+    font-size: 14px;
+
+}
+
+
+.profile-card p {
+
+    margin-top: 6px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.profile-button {
+
+    width: 100%;
+
+    margin-top: 15px;
+
+    padding: 12px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background: var(--primary);
+
+    color: #050505;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+}
+
+
+/* =====================================================
+   OPTIONS
+===================================================== */
+
+.profile-options {
+
+    margin-top: 18px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+
+.profile-option {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+}
+
+
+.option-icon {
+
+    width: 36px;
+    height: 36px;
+
+    display: grid;
+
+    place-items: center;
+
+    flex-shrink: 0;
+
+    background: var(--card-2);
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+}
+
+
+.option-text {
+
+    flex: 1;
+
+}
+
+
+.option-text strong {
+
+    display: block;
+
+    font-size: 10px;
+
+}
+
+
+.option-text span {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+}
+
+
+.option-arrow {
+
+    color: var(--muted);
+
+    font-size: 15px;
+
+}
+
+
+/* =====================================================
+   VERSION
+===================================================== */
+
+.version {
+
+    margin-top: 22px;
+
+    text-align: center;
+
+    color: #58616e;
+
+    font-size: 8px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<main class="main-content profile-page">
+
+
+<!-- =====================================================
+     PROFILE HEADER
+===================================================== -->
+
+<section class="profile-head">
+
+    <div class="profile-avatar">
+        ⚽
+    </div>
+
+    <h2>
+        Mon Profil
+    </h2>
+
+    <p>
+        Bienvenue sur PreziScore
+    </p>
+
+</section>
+
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<section class="profile-card">
+
+    <h3>
+        👤 Votre compte
+    </h3>
+
+    <p>
+        Connectez-vous pour personnaliser
+        votre expérience PreziScore et
+        suivre vos équipes préférées.
+    </p>
+
+    <button
+        class="profile-button"
+        onclick="loginMessage()"
+    >
+        Se connecter
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+     OPTIONS
+===================================================== -->
+
+<section class="profile-options">
+
+
+    <div class="profile-option">
+
+        <div class="option-icon">
+            ⭐
+        </div>
+
+        <div class="option-text">
+
+            <strong>
+                Mes équipes
+            </strong>
+
+            <span>
+                Retrouvez vos équipes préférées
+            </span>
+
+        </div>
+
+        <div class="option-arrow">
+            ›
+        </div>
+
+    </div>
+
+
+    <div class="profile-option">
+
+        <div class="option-icon">
+            🔔
+        </div>
+
+        <div class="option-text">
+
+            <strong>
+                Notifications
+            </strong>
+
+            <span>
+                Recevez les alertes de matchs
+            </span>
+
+        </div>
+
+        <div class="option-arrow">
+            ›
+        </div>
+
+    </div>
+
+
+    <div class="profile-option">
+
+        <div class="option-icon">
+            ⚙️
+        </div>
+
+        <div class="option-text">
+
+            <strong>
+                Paramètres
+            </strong>
+
+            <span>
+                Gérez vos préférences
+            </span>
+
+        </div>
+
+        <div class="option-arrow">
+            ›
+        </div>
+
+    </div>
+
+
+    <div class="profile-option">
+
+        <div class="option-icon">
+            ℹ️
+        </div>
+
+        <div class="option-text">
+
+            <strong>
+                À propos
+            </strong>
+
+            <span>
+                Informations sur PreziScore
+            </span>
+
+        </div>
+
+        <div class="option-arrow">
+            ›
+        </div>
+
+    </div>
+
+</section>
+
+
+<div class="version">
+    PreziScore v1.0
+</div>
+<!-- =====================================================
+     BOTTOM NAVIGATION
+===================================================== -->
+
+<nav class="bottom-nav">
+
+    <a
+        href="index.html"
+        class="nav-item"
+    >
+        <span>⌂</span>
+        <small>Accueil</small>
+    </a>
+
+
+    <a
+        href="match.html"
+        class="nav-item"
+    >
+        <span>⚽</span>
+        <small>Matchs</small>
+    </a>
+
+
+    <a
+        href="competitions.html"
+        class="nav-item"
+    >
+        <span>🏆</span>
+        <small>Compétitions</small>
+    </a>
+
+
+    <a
+        href="news.html"
+        class="nav-item"
+    >
+        <span>📰</span>
+        <small>News</small>
+    </a>
+
+
+    <a
+        href="profile.html"
+        class="nav-item active"
+    >
+        <span>👤</span>
+        <small>Profil</small>
+    </a>
+
+</nav>
+
+
+<!-- =====================================================
+     PROFILE JAVASCRIPT
+===================================================== -->
+
+<script>
+
+"use strict";
+
+
+function loginMessage() {
+
+    alert(
+        "👤 Connexion\n\n" +
+        "Cette fonction sera disponible " +
+        "dans une prochaine version de PreziScore."
+    );
+
+}
+
+
+console.log(
+    "👤 PreziScore Profil chargé"
+);
+
+</script>
+
+
+</main>
+
+
+</body>
+
+</html>
