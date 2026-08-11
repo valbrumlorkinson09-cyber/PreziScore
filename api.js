@@ -1173,3 +1173,1380 @@ window.PreziAPI =
 console.log(
     "✅ PREZISCORE API PART 1 READY"
 );
+
+/* =========================================================
+   PREZISCORE — API.JS
+   PARTIE 2 / 3
+
+   LIVE MINUTE + TRACKER + DETAILS
+========================================================= */
+
+
+/* =========================================================
+   MINUTE CLEANER
+========================================================= */
+
+function cleanMinute(value) {
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+        return null;
+    }
+
+
+    /* Si API a voye object */
+
+    if (
+        typeof value === "object"
+    ) {
+
+        value =
+
+            value.minute ??
+
+            value.minutes ??
+
+            value.elapsed ??
+
+            value.elapsed_time ??
+
+            value.elapsedTime ??
+
+            value.current ??
+
+            value.value ??
+
+            value.time ??
+
+            null;
+
+    }
+
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return null;
+    }
+
+
+    let text =
+        String(value)
+            .trim();
+
+
+    /*
+       Egzanp:
+       45
+       67'
+       67 min
+       67 minutes
+       67:30
+       45+2
+    */
+
+    text =
+        text
+            .replace(
+                /minutes?/gi,
+                ""
+            )
+            .replace(
+                /mins?/gi,
+                ""
+            )
+            .trim();
+
+
+    const found =
+        text.match(
+            /^(\d+)/
+        );
+
+
+    if (found) {
+
+        return Number(
+            found[1]
+        );
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   GET MINUTE FROM MATCH
+========================================================= */
+
+function getMatchMinute(
+    match
+) {
+
+    if (!match) {
+        return null;
+    }
+
+
+    /*
+       Nou pa mete okenn "2"
+       kòm fallback.
+    */
+
+    const direct =
+        firstValue(
+
+            match.minute,
+
+            match.minutes,
+
+            match.elapsed,
+
+            match.elapsed_time,
+
+            match.elapsedTime,
+
+            match.live_minute,
+
+            match.liveMinute,
+
+            match.current_minute,
+
+            match.currentMinute,
+
+            match.game_minute,
+
+            match.gameMinute,
+
+            match.match_minute,
+
+            match.matchMinute,
+
+            match.match_time,
+
+            match.matchTime,
+
+            match.play_time,
+
+            match.playTime,
+
+            match.status_time,
+
+            match.statusTime
+
+        );
+
+
+    if (
+        direct !== null
+    ) {
+
+        return cleanMinute(
+            direct
+        );
+
+    }
+
+
+    /* =====================================================
+       CLOCK
+    ===================================================== */
+
+    if (
+        match.clock &&
+        typeof match.clock === "object"
+    ) {
+
+        const clock =
+            firstValue(
+
+                match.clock.minute,
+
+                match.clock.minutes,
+
+                match.clock.elapsed,
+
+                match.clock.elapsed_time,
+
+                match.clock.current,
+
+                match.clock.value,
+
+                match.clock.time
+
+            );
+
+
+        if (
+            clock !== null
+        ) {
+
+            return cleanMinute(
+                clock
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       TIMER
+    ===================================================== */
+
+    if (
+        match.timer &&
+        typeof match.timer === "object"
+    ) {
+
+        const timer =
+            firstValue(
+
+                match.timer.minute,
+
+                match.timer.minutes,
+
+                match.timer.elapsed,
+
+                match.timer.elapsed_time,
+
+                match.timer.current,
+
+                match.timer.value,
+
+                match.timer.time
+
+            );
+
+
+        if (
+            timer !== null
+        ) {
+
+            return cleanMinute(
+                timer
+            );
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   GET TRACKER
+========================================================= */
+
+async function getTracker(
+    id
+) {
+
+    if (
+        id === undefined ||
+        id === null ||
+        id === ""
+    ) {
+
+        return null;
+
+    }
+
+
+    try {
+
+        const data =
+            await request(
+                "/tracker/",
+                {
+                    id: id
+                }
+            );
+
+
+        console.log(
+            "⏱️ Tracker:",
+            id,
+            data
+        );
+
+
+        return data;
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "⚠️ Tracker indisponible:",
+            id
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+/* =========================================================
+   EXTRACT MINUTE FROM TRACKER
+========================================================= */
+
+function getTrackerMinute(
+    tracker
+) {
+
+    if (!tracker) {
+        return null;
+    }
+
+
+    /*
+       Tracker ka ka ka:
+       data
+       tracker
+       match
+       event
+    */
+
+    const sources = [
+
+        tracker,
+
+        tracker.data,
+
+        tracker.tracker,
+
+        tracker.match,
+
+        tracker.event,
+
+        tracker.result
+
+    ];
+
+
+    for (
+        const source of sources
+    ) {
+
+        if (
+            !source
+        ) {
+            continue;
+        }
+
+
+        const minute =
+            getMatchMinute(
+                source
+            );
+
+
+        if (
+            minute !== null
+        ) {
+
+            return minute;
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   GET LIVE MINUTE
+========================================================= */
+
+async function getLiveMinute(
+    match
+) {
+
+    if (!match) {
+        return null;
+    }
+
+
+    /*
+       PREMIÈRE TENTATIVE:
+       minit ki deja nan match la.
+    */
+
+    const directMinute =
+        getMatchMinute(
+            match.raw ||
+            match
+        );
+
+
+    if (
+        directMinute !== null
+    ) {
+
+        return directMinute;
+
+    }
+
+
+    /*
+       DEZYÈM TENTATIV:
+       tracker.
+    */
+
+    const id =
+        match.id ||
+        match.raw?.id ||
+        match.raw?.match_id ||
+        match.raw?.event_id;
+
+
+    if (!id) {
+
+        return null;
+
+    }
+
+
+    const tracker =
+        await getTracker(
+            id
+        );
+
+
+    return getTrackerMinute(
+        tracker
+    );
+
+}
+
+
+/* =========================================================
+   ADD LIVE MINUTES
+========================================================= */
+
+async function addLiveMinutes(
+    matches
+) {
+
+    if (
+        !Array.isArray(matches)
+    ) {
+
+        return [];
+
+    }
+
+
+    const liveMatches =
+        matches.filter(
+            match =>
+                match.status === "live"
+        );
+
+
+    /*
+       Si pa gen live,
+       pa bezwen tracker.
+    */
+
+    if (
+        liveMatches.length === 0
+    ) {
+
+        return matches;
+
+    }
+
+
+    console.log(
+        "⏱️ Recherche minutes pour",
+        liveMatches.length,
+        "matchs LIVE..."
+    );
+
+
+    /*
+       Nou limite demann tracker yo
+       pou API a pa pran twòp request.
+    */
+
+    const updated =
+        await Promise.all(
+
+            liveMatches.map(
+                async match => {
+
+                    try {
+
+                        const minute =
+                            await getLiveMinute(
+                                match
+                            );
+
+
+                        if (
+                            minute !== null
+                        ) {
+
+                            match.minute =
+                                minute;
+
+                        }
+
+                    }
+
+                    catch (error) {
+
+                        console.warn(
+                            "⚠️ Minute pa disponib:",
+                            match.id
+                        );
+
+                    }
+
+
+                    return match;
+
+                }
+            )
+
+        );
+
+
+    /*
+       Ranplase ansyen live matches
+       yo ak nouvo yo.
+    */
+
+    const map =
+        new Map();
+
+
+    updated.forEach(
+        match => {
+
+            map.set(
+                String(match.id),
+                match
+            );
+
+        }
+    );
+
+
+    return matches.map(
+        match => {
+
+            const key =
+                String(match.id);
+
+
+            return map.get(key) ||
+                match;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GET LIVE MATCHES
+========================================================= */
+
+async function getLiveMatches() {
+
+    const matches =
+        await getNormalizedMatches();
+
+
+    const live =
+        matches.filter(
+            match =>
+                match.status === "live"
+        );
+
+
+    return await addLiveMinutes(
+        live
+    );
+
+}
+
+
+/* =========================================================
+   GET UPCOMING MATCHES
+========================================================= */
+
+async function getUpcomingMatches() {
+
+    const matches =
+        await getNormalizedMatches();
+
+
+    return matches.filter(
+        match =>
+            match.status === "upcoming"
+    );
+
+}
+
+
+/* =========================================================
+   GET FINISHED MATCHES
+========================================================= */
+
+async function getFinishedMatches() {
+
+    const matches =
+        await getNormalizedMatches();
+
+
+    return matches.filter(
+        match =>
+            match.status === "finished"
+    );
+
+}
+
+
+/* =========================================================
+   GET ONE MATCH
+========================================================= */
+
+async function getMatch(
+    slug
+) {
+
+    if (!slug) {
+
+        throw new Error(
+            "Match slug manke"
+        );
+
+    }
+
+
+    return await request(
+        "/match/",
+        {
+            slug: slug
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GET TEAM
+========================================================= */
+
+async function getTeam(
+    slug
+) {
+
+    if (!slug) {
+
+        throw new Error(
+            "Team slug manke"
+        );
+
+    }
+
+
+    return await request(
+        "/team/",
+        {
+            slug: slug
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GET STANDINGS
+========================================================= */
+
+async function getStandings(
+    slug
+) {
+
+    if (!slug) {
+
+        throw new Error(
+            "Competition slug manke"
+        );
+
+    }
+
+
+    return await request(
+        "/standings/",
+        {
+            slug: slug
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GET TOP SCORERS
+========================================================= */
+
+async function getTopScorers(
+    slug
+) {
+
+    if (!slug) {
+
+        throw new Error(
+            "Competition slug manke"
+        );
+
+    }
+
+
+    return await request(
+        "/topscorers/",
+        {
+            slug: slug
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GET PLAYER
+========================================================= */
+
+async function getPlayer(
+    slug
+) {
+
+    if (!slug) {
+
+        throw new Error(
+            "Player slug manke"
+        );
+
+    }
+
+
+    return await request(
+        "/player/",
+        {
+            slug: slug
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   GET BRACKET
+========================================================= */
+
+async function getBracket(
+    slug
+) {
+
+    if (!slug) {
+
+        throw new Error(
+            "Competition slug manke"
+        );
+
+    }
+
+
+    return await request(
+        "/bracket/",
+        {
+            slug: slug
+        }
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE PUBLIC API
+========================================================= */
+
+Object.assign(
+    PreziAPI,
+    {
+
+        getLiveMatches,
+
+        getUpcomingMatches,
+
+        getFinishedMatches,
+
+        getMatch,
+
+        getTeam,
+
+        getStandings,
+
+        getTopScorers,
+
+        getPlayer,
+
+        getBracket,
+
+        getTracker,
+
+        getLiveMinute,
+
+        addLiveMinutes
+
+    }
+);
+
+
+console.log(
+    "✅ PREZISCORE API PART 2 READY"
+   /* =========================================================
+   PREZISCORE — API.JS
+   PARTIE 3 / 3
+
+   FINAL PUBLIC API
+   AUTO REFRESH
+   LIVE MINUTE FALLBACK
+   CACHE CONTROL
+========================================================= */
+
+
+/* =========================================================
+   GET ALL MATCHES
+========================================================= */
+
+async function getAllMatches() {
+
+    const matches =
+        await getNormalizedMatches();
+
+
+    /*
+       Pou LIVE sèlman,
+       nou eseye jwenn minit la.
+    */
+
+    const result =
+        await addLiveMinutes(
+            matches
+        );
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   GET LIVE + ALL DATA
+========================================================= */
+
+async function getLiveData() {
+
+    try {
+
+        const matches =
+            await getAllMatches();
+
+
+        const live =
+            matches.filter(
+                match =>
+                    match.status === "live"
+            );
+
+
+        console.log(
+            "🔴 LIVE:",
+            live.length
+        );
+
+
+        return live;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ LIVE DATA ERROR:",
+            error
+        );
+
+
+        return [];
+
+    }
+
+}
+
+
+/* =========================================================
+   MINUTE FORMAT
+========================================================= */
+
+function formatMinute(
+    minute
+) {
+
+    if (
+        minute === null ||
+        minute === undefined ||
+        minute === ""
+    ) {
+
+        return "";
+
+    }
+
+
+    const number =
+        Number(minute);
+
+
+    if (
+        Number.isNaN(number)
+    ) {
+
+        return "";
+
+    }
+
+
+    return (
+        number +
+        "'"
+    );
+
+}
+
+
+/* =========================================================
+   LIVE LABEL
+========================================================= */
+
+function getLiveLabel(
+    match
+) {
+
+    if (
+        !match ||
+        match.status !== "live"
+    ) {
+
+        return "";
+
+    }
+
+
+    /*
+       IMPORTANT:
+       Pa mete "2'" si API a pa bay li.
+    */
+
+    const minute =
+        match.minute;
+
+
+    if (
+        minute !== null &&
+        minute !== undefined
+    ) {
+
+        return (
+            "LIVE • " +
+            formatMinute(
+                minute
+            )
+        );
+
+    }
+
+
+    return "LIVE";
+
+}
+
+
+/* =========================================================
+   REFRESH MATCHES
+========================================================= */
+
+async function refreshMatches() {
+
+    try {
+
+        /*
+           Netwaye cache avan refresh
+           pou jwenn nouvo score/minit.
+        */
+
+        clearCache();
+
+
+        const matches =
+            await getAllMatches();
+
+
+        return matches;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Refresh error:",
+            error
+        );
+
+
+        return [];
+
+    }
+
+}
+
+
+/* =========================================================
+   SAFE REQUEST
+========================================================= */
+
+async function safeRequest(
+    endpoint,
+    params = {}
+) {
+
+    try {
+
+        return await request(
+            endpoint,
+            params
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ API request error:",
+            endpoint,
+            error
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+/* =========================================================
+   API HEALTH CHECK
+========================================================= */
+
+async function healthCheck() {
+
+    try {
+
+        const matches =
+            await getMatches(
+                1
+            );
+
+
+        if (
+            Array.isArray(
+                matches
+            )
+        ) {
+
+            console.log(
+                "🟢 PreziScore API OK"
+            );
+
+
+            return true;
+
+        }
+
+
+        return false;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "🔴 PreziScore API OFFLINE",
+            error
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTO REFRESH ENGINE
+========================================================= */
+
+const PreziLive = {
+
+    timer: null,
+
+    running: false,
+
+
+    start(
+        callback,
+        seconds = 30
+    ) {
+
+        this.stop();
+
+
+        if (
+            typeof callback !==
+            "function"
+        ) {
+
+            console.error(
+                "❌ PreziLive callback pa valid"
+            );
+
+
+            return;
+
+        }
+
+
+        this.running =
+            true;
+
+
+        /*
+           Premye refresh imedyat.
+        */
+
+        callback();
+
+
+        /*
+           Apre sa chak X segonn.
+        */
+
+        this.timer =
+            setInterval(
+
+                () => {
+
+                    if (
+                        this.running
+                    ) {
+
+                        callback();
+
+                    }
+
+                },
+
+                Math.max(
+                    Number(seconds) ||
+                    30,
+
+                    10
+                ) * 1000
+
+            );
+
+
+        console.log(
+            "🔄 PreziLive started"
+        );
+
+    },
+
+
+    stop() {
+
+        if (
+            this.timer
+        ) {
+
+            clearInterval(
+                this.timer
+            );
+
+        }
+
+
+        this.timer =
+            null;
+
+
+        this.running =
+            false;
+
+
+        console.log(
+            "⏹️ PreziLive stopped"
+        );
+
+    }
+
+};
+
+
+/* =========================================================
+   FINAL PUBLIC API
+========================================================= */
+
+Object.assign(
+    PreziAPI,
+    {
+
+        getAllMatches,
+
+        getLiveData,
+
+        formatMinute,
+
+        getLiveLabel,
+
+        refreshMatches,
+
+        safeRequest,
+
+        healthCheck
+
+    }
+);
+
+
+/* =========================================================
+   GLOBAL OBJECTS
+========================================================= */
+
+window.PreziAPI =
+    PreziAPI;
+
+
+window.PreziLive =
+    PreziLive;
+
+
+/* =========================================================
+   FINAL TEST
+========================================================= */
+
+console.log(
+    "===================================="
+);
+
+console.log(
+    "⚽ PREZISCORE API READY"
+);
+
+console.log(
+    "🔴 LIVE MATCHES READY"
+);
+
+console.log(
+    "⏱️ LIVE MINUTE SYSTEM READY"
+);
+
+console.log(
+    "🏆 COMPETITIONS READY"
+);
+
+console.log(
+    "👤 PLAYERS READY"
+);
+
+console.log(
+    "📊 STANDINGS READY"
+);
+
+console.log(
+    "🔄 AUTO REFRESH READY"
+);
+
+console.log(
+    "===================================="
+);
+
+
+/* =========================================================
+   OPTIONAL START TEST
+========================================================= */
+
+(async function () {
+
+    try {
+
+        const ok =
+            await healthCheck();
+
+
+        if (ok) {
+
+            console.log(
+                "✅ SportScore konekte ak PreziScore"
+            );
+
+        }
+
+        else {
+
+            console.warn(
+                "⚠️ SportScore pa retounen matchs"
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ PreziScore API initialization error:",
+            error
+        );
+
+    }
+
+})();
+);
