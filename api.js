@@ -1,12 +1,11 @@
 "use strict";
 
 /* =====================================================
-   PREZISCORE API
-   API-FOOTBALL
-   MATCHS + DETAILS + STATISTIQUES + EVENEMENTS
-===================================================== */
+   PREZISCORE — API FINAL
+   API-FOOTBALL / API-SPORTS
+   ===================================================== */
 
-const API_KEY = "47f671279defefb2b169097f1062a2a2";
+const API_KEY = "47f671279defefb2b169097f1062a2a6";
 
 const API_URL =
     "https://v3.football.api-sports.io";
@@ -17,13 +16,14 @@ const cache = new Map();
 
 
 /* =====================================================
-   REQUEST
+   API REQUEST
 ===================================================== */
 
 async function apiRequest(endpoint, params = {}) {
 
     const url =
         new URL(API_URL + endpoint);
+
 
     Object.entries(params).forEach(
         ([key, value]) => {
@@ -49,16 +49,17 @@ async function apiRequest(endpoint, params = {}) {
         url.toString();
 
 
-    const old =
+    const cached =
         cache.get(cacheKey);
 
 
     if (
-        old &&
-        Date.now() - old.time < CACHE_TIME
+        cached &&
+        Date.now() - cached.time <
+        CACHE_TIME
     ) {
 
-        return old.data;
+        return cached.data;
 
     }
 
@@ -70,8 +71,11 @@ async function apiRequest(endpoint, params = {}) {
                 method: "GET",
 
                 headers: {
-                    "x-apisports-key": API_KEY,
-                    "Accept": "application/json"
+                    "x-apisports-key":
+                        API_KEY,
+
+                    "Accept":
+                        "application/json"
                 }
             }
         );
@@ -91,11 +95,24 @@ async function apiRequest(endpoint, params = {}) {
         await response.json();
 
 
+    if (
+        data?.errors &&
+        Object.keys(data.errors).length
+    ) {
+
+        console.error(
+            "API errors:",
+            data.errors
+        );
+
+    }
+
+
     cache.set(
         cacheKey,
         {
             time: Date.now(),
-            data: data
+            data
         }
     );
 
@@ -106,7 +123,7 @@ async function apiRequest(endpoint, params = {}) {
 
 
 /* =====================================================
-   LIVE MATCHS
+   LIVE MATCHES
 ===================================================== */
 
 async function getLiveMatches() {
@@ -120,13 +137,17 @@ async function getLiveMatches() {
         );
 
 
-    return data?.response || [];
+    return (
+        Array.isArray(data?.response)
+            ? data.response
+            : []
+    );
 
 }
 
 
 /* =====================================================
-   MATCHS DU JOUR
+   TODAY MATCHES
 ===================================================== */
 
 async function getTodayMatches() {
@@ -146,13 +167,286 @@ async function getTodayMatches() {
         );
 
 
-    return data?.response || [];
+    return (
+        Array.isArray(data?.response)
+            ? data.response
+            : []
+    );
 
 }
 
 
 /* =====================================================
-   MATCH PAR ID
+   COMBINE LIVE + TODAY
+   LIVE yo enkli tou
+===================================================== */
+
+async function getAllTodayMatches() {
+
+    const [
+        today,
+        live
+    ] =
+        await Promise.all([
+            getTodayMatches(),
+            getLiveMatches()
+        ]);
+
+
+    const map =
+        new Map();
+
+
+    today.forEach(
+        match => {
+
+            if (match?.fixture?.id) {
+
+                map.set(
+                    String(
+                        match.fixture.id
+                    ),
+                    match
+                );
+
+            }
+
+        }
+    );
+
+
+    live.forEach(
+        match => {
+
+            if (match?.fixture?.id) {
+
+                map.set(
+                    String(
+                        match.fixture.id
+                    ),
+                    match
+                );
+
+            }
+
+        }
+    );
+
+
+    return Array.from(
+        map.values()
+    );
+
+}
+
+
+/* =====================================================
+   NORMALIZE MATCH
+===================================================== */
+
+function normalizeMatch(match) {
+
+    const fixture =
+        match?.fixture || {};
+
+
+    const teams =
+        match?.teams || {};
+
+
+    const goals =
+        match?.goals || {};
+
+
+    const status =
+        fixture?.status || {};
+
+
+    let state =
+        "upcoming";
+
+
+    const short =
+        String(
+            status.short || ""
+        ).toUpperCase();
+
+
+    /* LIVE */
+
+    if (
+        [
+            "1H",
+            "2H",
+            "HT",
+            "ET",
+            "BT",
+            "P"
+        ].includes(short)
+    ) {
+
+        state =
+            "live";
+
+    }
+
+
+    /* FINISHED */
+
+    if (
+        [
+            "FT",
+            "AET",
+            "PEN"
+        ].includes(short)
+    ) {
+
+        state =
+            "finished";
+
+    }
+
+
+    return {
+
+        id:
+            fixture.id || null,
+
+
+        slug:
+            String(
+                fixture.id || ""
+            ),
+
+
+        status:
+            state,
+
+
+        statusShort:
+            short,
+
+
+        statusLong:
+            status.long || "",
+
+
+        minute:
+            status.elapsed ??
+            null,
+
+
+        time:
+            fixture.date ||
+            null,
+
+
+        venue:
+            fixture.venue?.name ||
+            "",
+
+
+        referee:
+            fixture.referee ||
+            "",
+
+
+        competition:
+            match?.league?.name ||
+            "Football",
+
+
+        leagueId:
+            match?.league?.id ||
+            null,
+
+
+        leagueLogo:
+            match?.league?.logo ||
+            null,
+
+
+        country:
+            match?.league?.country ||
+            "",
+
+
+        home: {
+
+            id:
+                teams.home?.id ||
+                null,
+
+
+            name:
+                teams.home?.name ||
+                "Équipe domicile",
+
+
+            logo:
+                teams.home?.logo ||
+                null,
+
+
+            score:
+                goals.home ??
+                null
+
+        },
+
+
+        away: {
+
+            id:
+                teams.away?.id ||
+                null,
+
+
+            name:
+                teams.away?.name ||
+                "Équipe visiteuse",
+
+
+            logo:
+                teams.away?.logo ||
+                null,
+
+
+            score:
+                goals.away ??
+                null
+
+        },
+
+
+        raw:
+            match
+
+    };
+
+}
+
+
+/* =====================================================
+   NORMALIZED MATCHES
+===================================================== */
+
+async function getNormalizedMatches() {
+
+    const matches =
+        await getAllTodayMatches();
+
+
+    return matches.map(
+        normalizeMatch
+    );
+
+}
+
+
+/* =====================================================
+   GET MATCH BY ID
+   IMPORTANT POUR match-details.html
 ===================================================== */
 
 async function getMatchById(id) {
@@ -192,7 +486,7 @@ async function getMatchById(id) {
 
 
 /* =====================================================
-   STATISTIQUES
+   STATISTICS
 ===================================================== */
 
 async function getMatchStatistics(id) {
@@ -213,13 +507,17 @@ async function getMatchStatistics(id) {
         );
 
 
-    return data?.response || [];
+    return (
+        Array.isArray(data?.response)
+            ? data.response
+            : []
+    );
 
 }
 
 
 /* =====================================================
-   EVENEMENTS
+   EVENTS
 ===================================================== */
 
 async function getMatchEvents(id) {
@@ -240,7 +538,11 @@ async function getMatchEvents(id) {
         );
 
 
-    return data?.response || [];
+    return (
+        Array.isArray(data?.response)
+            ? data.response
+            : []
+    );
 
 }
 
@@ -267,7 +569,11 @@ async function getMatchLineups(id) {
         );
 
 
-    return data?.response || [];
+    return (
+        Array.isArray(data?.response)
+            ? data.response
+            : []
+    );
 
 }
 
@@ -276,9 +582,12 @@ async function getMatchLineups(id) {
    HEAD TO HEAD
 ===================================================== */
 
-async function getHeadToHead(homeId, awayId) {
+async function getHeadToHead(
+    team1,
+    team2
+) {
 
-    if (!homeId || !awayId) {
+    if (!team1 || !team2) {
 
         return [];
 
@@ -290,196 +599,15 @@ async function getHeadToHead(homeId, awayId) {
             "/fixtures/headtohead",
             {
                 h2h:
-                    homeId +
-                    "-" +
-                    awayId,
-
-                last: 5
+                    `${team1}-${team2}`
             }
         );
 
 
-    return data?.response || [];
-
-}
-
-
-/* =====================================================
-   NORMALIZE MATCH
-===================================================== */
-
-function normalizeMatch(match) {
-
-    const fixture =
-        match?.fixture || {};
-
-    const teams =
-        match?.teams || {};
-
-    const goals =
-        match?.goals || {};
-
-    const status =
-        fixture?.status || {};
-
-    let state =
-        "upcoming";
-
-
-    /* LIVE */
-
-    if (
-
-        status.short === "1H" ||
-        status.short === "2H" ||
-        status.short === "ET" ||
-        status.short === "BT" ||
-        status.short === "P"
-
-    ) {
-
-        state =
-            "live";
-
-    }
-
-
-    /* FINISHED */
-
-    if (
-
-        status.short === "FT" ||
-        status.short === "AET" ||
-        status.short === "PEN"
-
-    ) {
-
-        state =
-            "finished";
-
-    }
-
-
-    return {
-
-        id:
-            fixture.id,
-
-        status:
-            state,
-
-        minute:
-            status.elapsed ??
-            null,
-
-        statusShort:
-            status.short ||
-            "",
-
-        statusLong:
-            status.long ||
-            "",
-
-        time:
-            fixture.date ||
-            null,
-
-        competition:
-            match?.league?.name ||
-            "Football",
-
-        leagueId:
-            match?.league?.id ||
-            null,
-
-        leagueLogo:
-            match?.league?.logo ||
-            null,
-
-        season:
-            match?.league?.season ||
-            null,
-
-        round:
-            match?.league?.round ||
-            null,
-
-        venue:
-            fixture?.venue?.name ||
-            "",
-
-        city:
-            fixture?.venue?.city ||
-            "",
-
-        referee:
-            fixture?.referee ||
-            "",
-
-        timezone:
-            fixture?.timezone ||
-            "",
-
-        home: {
-
-            id:
-                teams.home?.id ||
-                null,
-
-            name:
-                teams.home?.name ||
-                "Équipe domicile",
-
-            logo:
-                teams.home?.logo ||
-                null,
-
-            score:
-                goals.home ??
-                null
-
-        },
-
-        away: {
-
-            id:
-                teams.away?.id ||
-                null,
-
-            name:
-                teams.away?.name ||
-                "Équipe visiteuse",
-
-            logo:
-                teams.away?.logo ||
-                null,
-
-            score:
-                goals.away ??
-                null
-
-        },
-
-        raw:
-            match
-
-    };
-
-}
-
-
-/* =====================================================
-   NORMALIZED MATCHS
-===================================================== */
-
-async function getNormalizedMatches() {
-
-    const matches =
-        await getTodayMatches();
-
-
-    return matches.map(
-        normalizeMatch
+    return (
+        Array.isArray(data?.response)
+            ? data.response
+            : []
     );
 
 }
@@ -494,6 +622,8 @@ window.PreziAPI = {
     getLiveMatches,
 
     getTodayMatches,
+
+    getAllTodayMatches,
 
     getNormalizedMatches,
 
@@ -513,5 +643,5 @@ window.PreziAPI = {
 
 
 console.log(
-    "✅ PreziScore API complète prête"
+    "✅ PreziScore API FINAL READY"
 );
