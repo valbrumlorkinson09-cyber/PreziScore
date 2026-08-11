@@ -3,521 +3,562 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="theme-color"
-        content="#080b10"
-    >
+<meta name="theme-color"
+      content="#080b10">
 
-    <meta
-        name="description"
-        content="PreziScore — Scores football en direct"
-    >
+<meta name="description"
+      content="PreziScore — Scores football en direct">
 
-    <title>PreziScore — Matchs</title>
+<title>PreziScore — Matchs</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+<link rel="stylesheet" href="style.css">
 
-    <style>
+<style>
 
-        /* =================================================
-           MATCH PAGE
-        ================================================= */
+/* =====================================================
+   PREZISCORE — MATCH PAGE
+===================================================== */
 
-        .page-head {
-            padding: 22px 0 15px;
-        }
+.page-head {
+    padding: 22px 0 15px;
+}
 
-        .page-head h2 {
-            font-size: 25px;
-            letter-spacing: -0.7px;
-        }
+.page-head h2 {
+    font-size: 25px;
+    letter-spacing: -0.7px;
+}
 
-        .page-head p {
-            margin-top: 5px;
-            color: var(--muted);
-            font-size: 11px;
-        }
+.page-head p {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 11px;
+}
 
 
-        /* =================================================
-           SEARCH
-        ================================================= */
+/* =====================================================
+   SEARCH
+===================================================== */
 
-        .search-box {
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 9px;
 
-            display: flex;
-            align-items: center;
-            gap: 9px;
+    padding: 12px 14px;
 
-            padding: 12px 14px;
+    background: var(--card);
 
-            background: var(--card);
+    border: 1px solid var(--border);
 
-            border: 1px solid var(--border);
+    border-radius: 15px;
+}
 
-            border-radius: 15px;
-        }
+.search-box span {
+    font-size: 16px;
+}
 
-        .search-box span {
-            font-size: 16px;
-        }
+.search-box input {
+    width: 100%;
 
-        .search-box input {
+    border: 0;
+    outline: 0;
 
-            width: 100%;
+    background: transparent;
 
-            border: 0;
-            outline: 0;
+    color: white;
 
-            background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+}
 
-            color: white;
+.search-box input::placeholder {
+    color: #68717f;
+}
 
-            font-family: inherit;
 
-            font-size: 12px;
-        }
+/* =====================================================
+   FILTER TABS
+===================================================== */
 
-        .search-box input::placeholder {
-            color: #68717f;
-        }
+.match-tabs {
+    display: grid;
 
+    grid-template-columns:
+        repeat(3, 1fr);
 
-        /* =================================================
-           TABS
-        ================================================= */
+    gap: 7px;
 
-        .match-tabs {
+    margin-top: 14px;
+}
 
-            display: grid;
+.match-tab {
+    height: 42px;
 
-            grid-template-columns:
-                repeat(3, 1fr);
+    border: 1px solid var(--border);
 
-            gap: 7px;
+    border-radius: 12px;
 
-            margin-top: 14px;
-        }
+    background: var(--card);
 
-        .match-tab {
+    color: var(--muted);
 
-            height: 40px;
+    font-family: inherit;
 
-            border: 1px solid var(--border);
+    font-size: 10px;
 
-            border-radius: 12px;
+    font-weight: 800;
 
-            background: var(--card);
+    cursor: pointer;
 
-            color: var(--muted);
+    transition: 0.2s;
+}
 
-            font-family: inherit;
+.match-tab.active {
+    background:
+        rgba(0,230,118,0.10);
 
-            font-size: 10px;
+    border-color:
+        rgba(0,230,118,0.30);
 
-            font-weight: 700;
+    color: var(--primary);
+}
 
-            cursor: pointer;
-        }
+.match-tab:active {
+    transform: scale(0.96);
+}
 
-        .match-tab.active {
 
-            background:
-                rgba(0,230,118,0.10);
+/* =====================================================
+   DATE BAR
+===================================================== */
 
-            border-color:
-                rgba(0,230,118,0.25);
+.date-bar {
+    display: flex;
 
-            color: var(--primary);
-        }
+    align-items: center;
 
+    justify-content: space-between;
 
-        /* =================================================
-           DATE
-        ================================================= */
+    margin-top: 22px;
 
-        .date-bar {
+    margin-bottom: 10px;
+}
 
-            display: flex;
+.date-bar h3 {
+    font-size: 13px;
+}
 
-            align-items: center;
+.date-bar span {
+    color: var(--muted);
+    font-size: 10px;
+}
 
-            justify-content: space-between;
 
-            margin-top: 22px;
+/* =====================================================
+   COMPETITION
+===================================================== */
 
-            margin-bottom: 10px;
-        }
+.competition {
+    margin-top: 16px;
+}
 
-        .date-bar h3 {
-            font-size: 13px;
-        }
+.competition-head {
+    display: flex;
 
-        .date-bar span {
+    align-items: center;
 
-            color: var(--muted);
+    gap: 8px;
 
-            font-size: 10px;
-        }
+    padding: 9px 4px;
 
+    color: var(--muted);
 
-        /* =================================================
-           COMPETITION
-        ================================================= */
+    font-size: 10px;
 
-        .competition {
-            margin-top: 17px;
-        }
+    font-weight: 800;
+}
 
-        .competition-head {
+.competition-icon {
+    width: 27px;
+    height: 27px;
 
-            display: flex;
+    display: grid;
 
-            align-items: center;
+    place-items: center;
 
-            gap: 8px;
+    background: var(--card-2);
 
-            padding: 9px 4px;
+    border-radius: 8px;
 
-            color: var(--muted);
+    font-size: 13px;
+}
 
-            font-size: 10px;
 
-            font-weight: 700;
-        }
+/* =====================================================
+   MATCH CARD
+===================================================== */
 
-        .competition-icon {
+.match-item {
+    display: block;
 
-            width: 26px;
-            height: 26px;
+    padding: 14px;
 
-            display: grid;
+    margin-bottom: 8px;
 
-            place-items: center;
+    background: var(--card);
 
-            background: var(--card-2);
+    border: 1px solid var(--border);
 
-            border-radius: 8px;
+    border-radius: 16px;
 
-            font-size: 13px;
-        }
+    transition: 0.2s;
 
+    cursor: pointer;
+}
 
-        /* =================================================
-           MATCH CARD
-        ================================================= */
+.match-item:active {
+    transform: scale(0.985);
+}
 
-        .match-item {
 
-            display: block;
+/* =====================================================
+   MATCH TOP
+===================================================== */
 
-            padding: 14px;
+.match-top {
+    display: flex;
 
-            margin-bottom: 7px;
+    align-items: center;
 
-            background: var(--card);
+    justify-content: space-between;
 
-            border: 1px solid var(--border);
+    margin-bottom: 13px;
+}
 
-            border-radius: 16px;
 
-            transition: 0.2s;
+/* =====================================================
+   STATUS
+===================================================== */
 
-        }
+.status {
+    display: inline-flex;
 
-        .match-item:active {
-            transform: scale(0.985);
-        }
+    align-items: center;
 
+    gap: 6px;
 
-        .match-top {
+    min-height: 20px;
 
-            display: flex;
+    padding: 4px 8px;
 
-            align-items: center;
+    border-radius: 7px;
 
-            justify-content: space-between;
+    font-size: 9px;
 
-            margin-bottom: 12px;
-        }
+    font-weight: 900;
 
+    letter-spacing: 0.2px;
+}
 
-        .status {
+.status.live {
+    color: #ff304f;
 
-            display: flex;
+    background:
+        rgba(255,48,79,0.10);
+}
 
-            align-items: center;
+.status.finished {
+    color: #8b95a3;
 
-            gap: 5px;
+    background:
+        rgba(139,149,163,0.10);
+}
 
-            font-size: 8px;
+.status.upcoming {
+    color: var(--primary);
 
-            font-weight: 800;
-        }
+    background:
+        rgba(0,230,118,0.08);
+}
 
 
-        .status.live {
-            color: #ff304f;
-        }
+/* STATUS DOT */
 
-        .status.finished {
-            color: #778291;
-        }
+.status-dot {
+    width: 7px;
+    height: 7px;
 
-        .status.upcoming {
-            color: var(--primary);
-        }
+    flex-shrink: 0;
 
+    border-radius: 50%;
 
-        .status-dot {
+    background: currentColor;
+}
 
-            width: 6px;
-            height: 6px;
+.status.live .status-dot {
+    animation:
+        livePulse 1.2s infinite;
+}
 
-            border-radius: 50%;
+@keyframes livePulse {
 
-            background: currentColor;
-        }
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
 
+    50% {
+        opacity: 0.35;
+        transform: scale(0.75);
+    }
 
-        .match-time {
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 
-            color: var(--muted);
+}
 
-            font-size: 9px;
-        }
 
+/* =====================================================
+   MATCH TIME
+===================================================== */
 
-        .match-body {
+.match-time {
+    color: var(--muted);
 
-            display: grid;
+    font-size: 9px;
 
-            grid-template-columns:
-                1fr 70px 1fr;
+    font-weight: 600;
+}
 
-            align-items: center;
 
-            gap: 5px;
+/* =====================================================
+   MATCH BODY
+===================================================== */
 
-            text-align: center;
-        }
+.match-body {
+    display: grid;
 
+    grid-template-columns:
+        1fr 76px 1fr;
 
-        .club {
+    align-items: center;
 
-            display: flex;
+    gap: 6px;
 
-            flex-direction: column;
+    text-align: center;
+}
 
-            align-items: center;
 
-            gap: 7px;
+/* =====================================================
+   CLUB
+===================================================== */
 
-            min-width: 0;
-        }
+.club {
+    display: flex;
 
+    flex-direction: column;
 
-        .club-logo {
+    align-items: center;
 
-            width: 42px;
-            height: 42px;
+    gap: 8px;
 
-            display: grid;
+    min-width: 0;
+}
 
-            place-items: center;
+.club-logo {
+    width: 44px;
+    height: 44px;
 
-            background: var(--card-2);
+    display: grid;
 
-            border: 1px solid var(--border);
+    place-items: center;
 
-            border-radius: 12px;
+    background: var(--card-2);
 
-            font-size: 18px;
+    border: 1px solid var(--border);
 
-            overflow: hidden;
-        }
+    border-radius: 12px;
 
+    font-size: 18px;
 
-        .club-logo img {
+    overflow: hidden;
+}
 
-            width: 32px;
-            height: 32px;
+.club-logo img {
+    width: 34px;
+    height: 34px;
 
-            object-fit: contain;
-        }
+    object-fit: contain;
+}
 
+.club-name {
+    width: 100%;
 
-        .club-name {
+    overflow: hidden;
 
-            width: 100%;
+    text-overflow: ellipsis;
 
-            overflow: hidden;
+    white-space: nowrap;
 
-            text-overflow: ellipsis;
+    font-size: 10px;
 
-            white-space: nowrap;
+    font-weight: 700;
+}
 
-            font-size: 10px;
 
-            font-weight: 650;
-        }
+/* =====================================================
+   SCORE
+===================================================== */
 
+.score {
+    font-size: 20px;
 
-        .score {
+    font-weight: 900;
 
-            font-size: 19px;
+    letter-spacing: -0.5px;
+}
 
-            font-weight: 850;
+.score small {
+    display: block;
 
-            letter-spacing: -0.5px;
-        }
+    margin-top: 5px;
 
+    color: var(--muted);
 
-        .score small {
+    font-size: 8px;
 
-            display: block;
+    font-weight: 600;
+}
 
-            margin-top: 3px;
 
-            color: var(--muted);
+/* =====================================================
+   EMPTY STATE
+===================================================== */
 
-            font-size: 8px;
+.no-matches {
+    display: none;
 
-            font-weight: 500;
-        }
+    padding: 40px 15px;
 
+    text-align: center;
 
-        /* =================================================
-           EMPTY
-        ================================================= */
+    background: var(--card);
 
-        .no-matches {
+    border: 1px solid var(--border);
 
-            display: none;
+    border-radius: 16px;
+}
 
-            padding: 38px 15px;
+.no-matches.show {
+    display: block;
+}
 
-            text-align: center;
+.no-matches div {
+    font-size: 32px;
+}
 
-            background: var(--card);
+.no-matches h3 {
+    margin-top: 10px;
 
-            border: 1px solid var(--border);
+    font-size: 14px;
+}
 
-            border-radius: var(--radius);
-        }
+.no-matches p {
+    margin-top: 6px;
 
+    color: var(--muted);
 
-        .no-matches.show {
-            display: block;
-        }
+    font-size: 10px;
+}
 
 
-        .no-matches div {
-            font-size: 30px;
-        }
+/* =====================================================
+   LOADING
+===================================================== */
 
+.loading {
+    padding: 40px 10px;
 
-        .no-matches h3 {
+    text-align: center;
 
-            margin-top: 10px;
+    color: var(--muted);
 
-            font-size: 13px;
-        }
+    font-size: 11px;
+}
 
+.loader {
+    width: 26px;
+    height: 26px;
 
-        .no-matches p {
+    margin: 0 auto 10px;
 
-            margin-top: 5px;
+    border: 3px solid
+        rgba(255,255,255,0.08);
 
-            color: var(--muted);
+    border-top-color:
+        var(--primary);
 
-            font-size: 10px;
-        }
+    border-radius: 50%;
 
+    animation:
+        spin 0.8s linear infinite;
+}
 
-        /* =================================================
-           LOADING
-        ================================================= */
+@keyframes spin {
 
-        .loading {
+    to {
+        transform: rotate(360deg);
+    }
 
-            padding: 35px 10px;
+}
 
-            text-align: center;
 
-            color: var(--muted);
+/* =====================================================
+   LIVE CARD
+===================================================== */
 
-            font-size: 11px;
-        }
+.match-item.live-match {
+    border-color:
+        rgba(255,48,79,0.18);
+}
 
+.match-item.live-match .score {
+    color: #ffffff;
+}
 
-        .loader {
 
-            width: 25px;
-            height: 25px;
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 
-            margin: 0 auto 10px;
+@media (min-width: 768px) {
 
-            border: 3px solid
-                rgba(255,255,255,0.08);
+    .match-tabs {
+        max-width: 500px;
+    }
 
-            border-top-color:
-                var(--primary);
+    .match-item {
+        padding: 17px;
+    }
 
-            border-radius: 50%;
+    .club-name {
+        font-size: 11px;
+    }
 
-            animation:
-                spin 0.8s linear infinite;
-        }
+}
 
-
-        @keyframes spin {
-
-            to {
-                transform: rotate(360deg);
-            }
-
-        }
-
-
-        /* =================================================
-           DESKTOP
-        ================================================= */
-
-        @media (min-width: 768px) {
-
-            .match-tabs {
-                max-width: 500px;
-            }
-
-            .match-item {
-                padding: 17px;
-            }
-
-            .club-name {
-                font-size: 11px;
-            }
-
-        }
-
-
-    </style>
+</style>
 
 </head>
 
-
 <body>
-
 
 <!-- =====================================================
      HEADER
@@ -530,7 +571,6 @@
         <div class="brand-ball">
             ⚽
         </div>
-
 
         <div>
 
@@ -546,7 +586,6 @@
 
     </div>
 
-
     <button
         class="search-btn"
         onclick="focusSearch()"
@@ -558,15 +597,11 @@
 </header>
 
 
-
 <!-- =====================================================
      MAIN
 ===================================================== -->
 
 <main class="main-content">
-
-
-    <!-- PAGE TITLE -->
 
     <section class="page-head">
 
@@ -582,15 +617,11 @@
     </section>
 
 
-
     <!-- SEARCH -->
 
     <div class="search-box">
 
-        <span>
-            🔍
-        </span>
-
+        <span>🔍</span>
 
         <input
             id="searchInput"
@@ -602,11 +633,9 @@
     </div>
 
 
-
     <!-- FILTERS -->
 
     <div class="match-tabs">
-
 
         <button
             class="match-tab active"
@@ -615,14 +644,12 @@
             🔴 LIVE
         </button>
 
-
         <button
             class="match-tab"
             data-filter="upcoming"
         >
             📅 À VENIR
         </button>
-
 
         <button
             class="match-tab"
@@ -631,9 +658,7 @@
             ✅ TERMINÉS
         </button>
 
-
     </div>
-
 
 
     <!-- DATE -->
@@ -644,7 +669,6 @@
             Aujourd'hui
         </h3>
 
-
         <span id="matchCount">
             0 matchs
         </span>
@@ -652,15 +676,9 @@
     </div>
 
 
+    <!-- MATCH CONTAINER -->
 
-    <!-- =================================================
-         MATCHES
-    ================================================= -->
-
-    <section
-        id="matchesContainer"
-    >
-
+    <section id="matchesContainer">
 
         <div
             class="loading"
@@ -673,29 +691,21 @@
 
         </div>
 
-
     </section>
 
 
-
-    <!-- =================================================
-         EMPTY
-    ================================================= -->
+    <!-- EMPTY -->
 
     <div
         class="no-matches"
         id="noMatches"
     >
 
-        <div>
-            ⚽
-        </div>
-
+        <div>⚽</div>
 
         <h3>
             Aucun match trouvé
         </h3>
-
 
         <p>
             Aucun match ne correspond
@@ -704,26 +714,20 @@
 
     </div>
 
+            </main>
 
-</main>
-
-
-
-<!-- =====================================================
-     BOTTOM NAV
+    <!-- =====================================================
+     BOTTOM NAVIGATION
 ===================================================== -->
 
 <nav class="bottom-nav">
-
 
     <a
         href="index.html"
         class="nav-item"
     >
 
-        <span>
-            ⌂
-        </span>
+        <span>⌂</span>
 
         <small>
             Accueil
@@ -732,15 +736,12 @@
     </a>
 
 
-
     <a
         href="match.html"
         class="nav-item active"
     >
 
-        <span>
-            ⚽
-        </span>
+        <span>⚽</span>
 
         <small>
             Matchs
@@ -749,15 +750,12 @@
     </a>
 
 
-
     <a
         href="competitions.html"
         class="nav-item"
     >
 
-        <span>
-            🏆
-        </span>
+        <span>🏆</span>
 
         <small>
             Compétitions
@@ -766,15 +764,12 @@
     </a>
 
 
-
     <a
         href="news.html"
         class="nav-item"
     >
 
-        <span>
-            📰
-        </span>
+        <span>📰</span>
 
         <small>
             News
@@ -783,15 +778,12 @@
     </a>
 
 
-
     <a
         href="profile.html"
         class="nav-item"
     >
 
-        <span>
-            👤
-        </span>
+        <span>👤</span>
 
         <small>
             Profil
@@ -799,20 +791,1019 @@
 
     </a>
 
-
 </nav>
 
 
-
 <!-- =====================================================
-     API + JAVASCRIPT
+     API
 ===================================================== -->
 
 <script src="api.js"></script>
 
-<script src="script.js"></script>
 
+<!-- =====================================================
+     MATCH ENGINE
+===================================================== -->
+
+<script>
+
+"use strict";
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const matchesContainer =
+    document.getElementById(
+        "matchesContainer"
+    );
+
+const loading =
+    document.getElementById(
+        "loading"
+    );
+
+const noMatches =
+    document.getElementById(
+        "noMatches"
+    );
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+const matchCount =
+    document.getElementById(
+        "matchCount"
+    );
+
+const dateTitle =
+    document.getElementById(
+        "dateTitle"
+    );
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let allMatches = [];
+
+let currentFilter = "live";
+
+let isLoading = false;
+
+
+/* =====================================================
+   LOAD ALL MATCHES
+===================================================== */
+
+async function loadMatches() {
+
+    if (isLoading) return;
+
+    isLoading = true;
+
+    showLoading();
+
+
+    try {
+
+        if (
+            !window.PreziAPI
+        ) {
+
+            throw new Error(
+                "PreziAPI pa disponib"
+            );
+
+        }
+
+
+        const matches =
+            await PreziAPI
+                .getNormalizedMatches();
+
+
+        allMatches =
+            Array.isArray(matches)
+                ? matches
+                : [];
+
+
+        console.log(
+            "PreziScore matches:",
+            allMatches
+        );
+
+
+        renderMatches();
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "PreziScore:",
+            error
+        );
+
+
+        allMatches = [];
+
+
+        showEmpty(
+            "⚠️",
+            "Erreur de chargement",
+            "Nou pa kapab jwenn match yo kounye a."
+        );
+
+    }
+
+
+    finally {
+
+        isLoading = false;
+
+    }
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+function showLoading() {
+
+    noMatches.classList.remove(
+        "show"
+    );
+
+    matchesContainer.innerHTML = "";
+
+    matchesContainer.appendChild(
+        loading
+    );
+
+    loading.style.display =
+        "block";
+
+}
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+function getFilteredMatches() {
+
+    let result =
+        allMatches.filter(
+            match => {
+
+                return (
+                    match.status ===
+                    currentFilter
+                );
+
+            }
+        );
+
+
+    /* SEARCH */
+
+    const query =
+        searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+    if (query) {
+
+        result =
+            result.filter(
+                match => {
+
+                    const home =
+                        String(
+                            match.home?.name || ""
+                        ).toLowerCase();
+
+
+                    const away =
+                        String(
+                            match.away?.name || ""
+                        ).toLowerCase();
+
+
+                    const competition =
+                        String(
+                            match.competition || ""
+                        ).toLowerCase();
+
+
+                    return (
+                        home.includes(query) ||
+                        away.includes(query) ||
+                        competition.includes(query)
+                    );
+
+                }
+            );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function renderMatches() {
+
+    loading.style.display =
+        "none";
+
+    matchesContainer.innerHTML = "";
+
+
+    const matches =
+        getFilteredMatches();
+
+
+    matchCount.textContent =
+        `${matches.length} ${
+            matches.length === 1
+                ? "match"
+                : "matchs"
+        }`;
+
+
+    /* EMPTY */
+
+    if (!matches.length) {
+
+        showEmpty(
+            currentFilter === "live"
+                ? "🔴"
+                : currentFilter === "upcoming"
+                    ? "📅"
+                    : "✅",
+
+            currentFilter === "live"
+                ? "Aucun match en direct"
+                : currentFilter === "upcoming"
+                    ? "Aucun match à venir"
+                    : "Aucun match terminé",
+
+            currentFilter === "live"
+                ? "Les matchs en cours apparaîtront ici automatiquement."
+                : currentFilter === "upcoming"
+                    ? "Les prochains matchs apparaîtront ici automatiquement."
+                    : "Les matchs terminés apparaîtront ici automatiquement."
+        );
+
+        return;
+
+    }
+
+
+    noMatches.classList.remove(
+        "show"
+    );
+
+
+    /* =================================================
+       GROUP COMPETITIONS
+    ================================================= */
+
+    const groups = {};
+
+
+    matches.forEach(
+        match => {
+
+            const competition =
+                match.competition ||
+                "Football";
+
+
+            if (!groups[competition]) {
+
+                groups[competition] = [];
+
+            }
+
+
+            groups[competition].push(
+                match
+            );
+
+        }
+    );
+
+
+    Object.entries(groups)
+        .forEach(
+            ([competition, games]) => {
+
+                const section =
+                    document.createElement(
+                        "section"
+                    );
+
+
+                section.className =
+                    "competition";
+
+
+                const header =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                header.className =
+                    "competition-head";
+
+
+                header.innerHTML = `
+
+                    <div class="competition-icon">
+                        🏆
+                    </div>
+
+                    <span>
+                        ${escapeHTML(
+                            competition
+                        )}
+                    </span>
+
+                `;
+
+
+                section.appendChild(
+                    header
+                );
+
+
+                games.forEach(
+                    match => {
+
+                        section.appendChild(
+                            createMatchCard(
+                                match
+                            )
+                        );
+
+                    }
+                );
+
+
+                matchesContainer.appendChild(
+                    section
+                );
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   MATCH CARD
+===================================================== */
+
+function createMatchCard(match) {
+
+    const article =
+        document.createElement(
+            "article"
+        );
+
+
+    article.className =
+        "match-item";
+
+
+    if (
+        match.status === "live"
+    ) {
+
+        article.classList.add(
+            "live-match"
+        );
+
+    }
+
+
+    /* STATUS */
+
+    let statusText =
+        "À VENIR";
+
+    let statusClass =
+        "upcoming";
+
+
+    if (
+        match.status === "live"
+    ) {
+
+        statusClass =
+            "live";
+
+
+        statusText =
+            getLiveStatus(
+                match
+            );
+
+    }
+
+    else if (
+        match.status === "finished"
+    ) {
+
+        statusClass =
+            "finished";
+
+        statusText =
+            "TERMINÉ";
+
+    }
+
+
+    /* SCORES */
+
+    const homeScore =
+        match.home?.score ??
+        "-";
+
+
+    const awayScore =
+        match.away?.score ??
+        "-";
+
+
+    /* CARD */
+
+    article.innerHTML = `
+
+        <div class="match-top">
+
+            <div class="status ${statusClass}">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    ${escapeHTML(
+                        statusText
+                    )}
+                </span>
+
+            </div>
+
+
+            <div class="match-time">
+
+                ${escapeHTML(
+                    formatMatchTime(match)
+                )}
+
+            </div>
+
+        </div>
+
+
+        <div class="match-body">
+
+
+            <!-- HOME -->
+
+            <div class="club">
+
+                <div class="club-logo">
+
+                    ${
+                        match.home?.logo
+
+                            ? `
+
+                                <img
+                                    src="${escapeAttribute(
+                                        match.home.logo
+                                    )}"
+                                    alt=""
+                                    loading="lazy"
+                                >
+
+                              `
+
+                            : "⚽"
+                    }
+
+                </div>
+
+
+                <div class="club-name">
+
+                    ${escapeHTML(
+                        match.home?.name ||
+                        "Équipe domicile"
+                    )}
+
+                </div>
+
+            </div>
+
+
+            <!-- SCORE -->
+
+            <div class="score">
+
+                ${escapeHTML(
+                    homeScore
+                )}
+
+                <span>
+                    -
+                </span>
+
+                ${escapeHTML(
+                    awayScore
+                )}
+
+
+                <small>
+
+                    ${
+                        match.status === "live"
+                            ? "EN DIRECT"
+                            : match.status === "finished"
+                                ? "FT"
+                                : "À VENIR"
+                    }
+
+                </small>
+
+            </div>
+
+
+            <!-- AWAY -->
+
+            <div class="club">
+
+                <div class="club-logo">
+
+                    ${
+                        match.away?.logo
+
+                            ? `
+
+                                <img
+                                    src="${escapeAttribute(
+                                        match.away.logo
+                                    )}"
+                                    alt=""
+                                    loading="lazy"
+                                >
+
+                              `
+
+                            : "⚽"
+                    }
+
+                </div>
+
+
+                <div class="club-name">
+
+                    ${escapeHTML(
+                        match.away?.name ||
+                        "Équipe visiteuse"
+                    )}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    `;
+
+
+    /* CLICK MATCH */
+
+    article.addEventListener(
+        "click",
+        () => {
+
+            if (
+                match.slug
+            ) {
+
+                window.location.href =
+                    "match-details.html?match=" +
+                    encodeURIComponent(
+                        match.slug
+                    );
+
+            }
+
+        }
+    );
+
+
+    return article;
+
+}
+
+
+/* =====================================================
+   LIVE STATUS
+===================================================== */
+
+function getLiveStatus(match) {
+
+    const minute =
+        match.minute;
+
+
+    if (
+        minute !== null &&
+        minute !== undefined &&
+        minute !== ""
+    ) {
+
+        return `LIVE • ${minute}'`;
+
+    }
+
+
+    return "LIVE";
+
+}
+
+
+/* =====================================================
+   MATCH TIME
+===================================================== */
+
+function formatMatchTime(match) {
+
+    if (
+        match.status === "live"
+    ) {
+
+        return "En cours";
+
+    }
+
+
+    if (
+        match.status === "finished"
+    ) {
+
+        return "Terminé";
+
+    }
+
+
+    const start =
+        match.raw?.start_time ||
+        match.raw?.startTime ||
+        match.raw?.date ||
+        match.raw?.start_at;
+
+
+    if (!start) {
+
+        return "--:--";
+
+    }
+
+
+    const date =
+        new Date(start);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "--:--";
+
+    }
+
+
+    return date.toLocaleTimeString(
+        "fr-FR",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+function showEmpty(
+    icon,
+    title,
+    text
+) {
+
+    loading.style.display =
+        "none";
+
+
+    matchesContainer.innerHTML =
+        "";
+
+
+    noMatches.innerHTML = `
+
+        <div>
+            ${icon}
+        </div>
+
+        <h3>
+            ${escapeHTML(title)}
+        </h3>
+
+        <p>
+            ${escapeHTML(text)}
+        </p>
+
+    `;
+
+
+    noMatches.classList.add(
+        "show"
+    );
+
+}
+<!-- =====================================================
+     SEARCH ENGINE
+===================================================== -->
+
+<script>
+
+searchInput.addEventListener(
+    "input",
+    () => {
+
+        renderMatches();
+
+    }
+);
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+document
+    .querySelectorAll(".match-tab")
+    .forEach(tab => {
+
+        tab.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .querySelectorAll(
+                        ".match-tab"
+                    )
+                    .forEach(item => {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    });
+
+
+                tab.classList.add(
+                    "active"
+                );
+
+
+                currentFilter =
+                    tab.dataset.filter;
+
+
+                renderMatches();
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+   SEARCH BUTTON
+===================================================== */
+
+function focusSearch() {
+
+    if (
+        searchInput
+    ) {
+
+        searchInput.focus();
+
+    }
+
+}
+
+
+/* =====================================================
+   SECURITY
+===================================================== */
+
+function escapeHTML(value) {
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+
+function escapeAttribute(value) {
+
+    return String(
+        value ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    );
+
+}
+
+
+/* =====================================================
+   DATE
+===================================================== */
+
+function updateDateTitle() {
+
+    const today =
+        new Date();
+
+
+    dateTitle.textContent =
+        today.toLocaleDateString(
+            "fr-FR",
+            {
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+}
+
+
+/* =====================================================
+   AUTO REFRESH
+===================================================== */
+
+function startPreziRefresh() {
+
+    if (
+        window.PreziLive &&
+        typeof PreziLive.start === "function"
+    ) {
+
+        PreziLive.start(
+            () => {
+
+                loadMatches();
+
+            },
+            60
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Fallback si PreziLive
+       pa disponib.
+    */
+
+    setInterval(
+        () => {
+
+            loadMatches();
+
+        },
+        60 * 1000
+    );
+
+}
+
+
+/* =====================================================
+   STOP REFRESH WHEN PAGE CLOSES
+===================================================== */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (
+            window.PreziLive &&
+            typeof PreziLive.stop === "function"
+        ) {
+
+            PreziLive.stop();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+updateDateTitle();
+
+loadMatches();
+
+startPreziRefresh();
+
+</script>
+
+
+<!-- =====================================================
+     END PREZISCORE MATCH PAGE
+===================================================== -->
 
 </body>
 
-            </html>
+</html>    
