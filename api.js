@@ -168,17 +168,48 @@ const PreziAPI = (() => {
        MINUTE
     ===================================================== */
 
-    function getMinute(match) {
+    
+function getMinute(match) {
+
+    const value =
+        match.minute ??
+        match.elapsed ??
+        match.elapsed_time ??
+        match.match_time ??
+        match.timer ??
+        match.time_elapsed ??
+        match.status_time ??
+        null;
+
+    if (value === null || value === undefined) {
+        return null;
+    }
+
+    // Si API a voye yon object
+    if (typeof value === "object") {
 
         return (
-            match.minute ??
-            match.elapsed ??
-            match.match_time ??
+            value.minute ??
+            value.elapsed ??
+            value.current ??
+            value.value ??
             null
         );
 
     }
 
+    // Si API a voye yon string tankou "67"
+    const text =
+        String(value)
+            .trim()
+            .replace("'", "");
+
+    if (/^\d+$/.test(text)) {
+        return Number(text);
+    }
+
+    return text;
+}
 
     /* =====================================================
        NORMALIZE
