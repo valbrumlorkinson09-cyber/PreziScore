@@ -11,14 +11,51 @@ const PreziAPI = (() => {
     const BASE_URL =
         "https://sportscore.com/api/widget";
 
-    const SPORT =
-        "football";
+    const SPORT = "football";
 
-    const CACHE_TIME =
-        15000;
+    const CACHE_TIME = 10000;
 
-    const cache =
-        new Map();
+    const cache = new Map();
+
+
+    /* =====================================================
+       UTILITIES
+    ===================================================== */
+
+    function firstValue(...values) {
+
+        for (const value of values) {
+
+            if (
+                value !== undefined &&
+                value !== null &&
+                value !== ""
+            ) {
+                return value;
+            }
+
+        }
+
+        return null;
+    }
+
+
+    function toNumber(value) {
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
+        ) {
+            return null;
+        }
+
+        const number = Number(value);
+
+        return Number.isNaN(number)
+            ? null
+            : number;
+    }
 
 
     /* =====================================================
@@ -35,15 +72,13 @@ const PreziAPI = (() => {
                 BASE_URL + endpoint
             );
 
-
         url.searchParams.set(
             "sport",
             SPORT
         );
 
-
-        Object.entries(params)
-            .forEach(([key, value]) => {
+        Object.entries(params).forEach(
+            ([key, value]) => {
 
                 if (
                     value !== undefined &&
@@ -58,7 +93,8 @@ const PreziAPI = (() => {
 
                 }
 
-            });
+            }
+        );
 
 
         const cacheKey =
@@ -80,44 +116,69 @@ const PreziAPI = (() => {
         }
 
 
-        const response =
-            await fetch(
+        const controller =
+            new AbortController();
+
+
+        const timeout =
+            setTimeout(() => {
+
+                controller.abort();
+
+            }, 12000);
+
+
+        try {
+
+            const response =
+                await fetch(
+                    cacheKey,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Accept":
+                                "application/json"
+                        },
+
+                        signal:
+                            controller.signal
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "SportScore HTTP " +
+                    response.status
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            cache.set(
                 cacheKey,
                 {
-                    method: "GET",
-
-                    headers: {
-                        "Accept":
-                            "application/json"
-                    }
+                    time: Date.now(),
+                    data: data
                 }
             );
 
 
-        if (!response.ok) {
-
-            throw new Error(
-                "SportScore HTTP " +
-                response.status
-            );
+            return data;
 
         }
 
+        finally {
 
-        const data =
-            await response.json();
+            clearTimeout(timeout);
 
-
-        cache.set(
-            cacheKey,
-            {
-                time: Date.now(),
-                data: data
-            }
-        );
-
-
-        return data;
+        }
 
     }
 
@@ -137,7 +198,7 @@ const PreziAPI = (() => {
                     limit:
                         Math.min(
                             Math.max(
-                                limit,
+                                Number(limit) || 100,
                                 1
                             ),
                             100
@@ -166,38 +227,18 @@ const PreziAPI = (() => {
         }
 
 
-        return [];
-
-    }
-
-
-    /* =====================================================
-       FIND VALUE
-       Chèche yon valeur nan plizyè kote.
-    ===================================================== */
-
-    function firstValue(
-        ...values
-    ) {
-
-        for (
-            const value of values
+        if (
+            Array.isArray(
+                data?.data
+            )
         ) {
 
-            if (
-                value !== undefined &&
-                value !== null &&
-                value !== ""
-            ) {
-
-                return value;
-
-            }
+            return data.data;
 
         }
 
 
-        return null;
+        return [];
 
     }
 
@@ -233,9 +274,15 @@ const PreziAPI = (() => {
 
                 team.team_name,
 
+                team.teamName,
+
+                team.display_name,
+
+                team.displayName,
+
                 team.short_name,
 
-                team.display_name
+                team.shortName
 
             ) || fallback;
 
@@ -256,8 +303,6 @@ const PreziAPI = (() => {
         directLogo
     ) {
 
-        /* Logo direct */
-
         const direct =
             firstValue(
                 directLogo
@@ -271,42 +316,36 @@ const PreziAPI = (() => {
         }
 
 
-        /* Team object */
-
         if (
             team &&
             typeof team === "object"
         ) {
 
-            const logo =
-                firstValue(
+            return firstValue(
 
-                    team.logo,
+                team.logo,
 
-                    team.image,
+                team.logo_url,
 
-                    team.photo,
+                team.logoUrl,
 
-                    team.icon,
+                team.image,
 
-                    team.badge,
+                team.image_url,
 
-                    team.logo_url,
+                team.imageUrl,
 
-                    team.image_url,
+                team.photo,
 
-                    team.photo_url,
+                team.photo_url,
 
-                    team.badge_url
+                team.badge,
 
-                );
+                team.badge_url,
 
+                team.icon
 
-            if (logo) {
-
-                return logo;
-
-            }
+            );
 
         }
 
@@ -327,27 +366,55 @@ const PreziAPI = (() => {
 
         const team =
             side === "home"
-                ? match.home_team ||
-                  match.home ||
-                  match.homeTeam
-                : match.away_team ||
-                  match.away ||
-                  match.awayTeam;
+
+                ? (
+                    match.home_team ||
+                    match.home ||
+                    match.homeTeam ||
+                    {}
+                )
+
+                : (
+                    match.away_team ||
+                    match.away ||
+                    match.awayTeam ||
+                    {}
+                );
 
 
         const directScore =
             side === "home"
+
                 ? firstValue(
+
                     match.home_score,
+
                     match.homeScore,
+
                     match.home_goals,
-                    match.homeGoals
+
+                    match.homeGoals,
+
+                    match.home_result,
+
+                    match.homeResult
+
                 )
+
                 : firstValue(
+
                     match.away_score,
+
                     match.awayScore,
+
                     match.away_goals,
-                    match.awayGoals
+
+                    match.awayGoals,
+
+                    match.away_result,
+
+                    match.awayResult
+
                 );
 
 
@@ -355,13 +422,10 @@ const PreziAPI = (() => {
             directScore !== null
         ) {
 
-            const number =
-                Number(directScore);
-
-
-            return Number.isNaN(number)
-                ? directScore
-                : number;
+            return toNumber(
+                directScore
+            ) ??
+            directScore;
 
         }
 
@@ -380,7 +444,9 @@ const PreziAPI = (() => {
 
                     team.current_score,
 
-                    team.currentScore
+                    team.currentScore,
+
+                    team.result
 
                 );
 
@@ -389,13 +455,9 @@ const PreziAPI = (() => {
                 score !== null
             ) {
 
-                const number =
-                    Number(score);
-
-
-                return Number.isNaN(number)
-                    ? score
-                    : number;
+                return toNumber(
+                    score
+                ) ?? score;
 
             }
 
@@ -415,31 +477,29 @@ const PreziAPI = (() => {
         match
     ) {
 
-        const rawStatus =
-            firstValue(
-
-                match.status,
-
-                match.state,
-
-                match.match_status,
-
-                match.matchState,
-
-                match.status_code
-
-            );
-
-
-        const status =
+        const raw =
             String(
-                rawStatus || ""
+                firstValue(
+
+                    match.status,
+
+                    match.state,
+
+                    match.match_status,
+
+                    match.matchState,
+
+                    match.status_code,
+
+                    match.statusCode
+
+                ) || ""
             )
             .toLowerCase()
             .trim();
 
 
-        const statusText =
+        const text =
             String(
                 firstValue(
 
@@ -449,7 +509,11 @@ const PreziAPI = (() => {
 
                     match.status_name,
 
-                    match.statusName
+                    match.statusName,
+
+                    match.state_name,
+
+                    match.stateName
 
                 ) || ""
             )
@@ -457,25 +521,43 @@ const PreziAPI = (() => {
             .trim();
 
 
-        /* =========================
-           LIVE
-        ========================= */
+        const combined =
+            raw + " " + text;
+
+
+        /* LIVE */
 
         const liveWords = [
 
             "live",
+
             "in_progress",
+
             "in progress",
+
             "progress",
+
             "playing",
+
             "ongoing",
+
             "started",
+
             "1st_half",
+
             "2nd_half",
+
             "first_half",
+
             "second_half",
+
             "1st half",
-            "2nd half"
+
+            "2nd half",
+
+            "half time",
+
+            "halftime"
 
         ];
 
@@ -483,8 +565,7 @@ const PreziAPI = (() => {
         if (
             liveWords.some(
                 word =>
-                    status.includes(word) ||
-                    statusText.includes(word)
+                    combined.includes(word)
             )
         ) {
 
@@ -493,19 +574,27 @@ const PreziAPI = (() => {
         }
 
 
-        /* =========================
-           FINISHED
-        ========================= */
+        /* FINISHED */
 
         const finishedWords = [
 
             "finished",
+
             "finish",
+
             "ended",
+
             "completed",
+
             "full time",
+
             "full_time",
-            "ft"
+
+            "ft",
+
+            "after_penalties",
+
+            "after extra time"
 
         ];
 
@@ -513,9 +602,7 @@ const PreziAPI = (() => {
         if (
             finishedWords.some(
                 word =>
-                    status === word ||
-                    status.includes(word) ||
-                    statusText.includes(word)
+                    combined.includes(word)
             )
         ) {
 
@@ -524,29 +611,154 @@ const PreziAPI = (() => {
         }
 
 
-        /* =========================
-           UPCOMING
-        ========================= */
-
         return "upcoming";
 
     }
 
 
     /* =====================================================
-       MINUTE — IMPORTANT
+       START TIME
     ===================================================== */
 
-    function getMinute(
+    function getStartTime(
         match
     ) {
 
-        /* 
-           Nou teste plizyè kote.
-           Nou pa mete 2 kòm fallback.
-        */
+        return firstValue(
 
-        const value =
+            match.start_time,
+
+            match.startTime,
+
+            match.start_at,
+
+            match.startAt,
+
+            match.start,
+
+            match.kickoff,
+
+            match.kick_off,
+
+            match.kickoff_time,
+
+            match.kickoffTime,
+
+            match.datetime,
+
+            match.date,
+
+            match.event_time,
+
+            match.eventTime,
+
+            match.time
+
+        );
+
+    }
+
+
+    /* =====================================================
+       MINUTE
+    ===================================================== */
+
+    function cleanMinute(
+        value
+    ) {
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
+        ) {
+
+            return null;
+
+        }
+
+
+        if (
+            typeof value === "object"
+        ) {
+
+            value =
+                firstValue(
+
+                    value.minute,
+
+                    value.elapsed,
+
+                    value.elapsed_time,
+
+                    value.elapsedTime,
+
+                    value.current,
+
+                    value.value,
+
+                    value.time
+
+                );
+
+        }
+
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
+        ) {
+
+            return null;
+
+        }
+
+
+        const text =
+            String(value)
+                .trim();
+
+
+        const match =
+            text.match(
+                /(\d+)/
+            );
+
+
+        if (!match) {
+
+            return null;
+
+        }
+
+
+        const minute =
+            Number(
+                match[1]
+            );
+
+
+        if (
+            Number.isNaN(minute)
+        ) {
+
+            return null;
+
+        }
+
+
+        return minute;
+
+    }
+
+
+    function getAPIMinute(
+        match
+    ) {
+
+        return cleanMinute(
+
             firstValue(
 
                 match.minute,
@@ -573,79 +785,45 @@ const PreziAPI = (() => {
 
                 match.live_minute,
 
-                match.liveMinute
+                match.liveMinute,
 
-            );
+                match.game_minute,
 
+                match.gameMinute
 
-        if (
-            value === null
-        ) {
+            )
 
-            return null;
-
-        }
-
-
-        /* Object */
-
-        if (
-            typeof value === "object"
-        ) {
-
-            const objectValue =
-                firstValue(
-
-                    value.minute,
-
-                    value.elapsed,
-
-                    value.elapsed_time,
-
-                    value.current,
-
-                    value.value,
-
-                    value.time
-
-                );
-
-
-            if (
-                objectValue === null
-            ) {
-
-                return null;
-
-            }
-
-
-            return cleanMinute(
-                objectValue
-            );
-
-        }
-
-
-        return cleanMinute(
-            value
         );
 
     }
 
 
     /* =====================================================
-       CLEAN MINUTE
+       CALCULATE MINUTE
+       Si API pa bay minute, nou kalkile l.
     ===================================================== */
 
-    function cleanMinute(
-        value
+    function calculateMinute(
+        startTime
     ) {
 
+        if (!startTime) {
+
+            return null;
+
+        }
+
+
+        const start =
+            new Date(
+                startTime
+            );
+
+
         if (
-            value === null ||
-            value === undefined ||
-            value === ""
+            Number.isNaN(
+                start.getTime()
+            )
         ) {
 
             return null;
@@ -653,82 +831,92 @@ const PreziAPI = (() => {
         }
 
 
-        let text =
-            String(value)
-            .trim();
+        const now =
+            Date.now();
+
+
+        const difference =
+            now - start.getTime();
+
+
+        if (
+            difference < 0
+        ) {
+
+            return 0;
+
+        }
+
+
+        const minutes =
+            Math.floor(
+                difference /
+                60000
+            );
+
+
+        return Math.max(
+            0,
+            Math.min(
+                minutes,
+                130
+            )
+        );
+
+    }
+
+
+    /* =====================================================
+       MINUTE FINAL
+    ===================================================== */
+
+    function getMinute(
+        match,
+        status,
+        startTime
+    ) {
+
+        if (
+            status !== "live"
+        ) {
+
+            return null;
+
+        }
 
 
         /*
-         * Egzanp:
-         * 67'
-         * 67
-         * 67 min
-         * 67:30
+         * Premye chwa:
+         * vrè minute API a.
          */
 
-        text =
-            text
-            .replace(
-                /min/gi,
-                ""
-            )
-            .trim();
+        const apiMinute =
+            getAPIMinute(
+                match
+            );
 
 
         if (
-            /^\d+$/.test(text)
+            apiMinute !== null
         ) {
 
-            return Number(text);
+            return apiMinute;
 
         }
 
 
-        const match =
-            text.match(
-                /^(\d+)/
+        /*
+         * Si API pa bay li:
+         * kalkile depi kick-off.
+         */
+
+        const calculated =
+            calculateMinute(
+                startTime
             );
 
 
-        if (match) {
-
-            return Number(
-                match[1]
-            );
-
-        }
-
-
-        return text;
-
-    }
-
-
-    /* =====================================================
-       START TIME
-    ===================================================== */
-
-    function getStartTime(
-        match
-    ) {
-
-        return firstValue(
-
-            match.start_time,
-
-            match.startTime,
-
-            match.start_at,
-
-            match.startAt,
-
-            match.date,
-
-            match.datetime,
-
-            match.time
-
-        );
+        return calculated;
 
     }
 
@@ -752,9 +940,15 @@ const PreziAPI = (() => {
 
                 match.competition_name,
 
+                match.competitionName,
+
                 match.league_name,
 
-                match.tournament_name
+                match.leagueName,
+
+                match.tournament_name,
+
+                match.tournamentName
 
             );
 
@@ -779,7 +973,9 @@ const PreziAPI = (() => {
 
                 competition.title,
 
-                competition.league_name
+                competition.league_name,
+
+                competition.leagueName
 
             ) || "Football";
 
@@ -805,6 +1001,8 @@ const PreziAPI = (() => {
 
             match.match_id,
 
+            match.matchId,
+
             match.event_id,
 
             match.eventId,
@@ -819,7 +1017,7 @@ const PreziAPI = (() => {
 
 
     /* =====================================================
-       MATCH SLUG
+       SLUG
     ===================================================== */
 
     function getMatchSlug(
@@ -836,20 +1034,29 @@ const PreziAPI = (() => {
 
             match.url,
 
-            match.link
+            match.link,
+
+            match.match_url,
+
+            match.matchUrl
 
         );
 
-        }
+    }
 
-     /* =====================================================
+
+    /* =====================================================
        NORMALIZE MATCH
     ===================================================== */
 
-    function normalizeMatch(match) {
+    function normalizeMatch(
+        match
+    ) {
 
         if (!match) {
+
             return null;
+
         }
 
 
@@ -868,54 +1075,112 @@ const PreziAPI = (() => {
 
 
         const status =
-            normalizeStatus(match);
+            normalizeStatus(
+                match
+            );
+
+
+        const startTime =
+            getStartTime(
+                match
+            );
 
 
         const homeName =
             getTeamName(
+
                 homeTeam,
+
                 firstValue(
+
                     match.home_name,
-                    match.homeName
-                ) || "Équipe domicile"
+
+                    match.homeName,
+
+                    match.home_team_name,
+
+                    match.homeTeamName
+
+                ) ||
+                "Équipe domicile"
+
             );
 
 
         const awayName =
             getTeamName(
+
                 awayTeam,
+
                 firstValue(
+
                     match.away_name,
-                    match.awayName
-                ) || "Équipe visiteuse"
+
+                    match.awayName,
+
+                    match.away_team_name,
+
+                    match.awayTeamName
+
+                ) ||
+                "Équipe visiteuse"
+
             );
 
 
         const homeLogo =
             getTeamLogo(
+
                 homeTeam,
+
                 firstValue(
+
                     match.home_logo,
+
                     match.homeLogo,
+
                     match.home_image,
+
                     match.homeImage,
+
                     match.home_badge,
-                    match.homeBadge
+
+                    match.homeBadge,
+
+                    match.home_logo_url,
+
+                    match.homeLogoUrl
+
                 )
+
             );
 
 
         const awayLogo =
             getTeamLogo(
+
                 awayTeam,
+
                 firstValue(
+
                     match.away_logo,
+
                     match.awayLogo,
+
                     match.away_image,
+
                     match.awayImage,
+
                     match.away_badge,
-                    match.awayBadge
+
+                    match.awayBadge,
+
+                    match.away_logo_url,
+
+                    match.awayLogoUrl
+
                 )
+
             );
 
 
@@ -964,7 +1229,9 @@ const PreziAPI = (() => {
 
 
             competition:
-                getCompetition(match),
+                getCompetition(
+                    match
+                ),
 
 
             competitionLogo:
@@ -992,39 +1259,11 @@ const PreziAPI = (() => {
 
                     match.statusText,
 
-                    match.status_name
-
-                ) || "",
+                    match.status_name,
 
 
-            /*
-             * Si API a pa bay minute,
-             * li rete null.
-             *
-             * Nou pa janm mete 2 kòm
-             * default.
-             */
-
-            minute:
-                status === "live"
-                    ? getMinute(match)
-                    : null,
-
-
-            startTime:
-                getStartTime(match),
-
-
-            raw:
-                match
-
-        };
-
-    }
-
-
-    /* =====================================================
-       NORMALIZED MATCHES
+/* =====================================================
+       GET NORMALIZED MATCHES
     ===================================================== */
 
     async function getNormalizedMatches() {
@@ -1042,9 +1281,7 @@ const PreziAPI = (() => {
 
         const normalized =
             matches
-                .map(
-                    normalizeMatch
-                )
+                .map(normalizeMatch)
                 .filter(Boolean);
 
 
@@ -1117,7 +1354,9 @@ const PreziAPI = (() => {
        MATCH DETAILS
     ===================================================== */
 
-    async function getMatch(slug) {
+    async function getMatch(
+        slug
+    ) {
 
         if (!slug) {
 
@@ -1142,7 +1381,9 @@ const PreziAPI = (() => {
        TEAM
     ===================================================== */
 
-    async function getTeam(slug) {
+    async function getTeam(
+        slug
+    ) {
 
         if (!slug) {
 
@@ -1353,7 +1594,7 @@ const PreziAPI = (() => {
 
 
 /* =========================================================
-   PREZI LIVE — AUTO REFRESH
+   PREZISCORE LIVE REFRESH
 ========================================================= */
 
 const PreziLive = {
@@ -1369,20 +1610,38 @@ const PreziLive = {
         this.stop();
 
 
+        if (
+            typeof callback !== "function"
+        ) {
+
+            console.error(
+                "❌ PreziLive: callback invalid"
+            );
+
+            return;
+
+        }
+
+
         /*
-         * Premye loading
+         * Premye chaj la fèt imedyatman.
          */
 
         callback();
 
 
         /*
-         * Refresh otomatik
+         * Apre sa nou verifye API a
+         * chak 30 segonn.
          */
 
         this.timer =
             setInterval(
-                callback,
+                () => {
+
+                    callback();
+
+                },
                 seconds * 1000
             );
 
@@ -1419,5 +1678,5 @@ window.PreziLive =
 
 
 console.log(
-    "✅ PREZISCORE API READY"
-);                 
+    "✅ PREZISCORE API ENGINE READY"
+);                   
