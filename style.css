@@ -1,1 +1,1325 @@
+/* =========================================================
+   PREZISCORE — GLOBAL STYLE
+   Football App UI
+========================================================= */
 
+:root {
+
+    --bg: #070a0f;
+    --bg-2: #0b1017;
+
+    --card: #10161f;
+    --card-2: #151d28;
+
+    --border: rgba(255,255,255,0.07);
+
+    --primary: #00e676;
+    --primary-dark: #00b85a;
+
+    --danger: #ff304f;
+    --warning: #ffb020;
+
+    --text: #ffffff;
+    --muted: #8c96a5;
+
+    --nav-height: 72px;
+
+    --radius: 17px;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+}
+
+
+html {
+
+    scroll-behavior: smooth;
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #111a25 0,
+            var(--bg) 45%
+        );
+
+    color: var(--text);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 14px;
+
+    overflow-x: hidden;
+
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+
+    width: 5px;
+
+}
+
+
+::-webkit-scrollbar-track {
+
+    background: var(--bg);
+
+}
+
+
+::-webkit-scrollbar-thumb {
+
+    background: #26313e;
+
+    border-radius: 20px;
+
+}
+
+
+/* =========================================================
+   LINKS / BUTTONS
+========================================================= */
+
+a {
+
+    color: inherit;
+
+    text-decoration: none;
+
+}
+
+
+button,
+input {
+
+    font: inherit;
+
+}
+
+
+button {
+
+    border: 0;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.top-header {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    height: 66px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding:
+        0 16px;
+
+    background:
+        rgba(7,10,15,0.92);
+
+    border-bottom:
+        1px solid var(--border);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.brand-ball {
+
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(0,230,118,0.20),
+            rgba(0,230,118,0.05)
+        );
+
+    border:
+        1px solid
+        rgba(0,230,118,0.20);
+
+    font-size: 20px;
+
+}
+
+
+.brand h1 {
+
+    font-size: 18px;
+
+    line-height: 20px;
+
+    font-weight: 850;
+
+    letter-spacing: -0.5px;
+
+}
+
+
+.brand h1 span {
+
+    color: var(--primary);
+
+}
+
+
+.brand p {
+
+    margin-top: 1px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+}
+
+
+/* =========================================================
+   SEARCH BUTTON
+========================================================= */
+
+.search-btn {
+
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    color: white;
+
+    font-size: 16px;
+
+    transition: 0.2s;
+
+}
+
+
+.search-btn:active {
+
+    transform: scale(0.92);
+
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main-content {
+
+    width: min(
+        100%,
+        900px
+    );
+
+    margin: auto;
+
+    padding:
+        0 15px
+        calc(
+            var(--nav-height) + 25px
+        );
+
+}
+
+
+/* =========================================================
+   PAGE HEAD
+========================================================= */
+
+.page-head {
+
+    padding:
+        22px 0 15px;
+
+}
+
+
+.page-head h2 {
+
+    font-size: 25px;
+
+    font-weight: 850;
+
+    letter-spacing: -0.8px;
+
+}
+
+
+.page-head p {
+
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================================
+   SEARCH BOX
+========================================================= */
+
+.search-box {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    height: 46px;
+
+    padding:
+        0 14px;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    transition: 0.2s;
+
+}
+
+
+.search-box:focus-within {
+
+    border-color:
+        rgba(0,230,118,0.45);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0,230,118,0.07);
+
+}
+
+
+.search-box span {
+
+    font-size: 16px;
+
+    opacity: 0.8;
+
+}
+
+
+.search-box input {
+
+    width: 100%;
+
+    height: 100%;
+
+    border: 0;
+
+    outline: 0;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 12px;
+
+}
+
+
+.search-box input::placeholder {
+
+    color: #68717f;
+
+}
+
+
+/* =========================================================
+   MATCH TABS
+========================================================= */
+
+.match-tabs {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 7px;
+
+    margin-top: 14px;
+
+}
+
+
+.match-tab {
+
+    min-height: 40px;
+
+    padding: 0 7px;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 12px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    transition: 0.2s;
+
+}
+
+
+.match-tab:active {
+
+    transform: scale(0.97);
+
+}
+
+
+.match-tab.active {
+
+    background:
+        rgba(0,230,118,0.11);
+
+    border-color:
+        rgba(0,230,118,0.32);
+
+    color: var(--primary);
+
+    box-shadow:
+        inset 0 0 18px
+        rgba(0,230,118,0.04);
+
+}
+
+
+/* =========================================================
+   DATE BAR
+========================================================= */
+
+.date-bar {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin:
+        22px 2px 8px;
+
+}
+
+
+.date-bar h3 {
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+}
+
+
+.date-bar span {
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+}
+
+
+/* =========================================================
+   COMPETITION
+========================================================= */
+
+.competition {
+
+    margin-top: 14px;
+
+}
+
+
+.competition-head {
+
+    min-height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding:
+        5px 4px;
+
+    color: #aeb7c4;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+}
+
+
+.competition-icon {
+
+    width: 28px;
+    height: 28px;
+
+    display: grid;
+
+    place-items: center;
+
+    background:
+        var(--card-2);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   MATCH CARD
+========================================================= */
+
+.match-item {
+
+    position: relative;
+
+    padding: 15px;
+
+    margin-bottom: 8px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #111821,
+            #0d131b
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.18s,
+        border-color 0.18s,
+        background 0.18s;
+
+}
+
+
+.match-item::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 2px;
+
+    background:
+        transparent;
+
+}
+
+
+.match-item:active {
+
+    transform:
+        scale(0.985);
+
+}
+
+
+.match-item:hover {
+
+    border-color:
+        rgba(255,255,255,0.12);
+
+}
+
+
+/* =========================================================
+   MATCH TOP
+========================================================= */
+
+.match-top {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 13px;
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    min-height: 20px;
+
+    padding:
+        4px 7px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.2px;
+
+}
+
+
+.status.live {
+
+    color: var(--danger);
+
+    background:
+        rgba(255,48,79,0.10);
+
+}
+
+
+.status.finished {
+
+    color: #7e8997;
+
+    background:
+        rgba(126,137,151,0.09);
+
+}
+
+
+.status.upcoming {
+
+    color: var(--primary);
+
+    background:
+        rgba(0,230,118,0.09);
+
+}
+
+
+.status-dot {
+
+    width: 6px;
+    height: 6px;
+
+    flex: 0 0 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+}
+
+
+.status.live .status-dot {
+
+    animation:
+        livePulse 1.2s
+        infinite;
+
+}
+
+
+@keyframes livePulse {
+
+    0%,
+    100% {
+
+        opacity: 1;
+
+        transform: scale(1);
+
+    }
+
+    50% {
+
+        opacity: 0.35;
+
+        transform: scale(0.75);
+
+    }
+
+}
+
+
+/* =========================================================
+   MATCH TIME
+========================================================= */
+
+.match-time {
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+}
+
+
+/* =========================================================
+   MATCH BODY
+========================================================= */
+
+.match-body {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        72px
+        minmax(0,1fr);
+
+    align-items: center;
+
+    gap: 7px;
+
+    text-align: center;
+
+}
+
+
+/* =========================================================
+   CLUB
+========================================================= */
+
+.club {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+.club-logo {
+
+    width: 46px;
+    height: 46px;
+
+    display: grid;
+
+    place-items: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #19222d,
+            #111820
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    overflow: hidden;
+
+    font-size: 18px;
+
+}
+
+
+.club-logo img {
+
+    width: 34px;
+    height: 34px;
+
+    object-fit: contain;
+
+}
+
+
+.club-name {
+
+    width: 100%;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    color: #f0f3f6;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+.score {
+
+    font-size: 20px;
+
+    font-weight: 900;
+
+    letter-spacing: -0.7px;
+
+}
+
+
+.score small {
+
+    display: block;
+
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+    letter-spacing: 0;
+
+}
+
+
+/* =========================================================
+   LIVE SCORE
+========================================================= */
+
+.match-item:has(.status.live)::before {
+
+    background:
+        var(--danger);
+
+}
+
+
+.match-item:has(.status.live) {
+
+    border-color:
+        rgba(255,48,79,0.13);
+
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+
+    padding:
+        55px 10px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+}
+
+
+.loader {
+
+    width: 28px;
+    height: 28px;
+
+    margin:
+        0 auto 11px;
+
+    border:
+        3px solid
+        rgba(255,255,255,0.08);
+
+    border-top-color:
+        var(--primary);
+
+    border-radius: 50%;
+
+    animation:
+        spin 0.8s
+        linear infinite;
+
+}
+
+
+@keyframes spin {
+
+    to {
+
+        transform:
+            rotate(360deg);
+
+    }
+
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.no-matches {
+
+    display: none;
+
+    padding:
+        45px 18px;
+
+    margin-top: 10px;
+
+    text-align: center;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+}
+
+
+.no-matches.show {
+
+    display: block;
+
+}
+
+
+.no-matches div {
+
+    width: 54px;
+    height: 54px;
+
+    display: grid;
+
+    place-items: center;
+
+    margin: auto;
+
+    border-radius: 16px;
+
+    background: var(--card-2);
+
+    font-size: 25px;
+
+}
+
+
+.no-matches h3 {
+
+    margin-top: 12px;
+
+    font-size: 14px;
+
+}
+
+
+.no-matches p {
+
+    margin-top: 6px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
+
+.bottom-nav {
+
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 2000;
+
+    height:
+        var(--nav-height);
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    padding:
+        7px 7px
+        calc(
+            7px +
+            env(safe-area-inset-bottom)
+        );
+
+    background:
+        rgba(9,13,19,0.96);
+
+    border-top:
+        1px solid var(--border);
+
+    backdrop-filter:
+        blur(20px);
+
+    -webkit-backdrop-filter:
+        blur(20px);
+
+}
+
+
+.nav-item {
+
+    position: relative;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 4px;
+
+    border-radius: 13px;
+
+    color: #687381;
+
+    transition: 0.2s;
+
+}
+
+
+.nav-item span {
+
+    width: 30px;
+    height: 25px;
+
+    display: grid;
+
+    place-items: center;
+
+    font-size: 17px;
+
+}
+
+
+.nav-item small {
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+}
+
+
+.nav-item.active {
+
+    color: var(--primary);
+
+}
+
+
+.nav-item.active::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -7px;
+
+    width: 25px;
+    height: 2px;
+
+    border-radius: 5px;
+
+    background:
+        var(--primary);
+
+    box-shadow:
+        0 0 10px
+        rgba(0,230,118,0.55);
+
+}
+
+
+.nav-item:active {
+
+    transform:
+        scale(0.92);
+
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 768px) {
+
+    :root {
+
+        --nav-height: 76px;
+
+    }
+
+
+    .top-header {
+
+        padding:
+            0 28px;
+
+    }
+
+
+    .main-content {
+
+        padding-left: 24px;
+
+        padding-right: 24px;
+
+    }
+
+
+    .page-head h2 {
+
+        font-size: 29px;
+
+    }
+
+
+    .match-item {
+
+        padding: 17px;
+
+    }
+
+
+    .club-name {
+
+        font-size: 11px;
+
+    }
+
+
+    .club-logo {
+
+        width: 50px;
+        height: 50px;
+
+    }
+
+
+    .club-logo img {
+
+        width: 38px;
+        height: 38px;
+
+    }
+
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1100px) {
+
+    .main-content {
+
+        width: 980px;
+
+    }
+
+
+    .bottom-nav {
+
+        left: 50%;
+
+        right: auto;
+
+        width: 600px;
+
+        transform:
+            translateX(-50%);
+
+        border:
+            1px solid var(--border);
+
+        border-bottom: 0;
+
+        border-radius:
+            18px 18px 0 0;
+
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+
+    outline:
+        2px solid var(--primary);
+
+    outline-offset: 2px;
+
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            0.01ms !important;
+
+    }
+
+  }
