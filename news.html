@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+      content="#080b10">
+
+<meta name="description"
+      content="PreziScore — Actualités football">
+
+<title>PreziScore — News</title>
+
+<link rel="stylesheet"
+      href="style.css">
+
+<style>
+
+/* =====================================================
+   PREZISCORE — NEWS
+===================================================== */
+
+.news-page {
+    padding-bottom: 100px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.news-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 18px 0;
+
+}
+
+
+.news-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.news-ball {
+
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+
+    place-items: center;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 13px;
+
+    font-size: 21px;
+
+}
+
+
+.news-brand h1 {
+
+    font-size: 21px;
+
+    font-weight: 900;
+
+}
+
+
+.news-brand h1 span {
+
+    color: var(--primary);
+
+}
+
+
+.news-brand p {
+
+    margin-top: 2px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+}
+
+
+.news-search-btn {
+
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+
+    place-items: center;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+}
+
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.news-title {
+
+    margin-top: 8px;
+
+}
+
+
+.news-title h2 {
+
+    font-size: 24px;
+
+    letter-spacing: -.6px;
+
+}
+
+
+.news-title p {
+
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.news-search {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 18px;
+
+    padding: 12px 14px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+}
+
+
+.news-search span {
+
+    font-size: 15px;
+
+}
+
+
+.news-search input {
+
+    width: 100%;
+
+    border: 0;
+
+    outline: 0;
+
+    background: transparent;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+}
+
+
+.news-search input::placeholder {
+
+    color: #68717f;
+
+}
+
+
+/* =====================================================
+   NEWS TABS
+===================================================== */
+
+.news-tabs {
+
+    display: flex;
+
+    gap: 7px;
+
+    overflow-x: auto;
+
+    margin-top: 13px;
+
+    padding-bottom: 4px;
+
+    scrollbar-width: none;
+
+}
+
+
+.news-tabs::-webkit-scrollbar {
+
+    display: none;
+
+}
+
+
+.news-tab {
+
+    flex-shrink: 0;
+
+    padding: 9px 14px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    color: var(--muted);
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+}
+
+
+.news-tab.active {
+
+    background:
+        rgba(0,230,118,.10);
+
+    border-color:
+        rgba(0,230,118,.28);
+
+    color: var(--primary);
+
+}
+
+
+/* =====================================================
+   SECTION HEAD
+===================================================== */
+
+.news-section {
+
+    margin-top: 24px;
+
+}
+
+
+.news-section-head {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 11px;
+
+}
+
+
+.news-section-head h3 {
+
+    font-size: 14px;
+
+}
+
+
+.news-section-head span {
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+}
+
+
+/* =====================================================
+   FEATURED NEWS
+===================================================== */
+
+.featured-news {
+
+    position: relative;
+
+    min-height: 205px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #151a21,
+            #0b0e13
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+}
+
+
+.featured-image {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: grid;
+
+    place-items: center;
+
+    font-size: 55px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0,230,118,.12),
+            transparent 60%
+        );
+
+}
+
+
+.featured-image::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            transparent 15%,
+            rgba(0,0,0,.88) 100%
+        );
+
+}
+
+
+.featured-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    padding: 16px;
+
+}
+
+
+.news-tag {
+
+    display: inline-block;
+
+    padding: 5px 8px;
+
+    margin-bottom: 8px;
+
+    background:
+        rgba(0,230,118,.12);
+
+    border: 1px solid
+        rgba(0,230,118,.18);
+
+    border-radius: 7px;
+
+    color: var(--primary);
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+}
+
+
+.featured-content h3 {
+
+    max-width: 90%;
+
+    font-size: 17px;
+
+    line-height: 1.25;
+
+}
+
+
+.featured-content p {
+
+    margin-top: 7px;
+
+    color: #aeb6c2;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+}
+
+
+/* =====================================================
+   NEWS GRID
+===================================================== */
+
+.news-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+}
+
+
+.news-card {
+
+    display: flex;
+
+    gap: 11px;
+
+    padding: 11px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    text-decoration: none;
+
+    color: white;
+
+    transition: .2s;
+
+}
+
+
+.news-card:active {
+
+    transform: scale(.985);
+
+}
+
+
+.news-image {
+
+    width: 92px;
+    height: 78px;
+
+    display: grid;
+
+    place-items: center;
+
+    flex-shrink: 0;
+
+    background: var(--card-2);
+
+    border-radius: 11px;
+
+    font-size: 27px;
+
+    overflow: hidden;
+
+}
+
+
+.news-image img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+
+.news-content {
+
+    min-width: 0;
+
+    flex: 1;
+
+}
+
+
+.news-category {
+
+    color: var(--primary);
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+}
+
+
+.news-content h4 {
+
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    line-height: 1.35;
+
+}
+
+
+.news-content p {
+
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+    line-height: 1.35;
+
+}
+
+
+.news-time {
+
+    margin-top: 7px;
+
+    color: #66707d;
+
+    font-size: 7px;
+
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.news-empty {
+
+    display: none;
+
+    padding: 35px 15px;
+
+    text-align: center;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+}
+
+
+.news-empty.show {
+
+    display: block;
+
+}
+
+
+.news-empty div {
+
+    font-size: 30px;
+
+}
+
+
+.news-empty h3 {
+
+    margin-top: 9px;
+
+    font-size: 13px;
+
+}
+
+
+.news-empty p {
+
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (min-width: 768px) {
+
+    .news-list {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+    .featured-news {
+
+        min-height: 250px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<main class="main-content news-page">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="news-header">
+
+    <div class="news-brand">
+
+        <div class="news-ball">
+            ⚽
+        </div>
+
+        <div>
+
+            <h1>
+                Prezi<span>Score</span>
+            </h1>
+
+            <p>
+                Football en direct
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="news-search-btn"
+        onclick="focusNewsSearch()"
+        aria-label="Rechercher une actualité"
+    >
+        🔍
+    </button>
+
+</header>
+
+
+<!-- =====================================================
+     TITLE
+===================================================== -->
+
+<section class="news-title">
+
+    <h2>
+        📰 Actualités
+    </h2>
+
+    <p>
+        Toute l'actualité football
+        au même endroit.
+    </p>
+
+</section>
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<div class="news-search">
+
+    <span>🔍</span>
+
+    <input
+        id="newsSearch"
+        type="search"
+        placeholder="Rechercher une actualité..."
+        autocomplete="off"
+    >
+
+</div>
+
+
+<!-- =====================================================
+     FILTERS
+===================================================== -->
+
+<div class="news-tabs">
+
+    <button
+        class="news-tab active"
+        data-category="all"
+    >
+        🔥 Toutes
+    </button>
+
+
+    <button
+        class="news-tab"
+        data-category="football"
+    >
+        ⚽ Football
+    </button>
+
+
+    <button
+        class="news-tab"
+        data-category="competitions"
+    >
+        🏆 Compétitions
+    </button>
+
+
+    <button
+        class="news-tab"
+        data-category="transferts"
+    >
+        🔄 Transferts
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     FEATURED
+===================================================== -->
+
+<section class="news-section">
+
+    <div class="news-section-head">
+
+        <h3>
+            🔥 À la une
+        </h3>
+
+        <span>
+            Actualité
+        </span>
+
+    </div>
+
+
+    <article
+        class="featured-news"
+        data-category="football"
+        data-name="Toute l'actualité football"
+    >
+
+        <div class="featured-image">
+            ⚽
+        </div>
+
+
+        <div class="featured-content">
+
+            <span class="news-tag">
+                FOOTBALL
+            </span>
+
+            <h3>
+                Toute l'actualité football
+                au même endroit
+            </h3>
+
+            <p>
+                Résultats, matchs,
+                informations et actualités
+                football.
+            </p>
+
+        </div>
+
+    </article>
+
+</section>
+
+
+<!-- =====================================================
+     LATEST NEWS
+===================================================== -->
+
+<section class="news-section">
+
+    <div class="news-section-head">
+
+        <h3>
+            📰 Dernières actualités
+        </h3>
+
+        <span id="newsCount">
+            0
+        </span>
+
+    </div>
+
+
+    <div
+        class="news-list"
+        id="newsList"
+    >
+
+
+        <a
+            href="#"
+            class="news-card"
+            data-category="football"
+            data-name="Actualité football résultats matchs"
+        >
+
+            <div class="news-image">
+                ⚽
+            </div>
+
+            <div class="news-content">
+
+                <div class="news-category">
+                    Football
+                </div>
+
+                <h4>
+                    Les résultats et matchs
+                    du jour
+                </h4>
+
+                <p>
+                    Retrouvez les dernières
+                    informations des rencontres.
+                </p>
+
+                <div class="news-time">
+                    Il y a quelques minutes
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <a
+            href="#"
+            class="news-card"
+            data-category="competitions"
+            data-name="Compétitions football championnat"
+        >
+
+            <div class="news-image">
+                🏆
+            </div>
+
+            <div class="news-content">
+
+                <div class="news-category">
+                    Compétitions
+                </div>
+
+                <h4>
+                    Suivez vos compétitions
+                    préférées
+                </h4>
+
+                <p>
+                    Retrouvez les grands
+                    championnats du monde.
+                </p>
+
+                <div class="news-time">
+                    Aujourd'hui
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <a
+            href="#"
+            class="news-card"
+            data-category="transferts"
+            data-name="Transferts football joueurs"
+        >
+
+            <div class="news-image">
+                🔄
+            </div>
+
+            <div class="news-content">
+
+                <div class="news-category">
+                    Transferts
+                </div>
+
+                <h4>
+                    Les dernières nouvelles
+                    du mercato
+                </h4>
+
+                <p>
+                    Découvrez les mouvements
+                    et rumeurs du football.
+                </p>
+
+                <div class="news-time">
+                    Aujourd'hui
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <a
+            href="#"
+            class="news-card"
+            data-category="football"
+            data-name="Football informations actualités"
+        >
+
+            <div class="news-image">
+                🔥
+            </div>
+
+            <div class="news-content">
+
+                <div class="news-category">
+                    Football
+                </div>
+
+                <h4>
+                    Votre football,
+                    votre plateforme
+                </h4>
+
+                <p>
+                    PreziScore évolue pour
+                    devenir votre référence.
+                </p>
+
+                <div class="news-time">
+                    Aujourd'hui
+                </div>
+
+            </div>
+
+        </a>
+
+
+    </div>
+
+
+    <div
+        class="news-empty"
+        id="newsEmpty"
+    >
+
+        <div>
+            🔎
+        </div>
+
+        <h3>
+            Aucune actualité trouvée
+        </h3>
+
+        <p>
+            Essayez une autre recherche.
+        </p>
+
+    </div>
+
+      </section>
+      <!-- =====================================================
+     BOTTOM NAVIGATION
+===================================================== -->
+
+<nav class="bottom-nav">
+
+    <a
+        href="index.html"
+        class="nav-item"
+    >
+        <span>⌂</span>
+        <small>Accueil</small>
+    </a>
+
+
+    <a
+        href="match.html"
+        class="nav-item"
+    >
+        <span>⚽</span>
+        <small>Matchs</small>
+    </a>
+
+
+    <a
+        href="competitions.html"
+        class="nav-item"
+    >
+        <span>🏆</span>
+        <small>Compétitions</small>
+    </a>
+
+
+    <a
+        href="news.html"
+        class="nav-item active"
+    >
+        <span>📰</span>
+        <small>News</small>
+    </a>
+
+
+    <a
+        href="profile.html"
+        class="nav-item"
+    >
+        <span>👤</span>
+        <small>Profil</small>
+    </a>
+
+</nav>
+
+
+<!-- =====================================================
+     NEWS JAVASCRIPT
+===================================================== -->
+
+<script>
+
+"use strict";
+
+
+const newsSearch =
+    document.getElementById(
+        "newsSearch"
+    );
+
+
+const newsTabs =
+    document.querySelectorAll(
+        ".news-tab"
+    );
+
+
+const newsCards =
+    document.querySelectorAll(
+        ".news-card"
+    );
+
+
+const newsCount =
+    document.getElementById(
+        "newsCount"
+    );
+
+
+const newsEmpty =
+    document.getElementById(
+        "newsEmpty"
+    );
+
+
+let currentCategory =
+    "all";
+
+
+/* =====================================================
+   FILTER NEWS
+===================================================== */
+
+function filterNews() {
+
+    const query =
+        newsSearch.value
+            .trim()
+            .toLowerCase();
+
+
+    let visible = 0;
+
+
+    newsCards.forEach(card => {
+
+        const name =
+            (
+                card.dataset.name || ""
+            )
+            .toLowerCase();
+
+
+        const category =
+            card.dataset.category ||
+            "";
+
+
+        const searchOK =
+            !query ||
+            name.includes(query);
+
+
+        const categoryOK =
+            currentCategory === "all" ||
+            category === currentCategory;
+
+
+        if (
+            searchOK &&
+            categoryOK
+        ) {
+
+            card.style.display =
+                "flex";
+
+            visible++;
+
+        } else {
+
+            card.style.display =
+                "none";
+
+        }
+
+    });
+
+
+    newsCount.textContent =
+        visible;
+
+
+    newsEmpty.classList.toggle(
+        "show",
+        visible === 0
+    );
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+newsSearch.addEventListener(
+    "input",
+    filterNews
+);
+
+
+/* =====================================================
+   CATEGORY TABS
+===================================================== */
+
+newsTabs.forEach(tab => {
+
+    tab.addEventListener(
+        "click",
+        function() {
+
+            newsTabs.forEach(
+                button => {
+
+                    button.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            this.classList.add(
+                "active"
+            );
+
+
+            currentCategory =
+                this.dataset.category ||
+                "all";
+
+
+            filterNews();
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   HEADER SEARCH BUTTON
+===================================================== */
+
+function focusNewsSearch() {
+
+    newsSearch.focus();
+
+
+    window.scrollTo({
+
+        top:
+            newsSearch.offsetTop - 20,
+
+        behavior:
+            "smooth"
+
+    });
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+filterNews();
+
+
+console.log(
+    "📰 PreziScore News chargé"
+);
+
+</script>
+
+
+</main>
+
+
+</body>
+
+</html>
