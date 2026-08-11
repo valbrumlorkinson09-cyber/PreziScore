@@ -1,1 +1,1474 @@
+<!DOCTYPE html>
+<html lang="fr">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+      content="#080b10">
+
+<meta name="description"
+      content="PreziScore — Compétitions football">
+
+<title>PreziScore — Compétitions</title>
+
+<link rel="stylesheet"
+      href="style.css">
+
+<style>
+
+/* =====================================================
+   COMPÉTITIONS — PREZISCORE
+===================================================== */
+
+.competitions-page {
+    padding-bottom: 100px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.comp-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 18px 0;
+
+}
+
+
+.comp-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.comp-ball {
+
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+
+    place-items: center;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 13px;
+
+    font-size: 21px;
+
+}
+
+
+.comp-brand h1 {
+
+    font-size: 21px;
+
+    font-weight: 900;
+
+}
+
+
+.comp-brand h1 span {
+
+    color: var(--primary);
+
+}
+
+
+.comp-brand p {
+
+    margin-top: 2px;
+
+    color: var(--muted);
+
+    font-size: 9px;
+
+}
+
+
+.comp-search-btn {
+
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+
+    place-items: center;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+}
+
+
+/* =====================================================
+   PAGE TITLE
+===================================================== */
+
+.comp-title {
+
+    margin-top: 8px;
+
+}
+
+
+.comp-title h2 {
+
+    font-size: 24px;
+
+    letter-spacing: -.6px;
+
+}
+
+
+.comp-title p {
+
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =====================================================
+   SEARCH BOX
+===================================================== */
+
+.comp-search {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 18px;
+
+    padding: 12px 14px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+}
+
+
+.comp-search span {
+
+    font-size: 15px;
+
+}
+
+
+.comp-search input {
+
+    width: 100%;
+
+    border: 0;
+
+    outline: 0;
+
+    background: transparent;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+}
+
+
+.comp-search input::placeholder {
+
+    color: #68717f;
+
+}
+
+
+/* =====================================================
+   CATEGORY TABS
+===================================================== */
+
+.comp-tabs {
+
+    display: flex;
+
+    gap: 7px;
+
+    overflow-x: auto;
+
+    margin-top: 13px;
+
+    padding-bottom: 4px;
+
+    scrollbar-width: none;
+
+}
+
+
+.comp-tabs::-webkit-scrollbar {
+
+    display: none;
+
+}
+
+
+.comp-tab {
+
+    flex-shrink: 0;
+
+    padding: 9px 13px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    color: var(--muted);
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+}
+
+
+.comp-tab.active {
+
+    background:
+        rgba(0,230,118,.10);
+
+    border-color:
+        rgba(0,230,118,.28);
+
+    color: var(--primary);
+
+}
+
+
+/* =====================================================
+   SECTION
+===================================================== */
+
+.comp-section {
+
+    margin-top: 24px;
+
+}
+
+
+.comp-section-head {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 11px;
+
+}
+
+
+.comp-section-head h3 {
+
+    font-size: 14px;
+
+}
+
+
+.comp-section-head span {
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+}
+
+
+/* =====================================================
+   POPULAR COMPETITIONS
+===================================================== */
+
+.popular-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 9px;
+
+}
+
+
+.popular-competition {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 14px 12px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    color: white;
+
+    text-decoration: none;
+
+    overflow: hidden;
+
+}
+
+
+.popular-competition::after {
+
+    content: "🏆";
+
+    position: absolute;
+
+    right: -7px;
+
+    bottom: -10px;
+
+    font-size: 47px;
+
+    opacity: .05;
+
+}
+
+
+.popular-flag {
+
+    width: 39px;
+    height: 39px;
+
+    display: grid;
+
+    place-items: center;
+
+    flex-shrink: 0;
+
+    background: var(--card-2);
+
+    border-radius: 11px;
+
+    font-size: 19px;
+
+}
+
+
+.popular-info {
+
+    min-width: 0;
+
+}
+
+
+.popular-info strong {
+
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-size: 9px;
+
+}
+
+
+.popular-info span {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 7px;
+
+}
+
+
+/* =====================================================
+   ALL COMPETITIONS
+===================================================== */
+
+.competition-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+
+.competition-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 12px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    color: white;
+
+    text-decoration: none;
+
+}
+
+
+.competition-row:active,
+.popular-competition:active {
+
+    transform: scale(.98);
+
+}
+
+
+.comp-logo {
+
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+
+    place-items: center;
+
+    flex-shrink: 0;
+
+    background: var(--card-2);
+
+    border-radius: 12px;
+
+    font-size: 20px;
+
+}
+
+
+.comp-row-info {
+
+    min-width: 0;
+
+    flex: 1;
+
+}
+
+
+.comp-row-info strong {
+
+    display: block;
+
+    font-size: 10px;
+
+}
+
+
+.comp-row-info span {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+}
+
+
+.comp-arrow {
+
+    color: var(--muted);
+
+    font-size: 15px;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (min-width: 768px) {
+
+    .popular-grid {
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+    }
+
+    .competition-list {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<main class="main-content competitions-page">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="comp-header">
+
+    <div class="comp-brand">
+
+        <div class="comp-ball">
+            ⚽
+        </div>
+
+        <div>
+
+            <h1>
+                Prezi<span>Score</span>
+            </h1>
+
+            <p>
+                Football en direct
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="comp-search-btn"
+        onclick="focusCompetitionSearch()"
+        aria-label="Rechercher une compétition"
+    >
+        🔍
+    </button>
+
+</header>
+
+
+<!-- =====================================================
+     TITLE
+===================================================== -->
+
+<section class="comp-title">
+
+    <h2>
+        🏆 Compétitions
+    </h2>
+
+    <p>
+        Retrouvez les plus grandes
+        compétitions de football du monde.
+    </p>
+
+</section>
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<div class="comp-search">
+
+    <span>🔍</span>
+
+    <input
+        id="competitionSearch"
+        type="search"
+        placeholder="Rechercher une compétition..."
+        autocomplete="off"
+    >
+
+</div>
+
+
+<!-- =====================================================
+     FILTERS
+===================================================== -->
+
+<div class="comp-tabs">
+
+    <button
+        class="comp-tab active"
+        data-region="all"
+    >
+        🌍 Toutes
+    </button>
+
+
+    <button
+        class="comp-tab"
+        data-region="europe"
+    >
+        🇪🇺 Europe
+    </button>
+
+
+    <button
+        class="comp-tab"
+        data-region="world"
+    >
+        🌎 Monde
+    </button>
+
+
+    <button
+        class="comp-tab"
+        data-region="france"
+    >
+        🇫🇷 France
+    </button>
+
+
+    <button
+        class="comp-tab"
+        data-region="england"
+    >
+        🏴 Angleterre
+    </button>
+
+
+    <button
+        class="comp-tab"
+        data-region="spain"
+    >
+        🇪🇸 Espagne
+    </button>
+
+
+    <button
+        class="comp-tab"
+        data-region="italy"
+    >
+        🇮🇹 Italie
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     POPULAR
+===================================================== -->
+
+<section class="comp-section">
+
+    <div class="comp-section-head">
+
+        <h3>
+            ⭐ Populaires
+        </h3>
+
+        <span>
+            Top compétitions
+        </span>
+
+    </div>
+
+
+    <div class="popular-grid">
+
+
+        <a
+            href="match.html"
+            class="popular-competition"
+            data-region="england"
+            data-name="Premier League Angleterre"
+        >
+
+            <div class="popular-flag">
+                🏴
+            </div>
+
+            <div class="popular-info">
+
+                <strong>
+                    Premier League
+                </strong>
+
+                <span>
+                    Angleterre
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="popular-competition"
+            data-region="spain"
+            data-name="La Liga Espagne"
+        >
+
+            <div class="popular-flag">
+                🇪🇸
+            </div>
+
+            <div class="popular-info">
+
+                <strong>
+                    La Liga
+                </strong>
+
+                <span>
+                    Espagne
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="popular-competition"
+            data-region="italy"
+            data-name="Serie A Italie"
+        >
+
+            <div class="popular-flag">
+                🇮🇹
+            </div>
+
+            <div class="popular-info">
+
+                <strong>
+                    Serie A
+                </strong>
+
+                <span>
+                    Italie
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="popular-competition"
+            data-region="germany"
+            data-name="Bundesliga Allemagne"
+        >
+
+            <div class="popular-flag">
+                🇩🇪
+            </div>
+
+            <div class="popular-info">
+
+                <strong>
+                    Bundesliga
+                </strong>
+
+                <span>
+                    Allemagne
+                </span>
+
+            </div>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ALL COMPETITIONS
+===================================================== -->
+
+<section class="comp-section">
+
+    <div class="comp-section-head">
+
+        <h3>
+            🌍 Toutes les compétitions
+        </h3>
+
+        <span id="competitionCount">
+            0
+        </span>
+
+    </div>
+
+
+    <div
+        class="competition-list"
+        id="competitionList"
+    >
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="france"
+            data-name="Ligue 1 France"
+        >
+
+            <div class="comp-logo">
+                🇫🇷
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    Ligue 1
+                </strong>
+
+                <span>
+                    France
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="europe"
+            data-name="UEFA Champions League Europe"
+        >
+
+            <div class="comp-logo">
+                🏆
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    UEFA Champions League
+                </strong>
+
+                <span>
+                    Europe
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="europe"
+            data-name="UEFA Europa League Europe"
+        >
+
+            <div class="comp-logo">
+                🏆
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    UEFA Europa League
+                </strong>
+
+                <span>
+                    Europe
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="world"
+            data-name="FIFA World Cup Monde"
+        >
+
+            <div class="comp-logo">
+                🌎
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    FIFA World Cup
+                </strong>
+
+                <span>
+                    Monde
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="england"
+            data-name="Championship Angleterre"
+        >
+
+            <div class="comp-logo">
+                🏴
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    Championship
+                </strong>
+
+                <span>
+                    Angleterre
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="spain"
+            data-name="Segunda Division Espagne"
+        >
+
+            <div class="comp-logo">
+                🇪🇸
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    Segunda División
+                </strong>
+
+                <span>
+                    Espagne
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="italy"
+            data-name="Serie B Italie"
+        >
+
+            <div class="comp-logo">
+                🇮🇹
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    Serie B
+                </strong>
+
+                <span>
+                    Italie
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="germany"
+            data-name="2 Bundesliga Allemagne"
+        >
+
+            <div class="comp-logo">
+                🇩🇪
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    2. Bundesliga
+                </strong>
+
+                <span>
+                    Allemagne
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="world"
+            data-name="Club World Cup Monde"
+        >
+
+            <div class="comp-logo">
+                🌎
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    FIFA Club World Cup
+                </strong>
+
+                <span>
+                    Monde
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <a
+            href="match.html"
+            class="competition-row"
+            data-region="europe"
+            data-name="Conference League Europe"
+        >
+
+            <div class="comp-logo">
+                🏆
+            </div>
+
+            <div class="comp-row-info">
+
+                <strong>
+                    UEFA Conference League
+                </strong>
+
+                <span>
+                    Europe
+                </span>
+
+            </div>
+
+            <div class="comp-arrow">
+                →
+            </div>
+
+        </a>
+
+
+    </div>
+
+  </section>
+  <!-- =====================================================
+     EMPTY SEARCH
+===================================================== -->
+
+<div
+    id="competitionEmpty"
+    style="
+        display:none;
+        padding:35px 15px;
+        margin-top:12px;
+        text-align:center;
+        background:var(--card);
+        border:1px solid var(--border);
+        border-radius:16px;
+    "
+>
+
+    <div style="font-size:30px;">
+        🔎
+    </div>
+
+    <h3 style="margin-top:9px;font-size:13px;">
+        Aucune compétition trouvée
+    </h3>
+
+    <p style="
+        margin-top:5px;
+        color:var(--muted);
+        font-size:9px;
+    ">
+        Essayez une autre recherche.
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     BOTTOM NAVIGATION
+===================================================== -->
+
+<nav class="bottom-nav">
+
+    <a
+        href="index.html"
+        class="nav-item"
+    >
+        <span>⌂</span>
+        <small>Accueil</small>
+    </a>
+
+
+    <a
+        href="match.html"
+        class="nav-item"
+    >
+        <span>⚽</span>
+        <small>Matchs</small>
+    </a>
+
+
+    <a
+        href="competitions.html"
+        class="nav-item active"
+    >
+        <span>🏆</span>
+        <small>Compétitions</small>
+    </a>
+
+
+    <a
+        href="news.html"
+        class="nav-item"
+    >
+        <span>📰</span>
+        <small>News</small>
+    </a>
+
+
+    <a
+        href="profile.html"
+        class="nav-item"
+    >
+        <span>👤</span>
+        <small>Profil</small>
+    </a>
+
+</nav>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+"use strict";
+
+
+const search =
+    document.getElementById(
+        "competitionSearch"
+    );
+
+const tabs =
+    document.querySelectorAll(
+        ".comp-tab"
+    );
+
+const items =
+    document.querySelectorAll(
+        ".competition-row, .popular-competition"
+    );
+
+const count =
+    document.getElementById(
+        "competitionCount"
+    );
+
+const empty =
+    document.getElementById(
+        "competitionEmpty"
+    );
+
+
+let currentRegion = "all";
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+function filterCompetitions() {
+
+    const query =
+        search.value
+            .trim()
+            .toLowerCase();
+
+
+    let visible = 0;
+
+
+    items.forEach(item => {
+
+        const name =
+            (
+                item.dataset.name || ""
+            )
+            .toLowerCase();
+
+
+        const region =
+            item.dataset.region ||
+            "";
+
+
+        const searchOK =
+            !query ||
+            name.includes(query);
+
+
+        const regionOK =
+            currentRegion === "all" ||
+            region === currentRegion;
+
+
+        if (
+            searchOK &&
+            regionOK
+        ) {
+
+            item.style.display =
+                "flex";
+
+            visible++;
+
+        } else {
+
+            item.style.display =
+                "none";
+
+        }
+
+    });
+
+
+    /* COUNT */
+
+    count.textContent =
+        visible;
+
+
+    /* EMPTY */
+
+    empty.style.display =
+        visible === 0
+            ? "block"
+            : "none";
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+search.addEventListener(
+    "input",
+    filterCompetitions
+);
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+tabs.forEach(tab => {
+
+    tab.addEventListener(
+        "click",
+        function() {
+
+            tabs.forEach(
+                button => {
+
+                    button.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            this.classList.add(
+                "active"
+            );
+
+
+            currentRegion =
+                this.dataset.region ||
+                "all";
+
+
+            filterCompetitions();
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   HEADER SEARCH BUTTON
+===================================================== */
+
+function focusCompetitionSearch() {
+
+    search.focus();
+
+    window.scrollTo({
+
+        top: search.offsetTop - 20,
+
+        behavior: "smooth"
+
+    });
+
+}
+
+
+/* =====================================================
+   INITIAL COUNT
+===================================================== */
+
+filterCompetitions();
+
+
+/* =====================================================
+   LOG
+===================================================== */
+
+console.log(
+    "🏆 PreziScore Compétitions chargé"
+);
+
+</script>
+
+
+</main>
+
+
+</body>
+
+</html>
