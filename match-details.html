@@ -22,7 +22,7 @@
 <style>
 
 /* =====================================================
-   MATCH DETAILS
+   PREZISCORE — MATCH DETAILS
 ===================================================== */
 
 .details-page {
@@ -31,7 +31,7 @@
 
 
 /* =====================================================
-   BACK
+   RETOUR
 ===================================================== */
 
 .back-row {
@@ -40,15 +40,12 @@
 
 .back-btn {
     border: 0;
-
     background: transparent;
 
     color: var(--muted);
 
     font-family: inherit;
-
     font-size: 11px;
-
     font-weight: 800;
 
     cursor: pointer;
@@ -56,7 +53,7 @@
 
 
 /* =====================================================
-   MATCH HEADER
+   HEADER MATCH
 ===================================================== */
 
 .match-header-card {
@@ -75,28 +72,28 @@
 
 
 /* =====================================================
-   COMPETITION
+   COMPÉTITION
 ===================================================== */
 
 .detail-competition {
     color: var(--muted);
 
     font-size: 10px;
-
     font-weight: 800;
 
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 }
 
 
 /* =====================================================
-   STATUS
+   STATUT
 ===================================================== */
 
 .detail-status {
     display: inline-flex;
 
     align-items: center;
+    justify-content: center;
 
     gap: 6px;
 
@@ -105,7 +102,6 @@
     border-radius: 8px;
 
     font-size: 9px;
-
     font-weight: 900;
 
     margin-bottom: 18px;
@@ -134,14 +130,14 @@
 
 
 /* =====================================================
-   TEAMS
+   ÉQUIPES
 ===================================================== */
 
 .detail-teams {
     display: grid;
 
     grid-template-columns:
-        1fr 85px 1fr;
+        1fr 80px 1fr;
 
     align-items: center;
 
@@ -224,7 +220,7 @@
 
 
 /* =====================================================
-   INFO
+   INFORMATIONS MATCH
 ===================================================== */
 
 .match-info {
@@ -265,11 +261,13 @@
     display: block;
 
     font-size: 9px;
+
+    line-height: 1.3;
 }
 
 
 /* =====================================================
-   TABS
+   ONGLETS
 ===================================================== */
 
 .detail-tabs {
@@ -317,7 +315,7 @@
 
 
 /* =====================================================
-   CONTENT
+   CONTENU
 ===================================================== */
 
 .detail-content {
@@ -360,6 +358,10 @@
 }
 
 
+/* =====================================================
+   ERREUR
+===================================================== */
+
 .detail-error {
     padding: 30px 15px;
 
@@ -395,7 +397,223 @@
 
 
 /* =====================================================
-   EVENTS
+   STATISTIQUES — HEADER ÉQUIPES
+===================================================== */
+
+.stats-container {
+    width: 100%;
+}
+
+
+.stats-title {
+    padding: 5px 0 14px;
+
+    font-size: 14px;
+
+    font-weight: 900;
+}
+
+
+.stats-teams {
+    display: grid;
+
+    grid-template-columns:
+        1fr 90px 1fr;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 13px 10px;
+
+    margin-bottom: 12px;
+
+    background: var(--card-2);
+
+    border-radius: 14px;
+
+    text-align: center;
+}
+
+
+.stats-team-home,
+.stats-team-away {
+    font-size: 10px;
+
+    font-weight: 900;
+
+    line-height: 1.3;
+}
+
+
+.stats-team-home {
+    text-align: left;
+}
+
+
+.stats-team-away {
+    text-align: right;
+}
+
+
+.stats-vs {
+    color: var(--muted);
+
+    font-size: 8px;
+
+    font-weight: 900;
+}
+
+
+/* =====================================================
+   SECTION STATISTIQUES
+===================================================== */
+
+.stats-section {
+    margin-top: 12px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+
+.stats-section-title {
+    padding: 11px 12px;
+
+    background: var(--card-2);
+
+    color: var(--primary);
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: .4px;
+}
+
+
+/* =====================================================
+   LIGNE STATISTIQUE
+===================================================== */
+
+.stat-line {
+    display: grid;
+
+    grid-template-columns:
+        55px 1fr 55px;
+
+    align-items: center;
+
+    min-height: 42px;
+
+    padding: 7px 10px;
+
+    border-bottom: 1px solid var(--border);
+
+    text-align: center;
+}
+
+
+.stat-line:last-child {
+    border-bottom: 0;
+}
+
+
+.stat-value {
+    font-size: 11px;
+
+    font-weight: 900;
+}
+
+
+.stat-value.home {
+    text-align: left;
+}
+
+
+.stat-value.away {
+    text-align: right;
+}
+
+
+.stat-label {
+    color: var(--muted);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   BARRE STATISTIQUE
+===================================================== */
+
+.stat-progress {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 3px;
+
+    padding: 0 10px 8px;
+}
+
+
+.stat-progress-side {
+    height: 3px;
+
+    background: var(--card-2);
+
+    border-radius: 5px;
+
+    overflow: hidden;
+}
+
+
+.stat-progress-fill {
+    height: 100%;
+
+    background: var(--primary);
+
+    border-radius: 5px;
+}
+
+
+.stat-progress-fill.away {
+    margin-left: auto;
+}
+
+
+/* =====================================================
+   AUCUNE STATISTIQUE
+===================================================== */
+
+.stats-empty {
+    padding: 20px 5px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    line-height: 1.6;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   ÉVÉNEMENTS
 ===================================================== */
 
 .event-row {
@@ -443,56 +661,34 @@
 
 
 /* =====================================================
-   STATISTICS
+   MOBILE
 ===================================================== */
 
-.stat-row {
-    margin-bottom: 15px;
+@media (max-width: 360px) {
+
+    .detail-teams {
+        grid-template-columns:
+            1fr 70px 1fr;
+    }
+
+
+    .detail-score {
+        font-size: 23px;
+    }
+
+
+    .stats-teams {
+        grid-template-columns:
+            1fr 45px 1fr;
+    }
+
+
+    .stat-line {
+        grid-template-columns:
+            48px 1fr 48px;
+    }
+
 }
-
-
-.stat-head {
-    display: flex;
-
-    justify-content: space-between;
-
-    margin-bottom: 6px;
-
-    font-size: 9px;
-
-    font-weight: 800;
-}
-
-
-.stat-bars {
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 3px;
-}
-
-
-.stat-bar {
-    height: 6px;
-
-    background: var(--card-2);
-
-    border-radius: 5px;
-
-    overflow: hidden;
-}
-
-
-.stat-fill {
-    height: 100%;
-
-    background: var(--primary);
-
-    border-radius: 5px;
-}
-
 
 </style>
 
@@ -532,6 +728,7 @@
     <button
         class="search-btn"
         onclick="location.href='match.html'"
+        aria-label="Rechercher"
     >
         🔍
     </button>
@@ -546,6 +743,8 @@
 <main class="main-content details-page">
 
 
+    <!-- RETOUR -->
+
     <div class="back-row">
 
         <button
@@ -558,7 +757,9 @@
     </div>
 
 
-    <!-- MATCH HEADER -->
+    <!-- =================================================
+         MATCH HEADER
+    ================================================= -->
 
     <section
         id="matchHeader"
@@ -566,15 +767,15 @@
     >
 
         <div class="detail-loading">
-
             Chargement du match...
-
         </div>
 
     </section>
 
 
-    <!-- TABS -->
+    <!-- =================================================
+         TABS
+    ================================================= -->
 
     <div class="detail-tabs">
 
@@ -585,12 +786,14 @@
             Résumé
         </button>
 
+
         <button
             class="detail-tab"
             data-tab="stats"
         >
             Statistiques
         </button>
+
 
         <button
             class="detail-tab"
@@ -602,7 +805,9 @@
     </div>
 
 
-    <!-- CONTENT -->
+    <!-- =================================================
+         CONTENT
+    ================================================= -->
 
     <section
         id="detailContent"
@@ -610,9 +815,7 @@
     >
 
         <div class="detail-loading">
-
             Chargement des informations...
-
         </div>
 
     </section>
@@ -626,6 +829,7 @@
 ===================================================== -->
 
 <nav class="bottom-nav">
+
 
     <a
         href="index.html"
@@ -696,6 +900,7 @@
 
     </a>
 
+
 </nav>
 
 
@@ -707,1580 +912,20 @@
 
 
 <!-- =====================================================
-     DETAIL SCRIPT — PART 1
+     PARTIE 2 APRE
 ===================================================== -->
 
 <script>
 
-"use strict";
-
-
-const matchHeader =
-    document.getElementById(
-        "matchHeader"
-    );
-
-
-const detailContent =
-    document.getElementById(
-        "detailContent"
-    );
-
-
-const tabs =
-    document.querySelectorAll(
-        ".detail-tab"
-    );
-
-
-/* ================================
-   MATCH ID
-================================ */
-
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
-
-const matchId =
-    params.get("match");
-
-
-console.log(
-    "⚽ Match ID:",
-    matchId
-);
-
-
-/* ================================
-   HELPERS
-================================ */
-
-function safe(value) {
-
-    return String(
-        value ?? ""
-    )
-    .replace(
-        /[&<>"']/g,
-        function(char) {
-
-            return {
-
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
-
-            }[char];
-
-        }
-    );
-
-}
-
-
-function getStatus(match) {
-
-    return (
-        match?.status ||
-        "upcoming"
-    );
-
-}
-
-
-function getMinute(match) {
-
-    return (
-        match?.minute ??
-        null
-    );
-
-}
-
-
-function getScore(
-    match,
-    side
-) {
-
-    return (
-        match?.[side]?.score ??
-        "-"
-    );
-
-}
-
-
-function getName(
-    match,
-    side
-) {
-
-    return (
-        match?.[side]?.name ||
-        "Équipe"
-    );
-
-}
-
-
-function getLogo(
-    match,
-    side
-) {
-
-    return (
-        match?.[side]?.logo ||
-        ""
-    );
-
-}
-
-
-/* ================================
-   STATUS TEXT
-================================ */
-
-function statusText(match) {
-
-    const status =
-        getStatus(match);
-
-
-    if (
-        status === "live"
-    ) {
-
-        const minute =
-            getMinute(match);
-
-
-        return minute !== null
-            ? `🔴 LIVE • ${minute}'`
-            : "🔴 LIVE";
-
-    }
-
-
-    if (
-        status === "finished"
-    ) {
-
-        return "TERMINÉ";
-
-    }
-
-
-    return "À VENIR";
-
-}
-
-
-/* ================================
-   LOAD MATCH
-================================ */
-
-async function loadMatch() {
-
-    if (!matchId) {
-
-        showError(
-            "Match introuvable",
-            "Aucun identifiant de match n'a été fourni."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !window.PreziAPI ||
-        typeof PreziAPI.getMatchById !==
-        "function"
-    ) {
-
-        showError(
-            "API indisponible",
-            "api.js ne contient pas la fonction du match."
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        const match =
-            await PreziAPI.getMatchById(
-                matchId
-            );
-
-
-        if (!match) {
-
-            showError(
-                "Match introuvable",
-                "Impossible de trouver ce match."
-            );
-
-            return;
-
-        }
-
-
-        window.currentMatch =
-            match;
-
-
-        renderMatchHeader(
-            match
-        );
-
-
-        renderSummary(
-            match
-        );
-
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "Erreur match:",
-            error
-        );
-
-
-        showError(
-            "Erreur de chargement",
-            "Impossible de charger les informations du match."
-        );
-
-    }
-
-}
-
-
-/* ================================
-   HEADER
-================================ */
-
-function renderMatchHeader(
-    match
-) {
-
-    const home =
-        getName(
-            match,
-            "home"
-        );
-
-
-    const away =
-        getName(
-            match,
-            "away"
-        );
-
-
-    const homeLogo =
-        getLogo(
-            match,
-            "home"
-        );
-
-
-    const awayLogo =
-        getLogo(
-            match,
-            "away"
-        );
-
-
-    matchHeader.innerHTML = `
-
-        <div class="detail-competition">
-
-            🏆
-            ${safe(
-                match.competition ||
-                "Football"
-            )}
-
-        </div>
-
-
-        <div class="detail-status ${
-            safe(
-                getStatus(match)
-            )
-        }">
-
-            ${safe(
-                statusText(match)
-            )}
-
-        </div>
-
-
-        <div class="detail-teams">
-
-
-            <div class="detail-team">
-
-                <div class="detail-logo">
-
-                    ${
-                        homeLogo
-                            ? `
-                                <img
-                                    src="${safe(homeLogo)}"
-                                    alt="${safe(home)}"
-                                >
-                              `
-                            : "⚽"
-                    }
-
-                </div>
-
-
-                <div class="detail-team-name">
-
-                    ${safe(home)}
-
-                </div>
-
-            </div>
-
-
-            <div class="detail-score">
-
-                ${safe(
-                    getScore(
-                        match,
-                        "home"
-                    )
-                )}
-
-                :
-
-                ${safe(
-                    getScore(
-                        match,
-                        "away"
-                    )
-                )}
-
-                <small>
-
-                    ${
-                        getStatus(match)
-                        === "live"
-                            ? `${safe(
-                                getMinute(match)
-                                ?? ""
-                              )}'`
-                            : getStatus(match)
-                              === "finished"
-                                ? "FT"
-                                : "À venir"
-                    }
-
-                </small>
-
-            </div>
-
-
-            <div class="detail-team">
-
-                <div class="detail-logo">
-
-                    ${
-                        awayLogo
-                            ? `
-                                <img
-                                    src="${safe(awayLogo)}"
-                                    alt="${safe(away)}"
-                                >
-                              `
-                            : "⚽"
-                    }
-
-                </div>
-
-
-                <div class="detail-team-name">
-
-                    ${safe(away)}
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="match-info">
-
-            <div class="info-box">
-
-                <span>
-                    DATE
-                </span>
-
-                <strong>
-                    ${formatDate(match.time)}
-                </strong>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <span>
-                    STADE
-                </span>
-
-                <strong>
-                    ${safe(
-                        match.venue ||
-                        "—"
-                    )}
-                </strong>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <span>
-                    ARBITRE
-                </span>
-
-                <strong>
-                    ${safe(
-                        match.referee ||
-                        "—"
-                    )}
-                </strong>
-
-            </div>
-
-        </div>
-
-    `;
-
-}
-
-
-function formatDate(
-    value
-) {
-
-    if (!value) {
-
-        return "—";
-
-    }
-
-
-    const date =
-        new Date(value);
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return "—";
-
-    }
-
-
-    return date.toLocaleString(
-        "fr-FR",
-        {
-            day: "2-digit",
-            month: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit"
-        }
-    );
-
-}
-
-
-function showError(
-    title,
-    text
-) {
-
-    matchHeader.innerHTML = `
-
-        <div class="detail-error">
-
-            <div>
-                ⚠️
-            </div>
-
-            <h3>
-                ${safe(title)}
-            </h3>
-
-            <p>
-                ${safe(text)}
-            </p>
-
-        </div>
-
-    `;
-
-
-    detailContent.innerHTML = "";
-
-}
-
-
-/* ================================
-   SUMMARY
-================================ */
-
-function renderSummary(
-    match
-) {
-
-    detailContent.innerHTML = `
-
-        <div class="detail-panel">
-
-            <div class="panel-title">
-                📋 Résumé du match
-            </div>
-
-            <p style="
-                color:var(--muted);
-                font-size:10px;
-                line-height:1.7;
-            ">
-
-                ${
-                    getStatus(match)
-                    === "live"
-
-                    ? "Le match est actuellement en direct. Les informations seront mises à jour automatiquement."
-
-                    : getStatus(match)
-                    === "finished"
-
-                    ? "Ce match est terminé. Consultez les statistiques et les événements ci-dessus."
-
-                    : "Le match n'a pas encore commencé."
-
-                }
-
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-
-/* ================================
-   TABS
-================================ */
-
-tabs.forEach(
-    tab => {
-
-        tab.addEventListener(
-            "click",
-            () => {
-
-                tabs.forEach(
-                    item =>
-                        item.classList.remove(
-                            "active"
-                        )
-                );
-
-
-                tab.classList.add(
-                    "active"
-                );
-
-
-                const type =
-                    tab.dataset.tab;
-
-
-                if (
-                    !window.currentMatch
-                ) return;
-
-
-                if (
-                    type === "summary"
-                ) {
-
-                    renderSummary(
-                        window.currentMatch
-                    );
-
-                }
-
-            }
-        );
-
-    }
-);
-
-/* =====================================================
-   PREZISCORE — PART 2
-   STATISTIQUES + ÉVÉNEMENTS
-===================================================== */
-
-
-/* =====================================================
-   LOAD STATISTICS
-===================================================== */
-
-
-async function loadStatistics() {
-
-    const match =
-        window.currentMatch;
-
-    if (!match) return;
-
-
-    detailContent.innerHTML = `
-
-        <div class="detail-panel">
-
-            <div class="detail-loading">
-                📊 Chargement des statistiques...
-            </div>
-
-        </div>
-
-    `;
-
-
-    try {
-
-        const data =
-            await apiRequest(
-                "/fixtures/statistics",
-                {
-                    fixture: match.id
-                }
-            );
-
-
-        const stats =
-            data?.response || [];
-
-
-        if (!Array.isArray(stats) || !stats.length) {
-
-            detailContent.innerHTML = `
-
-                <div class="detail-panel">
-
-                    <div class="panel-title">
-                        📊 Statistiques
-                    </div>
-
-                    <p style="
-                        color:var(--muted);
-                        font-size:10px;
-                        text-align:center;
-                        padding:15px 0;
-                    ">
-                        Statistiques non disponibles
-                        pour ce match.
-                    </p>
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        /* =========================================
-           ÉQUIPES
-        ========================================= */
-
-        const homeTeam =
-            match?.home?.name ||
-            stats[0]?.team?.name ||
-            "Équipe A";
-
-
-        const awayTeam =
-            match?.away?.name ||
-            stats[1]?.team?.name ||
-            "Équipe B";
-
-
-        /* =========================================
-           STATISTIQUES API
-        ========================================= */
-
-        const homeStats =
-            stats[0]?.statistics || [];
-
-
-        const awayStats =
-            stats[1]?.statistics || [];
-
-
-        const awayMap = {};
-
-
-        awayStats.forEach(item => {
-
-            if (item?.type) {
-
-                awayMap[item.type] =
-                    item.value;
-
-            }
-
-        });
-
-
-        /* =========================================
-           TRADUCTION FRANÇAISE
-        ========================================= */
-
-        const labels = {
-
-            "Shots on Goal":
-                "Tirs cadrés",
-
-            "Shots off Goal":
-                "Tirs non cadrés",
-
-            "Total Shots":
-                "Tirs totaux",
-
-            "Blocked Shots":
-                "Tirs bloqués",
-
-            "Shots insidebox":
-                "Tirs dans la surface",
-
-            "Shots outsidebox":
-                "Tirs hors surface",
-
-            "Fouls":
-                "Fautes",
-
-            "Corner Kicks":
-                "Corners",
-
-            "Offsides":
-                "Hors-jeu",
-
-            "Ball Possession":
-                "Possession",
-
-            "Yellow Cards":
-                "Cartons jaunes",
-
-            "Red Cards":
-                "Cartons rouges",
-
-            "Goalkeeper Saves":
-                "Arrêts du gardien",
-
-            "Total passes":
-                "Passes",
-
-            "Passes accurate":
-                "Passes réussies",
-
-            "Passes %":
-                "Précision des passes",
-
-            "expected_goals":
-                "Buts attendus (xG)",
-
-            "goals_prevented":
-                "Buts évités"
-
-        };
-
-
-        /* =========================================
-           VALEUR NUMÉRIQUE
-        ========================================= */
-
-        function getNumber(value) {
-
-            if (
-                value === null ||
-                value === undefined ||
-                value === "-"
-            ) {
-
-                return 0;
-
-            }
-
-
-            return parseFloat(
-                String(value)
-                    .replace("%", "")
-                    .replace(",", ".")
-            ) || 0;
-
-        }
-
-
-        /* =========================================
-           CRÉATION DES LIGNES
-        ========================================= */
-
-        let rows = "";
-
-
-        homeStats.forEach(item => {
-
-            const original =
-                item?.type;
-
-
-            if (!original) return;
-
-
-            const label =
-                labels[original] ||
-                original;
-
-
-            const homeValue =
-                item?.value ??
-                "-";
-
-
-            const awayValue =
-                awayMap[original] ??
-                "-";
-
-
-            const homeNumber =
-                getNumber(homeValue);
-
-
-            const awayNumber =
-                getNumber(awayValue);
-
-
-            let homeWidth = 50;
-            let awayWidth = 50;
-
-
-            if (
-                homeNumber +
-                awayNumber >
-                0
-            ) {
-
-                homeWidth =
-                    (
-                        homeNumber /
-                        (
-                            homeNumber +
-                            awayNumber
-                        )
-                    ) * 100;
-
-
-                awayWidth =
-                    (
-                        awayNumber /
-                        (
-                            homeNumber +
-                            awayNumber
-                        )
-                    ) * 100;
-
-            }
-
-
-            rows += `
-
-                <div class="prezi-stat-row">
-
-                    <div class="prezi-stat-values">
-
-                        <strong>
-                            ${safe(homeValue)}
-                        </strong>
-
-
-                        <span>
-                            ${safe(label)}
-                        </span>
-
-
-                        <strong>
-                            ${safe(awayValue)}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="prezi-stat-bars">
-
-                        <div class="prezi-bar home">
-
-                            <div
-                                class="prezi-fill"
-                                style="
-                                    width:${homeWidth}%;
-                                "
-                            ></div>
-
-                        </div>
-
-
-                        <div class="prezi-bar away">
-
-                            <div
-                                class="prezi-fill"
-                                style="
-                                    width:${awayWidth}%;
-                                "
-                            ></div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            `;
-
-        });
-
-
-        /* =========================================
-           AFFICHAGE FINAL
-        ========================================= */
-
-        detailContent.innerHTML = `
-
-            <div class="detail-panel prezi-statistics">
-
-                <div class="panel-title">
-                    📊 Statistiques
-                </div>
-
-
-                <div class="prezi-stat-teams">
-
-                    <div>
-                        ${safe(homeTeam)}
-                    </div>
-
-
-                    <span>
-                        -
-                    </span>
-
-
-                    <div>
-                        ${safe(awayTeam)}
-                    </div>
-
-                </div>
-
-
-                ${rows}
-
-            </div>
-
-        `;
-
-    }
-
-
-    catch (error) {
-
-        console.error(
-            "Statistics error:",
-            error
-        );
-
-
-        detailContent.innerHTML = `
-
-            <div class="detail-panel">
-
-                <div class="panel-title">
-                    📊 Statistiques
-                </div>
-
-                <p style="
-                    color:var(--muted);
-                    font-size:10px;
-                    text-align:center;
-                ">
-
-                    Statistiques non disponibles
-                    pour ce match.
-
-                </p>
-
-            </div>
-
-        `;
-
-    }
-
-      }
-/* =====================================================
-   RENDER STATISTICS
-===================================================== */
-
-function renderStatistics(
-    stats
-) {
-
-    if (!stats.length) {
-
-        detailContent.innerHTML = `
-
-            <div class="detail-panel">
-
-                <div class="panel-title">
-                    📊 Statistiques
-                </div>
-
-                <p style="
-                    color:var(--muted);
-                    font-size:10px;
-                ">
-                    Aucune statistique disponible.
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    const homeStats =
-        stats[0]?.statistics || [];
-
-    const awayStats =
-        stats[1]?.statistics || [];
-
-
-    const values = {};
-
-
-    homeStats.forEach(
-        item => {
-
-            values[
-                item.type
-            ] = {
-
-                home:
-                    item.value,
-
-                away:
-                    null
-
-            };
-
-        }
-    );
-
-
-    awayStats.forEach(
-        item => {
-
-            if (
-                !values[item.type]
-            ) {
-
-                values[
-                    item.type
-                ] = {
-
-                    home: null,
-                    away: item.value
-
-                };
-
-            } else {
-
-                values[
-                    item.type
-                ].away =
-                    item.value;
-
-            }
-
-        }
-    );
-
-
-    const rows =
-        Object.entries(
-            values
-        );
-
-
-    detailContent.innerHTML = `
-
-        <div class="detail-panel">
-
-            <div class="panel-title">
-                📊 Statistiques
-            </div>
-
-            ${
-                rows.map(
-                    ([name, value]) => {
-
-                        const home =
-                            value.home ??
-                            "-";
-
-                        const away =
-                            value.away ??
-                            "-";
-
-
-                        return `
-
-                            <div class="stat-row">
-
-                                <div class="stat-head">
-
-                                    <span>
-                                        ${safe(name)}
-                                    </span>
-
-                                    <span>
-                                        ${safe(home)}
-                                        &nbsp; - &nbsp;
-                                        ${safe(away)}
-                                    </span>
-
-                                </div>
-
-
-                                <div class="stat-bars">
-
-                                    <div class="stat-bar">
-
-                                        <div
-                                            class="stat-fill"
-                                            style="width:${statWidth(home)}%"
-                                        ></div>
-
-                                    </div>
-
-
-                                    <div class="stat-bar">
-
-                                        <div
-                                            class="stat-fill"
-                                            style="width:${statWidth(away)}%"
-                                        ></div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        `;
-
-                    }
-                ).join("")
-            }
-
-        </div>
-
-    `;
-
-}
-
-
-/* =====================================================
-   STAT WIDTH
-===================================================== */
-
-function statWidth(
-    value
-) {
-
-    if (
-        value === null ||
-        value === undefined ||
-        value === "-"
-    ) {
-
-        return 0;
-
-    }
-
-
-    const number =
-        parseFloat(
-            String(value)
-                .replace("%", "")
-        );
-
-
-    if (
-        Number.isNaN(number)
-    ) {
-
-        return 50;
-
-    }
-
-
-    return Math.max(
-        5,
-        Math.min(
-            100,
-            number
-        )
-    );
-
-}
-
-
-/* =====================================================
-   LOAD EVENTS
-===================================================== */
-
-async function loadEvents() {
-
-    const match =
-        window.currentMatch;
-
-    if (!match) return;
-
-
-    detailContent.innerHTML = `
-
-        <div class="detail-panel">
-
-            <div class="detail-loading">
-                ⚽ Chargement des événements...
-            </div>
-
-        </div>
-
-    `;
-
-
-    try {
-
-        const data =
-            await apiRequest(
-                "/fixtures/events",
-                {
-                    fixture: match.id
-                }
-            );
-
-
-        const events =
-            data?.response || [];
-
-
-        renderEvents(
-            events
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Events error:",
-            error
-        );
-
-
-        detailContent.innerHTML = `
-
-            <div class="detail-panel">
-
-                <div class="panel-title">
-                    ⚽ Événements
-                </div>
-
-                <p style="
-                    color:var(--muted);
-                    font-size:10px;
-                ">
-                    Événements non disponibles.
-                </p>
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =====================================================
-   RENDER EVENTS
-===================================================== */
-
-function renderEvents(
-    events
-) {
-
-    if (!events.length) {
-
-        detailContent.innerHTML = `
-
-            <div class="detail-panel">
-
-                <div class="panel-title">
-                    ⚽ Événements
-                </div>
-
-                <p style="
-                    color:var(--muted);
-                    font-size:10px;
-                ">
-                    Aucun événement disponible.
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    detailContent.innerHTML = `
-
-        <div class="detail-panel">
-
-            <div class="panel-title">
-                ⚽ Événements du match
-            </div>
-
-
-            ${events.map(
-                event => {
-
-                    const minute =
-                        event.time?.elapsed ??
-                        "-";
-
-
-                    const extra =
-                        event.time?.extra
-                            ? `+${event.time.extra}`
-                            : "";
-
-
-                    const type =
-                        event.type ||
-                        "Événement";
-
-
-                    const detail =
-                        event.detail ||
-                        "";
-
-
-                    const player =
-                        event.player?.name ||
-                        "";
-
-
-                    const team =
-                        event.team?.name ||
-                        "";
-
-
-                    let icon = "⚽";
-
-
-                    if (
-                        type
-                        .toLowerCase()
-                        .includes("card")
-                    ) {
-
-                        icon =
-                            detail
-                            .toLowerCase()
-                            .includes("yellow")
-                                ? "🟨"
-                                : "🟥";
-
-                    }
-
-
-                    if (
-                        type
-                        .toLowerCase()
-                        .includes("subst")
-                    ) {
-
-                        icon = "🔄";
-
-                    }
-
-
-                    return `
-
-                        <div class="event-row">
-
-                            <div class="event-time">
-
-                                ${safe(
-                                    minute
-                                )}'
-                                ${safe(
-                                    extra
-                                )}
-
-                            </div>
-
-
-                            <div class="event-center">
-
-                                ${icon}
-
-                                ${safe(
-                                    player
-                                )}
-
-                                ${
-                                    detail
-                                        ? `
-                                            <div class="event-team">
-                                                ${safe(detail)}
-                                            </div>
-                                          `
-                                        : ""
-                                }
-
-                            </div>
-
-
-                            <div class="event-team">
-
-                                ${safe(team)}
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-            ).join("")}
-
-        </div>
-
-    `;
-
-}
-
-
-/* =====================================================
-   TAB SYSTEM — PART 2
-===================================================== */
-
-tabs.forEach(
-    tab => {
-
-        tab.addEventListener(
-            "click",
-            async () => {
-
-                const type =
-                    tab.dataset.tab;
-
-
-                if (
-                    !window.currentMatch
-                ) return;
-
-
-                if (
-                    type === "summary"
-                ) {
-
-                    renderSummary(
-                        window.currentMatch
-                    );
-
-                }
-
-
-                if (
-                    type === "stats"
-                ) {
-
-                    await loadStatistics();
-
-                }
-
-
-                if (
-                    type === "events"
-                ) {
-
-                    await loadEvents();
-
-                }
-
-            }
-        );
-
-    }
-);
-/* ================================
-   START
-================================ */
-
-loadMatch();
+/*
+   ⚠️ PA KOLE ANYEN LA ANKÒ.
+
+   Pati 2 ap kontinye egzakteman
+   anba liy sa a.
+*/
 
 </script>
 
-
 </body>
 
-   </html>
+</html>
