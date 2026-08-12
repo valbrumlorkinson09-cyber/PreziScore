@@ -1,24 +1,29 @@
 "use strict";
 
-/* =========================================
-   PREZISCORE — SPORTSCORE API
-========================================= */
+/* =====================================================
+   PREZISCORE
+   SPORTSCORE API ENGINE
+   PART 1 / 2
+===================================================== */
 
 const API_BASE =
     "https://sportscore.com/api/widget";
 
-const SPORT = "football";
+const SPORT =
+    "football";
 
-const CACHE_TIME = 60000;
+const CACHE_TIME =
+    60000;
 
-const cache = new Map();
+const cache =
+    new Map();
 
 
-/* =========================================
-   REQUEST
-========================================= */
+/* =====================================================
+   API REQUEST
+===================================================== */
 
-async function request(
+async function apiRequest(
     endpoint,
     params = {}
 ) {
@@ -28,231 +33,417 @@ async function request(
             API_BASE + endpoint
         );
 
-    Object.entries(params).forEach(
-        ([key, value]) => {
+    Object.entries(params)
+        .forEach(
+            ([key, value]) => {
 
-            if (
-                value !== undefined &&
-                value !== null &&
-                value !== ""
-            ) {
+                if (
+                    value !== undefined &&
+                    value !== null &&
+                    value !== ""
+                ) {
 
-                url.searchParams.set(
-                    key,
-                    value
-                );
+                    url.searchParams.set(
+                        key,
+                        value
+                    );
+
+                }
 
             }
+        );
 
-        }
-    );
 
-    url.searchParams.set(
-        "src",
-        "preziscore"
-    );
-
-    const key =
+    const cacheKey =
         url.toString();
 
-    const old =
-        cache.get(key);
+
+    const saved =
+        cache.get(
+            cacheKey
+        );
+
 
     if (
-        old &&
-        Date.now() - old.time <
+        saved &&
+        Date.now() -
+        saved.time <
         CACHE_TIME
     ) {
 
-        return old.data;
+        return saved.data;
 
     }
 
-    const res =
-        await fetch(key, {
-            method: "GET",
-            headers: {
-                Accept:
-                    "application/json"
-            }
-        });
 
-    if (!res.ok) {
+    const response =
+        await fetch(
+            cacheKey,
+            {
+                method:
+                    "GET",
+
+                headers: {
+                    "Accept":
+                        "application/json"
+                }
+            }
+        );
+
+
+    if (!response.ok) {
 
         throw new Error(
             "SportScore HTTP " +
-            res.status
+            response.status
         );
 
     }
 
+
     const data =
-        await res.json();
+        await response.json();
+
 
     cache.set(
-        key,
+        cacheKey,
         {
-            time: Date.now(),
-            data: data
+            time:
+                Date.now(),
+
+            data:
+                data
         }
     );
 
+
     return data;
+
 }
 
 
-/* =========================================
-   RAW MATCHES
-========================================= */
+/* =====================================================
+   GET RAW MATCHES
+===================================================== */
 
 async function getMatches(
     limit = 50
 ) {
 
     const data =
-        await request(
+        await apiRequest(
             "/matches/",
             {
-                sport: SPORT,
-                limit: Math.min(
-                    limit,
-                    50
-                )
+                sport:
+                    SPORT,
+
+                limit:
+                    Math.min(
+                        limit,
+                        50
+                    )
             }
         );
 
-    return Array.isArray(
-        data.matches
-    )
-        ? data.matches
-        : [];
+
+    if (
+        Array.isArray(
+            data
+        )
+    ) {
+
+        return data;
+
+    }
+
+
+    if (
+        Array.isArray(
+            data?.matches
+        )
+    ) {
+
+        return data.matches;
+
+    }
+
+
+    if (
+        Array.isArray(
+            data?.data
+        )
+    ) {
+
+        return data.data;
+
+    }
+
+
+    if (
+        Array.isArray(
+            data?.results
+        )
+    ) {
+
+        return data.results;
+
+    }
+
+
+    return [];
+
 }
 
 
-/* =========================================
-   TEAM EXTRACTOR
-========================================= */
+/* =====================================================
+   SMART TEAM
+===================================================== */
 
 function getTeam(
     match,
     side
 ) {
 
-    const team =
-        side === "home"
+    const home =
+        side === "home";
+
+
+    const candidates = [
+
+        home
             ? match.home
-            : match.away;
+            : match.away,
 
-    if (team) {
+        home
+            ? match.home_team
+            : match.away_team,
 
-        return team;
-
-    }
-
-    const teamObject =
-        side === "home"
+        home
             ? match.homeTeam
-            : match.awayTeam;
+            : match.awayTeam,
 
-    if (teamObject) {
+        home
+            ? match.team_home
+            : match.team_away,
 
-        return teamObject;
+        match.teams?.[
+            home
+                ? "home"
+                : "away"
+        ],
 
-    }
+        match.teams?.[
+            home
+                ? "home_team"
+                : "away_team"
+        ]
 
-    const nested =
-        match.teams;
+    ];
 
-    if (nested) {
 
-        return side === "home"
-            ? nested.home
-            : nested.away;
+    return (
+        candidates.find(
+            item =>
+                item &&
+                typeof item ===
+                "object"
+        ) || {}
+    );
 
-    }
-
-    return {};
 }
 
 
-/* =========================================
+/* =====================================================
    TEAM NAME
-========================================= */
+===================================================== */
 
-function teamName(
+function getTeamName(
     team
 ) {
 
+    if (!team) {
+
+        return "—";
+
+    }
+
+
     return (
+
         team.name ||
+
         team.title ||
+
         team.team_name ||
+
+        team.teamName ||
+
+        team.display_name ||
+
+        team.displayName ||
+
         team.short_name ||
+
+        team.shortName ||
+
+        team.label ||
+
         "—"
+
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    TEAM LOGO
-========================================= */
+===================================================== */
 
-function teamLogo(
+function getTeamLogo(
     team
 ) {
 
+    if (!team) {
+
+        return "";
+
+    }
+
+
     return (
+
         team.logo ||
+
         team.image ||
+
         team.logo_url ||
+
+        team.logoUrl ||
+
+        team.image_url ||
+
+        team.imageUrl ||
+
         team.icon ||
+
         ""
+
     );
 
 }
 
 
-/* =========================================
-   SCORE
-========================================= */
+/* =====================================================
+   SCORE READER
+===================================================== */
 
 function getScore(
     match,
     side
 ) {
 
+    const home =
+        side === "home";
+
+
     const score =
         match.score ||
         match.scores ||
+        match.result ||
         {};
 
-    if (
-        side === "home"
-    ) {
 
-        return (
-            score.home ??
-            score.home_score ??
-            match.home_score ??
-            null
+    const values = [
+
+        home
+            ? score.home
+            : score.away,
+
+        home
+            ? score.home_score
+            : score.away_score,
+
+        home
+            ? score.homeScore
+            : score.awayScore,
+
+        home
+            ? match.home_score
+            : match.away_score,
+
+        home
+            ? match.homeScore
+            : match.awayScore,
+
+        home
+            ? match.result?.home
+            : match.result?.away
+
+    ];
+
+
+    const found =
+        values.find(
+            value =>
+                value !==
+                undefined &&
+                value !== null
         );
 
-    }
 
-    return (
-        score.away ??
-        score.away_score ??
-        match.away_score ??
-        null
-    );
+    return found ?? null;
 
 }
 
 
-/* =========================================
+/* =====================================================
+   STATUS READER
+===================================================== */
+
+function getStatus(
+    match
+) {
+
+    const values = [
+
+        match.status,
+
+        match.state,
+
+        match.status_text,
+
+        match.statusText,
+
+        match.match_status,
+
+        match.matchStatus,
+
+        match.game_status,
+
+        match.gameStatus
+
+    ];
+
+
+    const found =
+        values.find(
+            value =>
+                value !==
+                undefined &&
+                value !== null
+        );
+
+
+    return String(
+        found || ""
+    ).toLowerCase();
+
+}
+
+
+/* =====================================================
    MATCH NORMALIZER
-========================================= */
+===================================================== */
 
 function normalizeMatch(
     match
@@ -264,11 +455,13 @@ function normalizeMatch(
 
     }
 
+
     const home =
         getTeam(
             match,
             "home"
         );
+
 
     const away =
         getTeam(
@@ -276,38 +469,73 @@ function normalizeMatch(
             "away"
         );
 
+
     const status =
-        String(
-            match.status ||
-            match.state ||
-            match.status_text ||
-            ""
-        ).toLowerCase();
+        getStatus(
+            match
+        );
+
 
     let state =
         "upcoming";
 
 
+    /* LIVE */
+
     if (
+
         status.includes("live") ||
+
         status.includes("playing") ||
+
+        status.includes("inplay") ||
+
         status.includes("in-play") ||
-        status.includes("in_play")
+
+        status.includes("in_play") ||
+
+        status === "1h" ||
+
+        status === "2h" ||
+
+        status === "ht" ||
+
+        status === "et" ||
+
+        status === "bt" ||
+
+        status === "p"
+
     ) {
 
-        state = "live";
+        state =
+            "live";
 
     }
 
 
-    if (
+    /* FINISHED */
+
+    else if (
+
         status.includes("finished") ||
+
+        status.includes("finish") ||
+
         status.includes("ended") ||
+
+        status.includes("complete") ||
+
         status === "ft" ||
-        status.includes("complete")
+
+        status === "aet" ||
+
+        status === "pen"
+
     ) {
 
-        state = "finished";
+        state =
+            "finished";
 
     }
 
@@ -320,43 +548,59 @@ function normalizeMatch(
             match.event_id ??
             null,
 
+
         slug:
             match.slug ??
             match.match_slug ??
+            match.event_slug ??
             "",
+
 
         status:
             state,
 
+
         statusText:
             match.status_text ||
+            match.statusText ||
             match.status ||
             match.state ||
             "",
 
+
         minute:
             match.minute ??
             match.elapsed ??
+            match.match_time ??
             null,
+
 
         date:
             match.date ??
             match.start_time ??
+            match.startTime ??
             match.kickoff ??
+            match.kickoff_time ??
             null,
+
 
         home: {
 
             id:
                 home.id ??
                 home.team_id ??
+                home.teamId ??
                 null,
 
             name:
-                teamName(home),
+                getTeamName(
+                    home
+                ),
 
             logo:
-                teamLogo(home),
+                getTeamLogo(
+                    home
+                ),
 
             score:
                 getScore(
@@ -366,18 +610,24 @@ function normalizeMatch(
 
         },
 
+
         away: {
 
             id:
                 away.id ??
                 away.team_id ??
+                away.teamId ??
                 null,
 
             name:
-                teamName(away),
+                getTeamName(
+                    away
+                ),
 
             logo:
-                teamLogo(away),
+                getTeamLogo(
+                    away
+                ),
 
             score:
                 getScore(
@@ -387,11 +637,15 @@ function normalizeMatch(
 
         },
 
+
         competition:
             match.competition?.name ||
             match.league?.name ||
             match.tournament?.name ||
+            match.competition_name ||
+            match.league_name ||
             "Football",
+
 
         competitionSlug:
             match.competition?.slug ||
@@ -399,15 +653,23 @@ function normalizeMatch(
             match.tournament?.slug ||
             "",
 
+
         country:
             match.competition?.country ||
             match.league?.country ||
             "",
 
+
         venue:
             match.venue ||
             match.stadium ||
             "",
+
+
+        referee:
+            match.referee ||
+            "",
+
 
         raw:
             match
@@ -417,149 +679,205 @@ function normalizeMatch(
 }
 
 
-/* =========================================
+/* =====================================================
    NORMALIZED MATCHES
-========================================= */
+===================================================== */
 
 async function getNormalizedMatches() {
 
     const matches =
-        await getMatches(50);
+        await getMatches(
+            50
+        );
+
 
     return matches
-        .map(normalizeMatch)
-        .filter(Boolean);
+        .map(
+            normalizeMatch
+        )
+        .filter(
+            Boolean
+        );
 
 }
 
 
-/* =========================================
+/* =====================================================
    LIVE MATCHES
-========================================= */
+===================================================== */
 
 async function getLiveMatches() {
 
     const matches =
         await getNormalizedMatches();
 
+
     return matches.filter(
         match =>
-            match.status === "live"
+            match.status ===
+            "live"
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    FINISHED MATCHES
-========================================= */
+===================================================== */
 
 async function getFinishedMatches() {
 
     const matches =
         await getNormalizedMatches();
 
+
     return matches.filter(
         match =>
-            match.status === "finished"
+            match.status ===
+            "finished"
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    UPCOMING MATCHES
-========================================= */
+===================================================== */
 
 async function getUpcomingMatches() {
 
     const matches =
         await getNormalizedMatches();
 
+
     return matches.filter(
         match =>
-            match.status === "upcoming"
+            match.status ===
+            "upcoming"
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    ALL MATCHES
-========================================= */
+===================================================== */
 
 async function getAllMatches() {
 
     return await getNormalizedMatches();
 
-                   }
-/* =========================================
-   MATCH DETAILS
-========================================= */
+                       }
+/* =====================================================
+   MATCH BY SLUG
+===================================================== */
 
 async function getMatchBySlug(
     slug
 ) {
 
-    if (!slug) return null;
-
-    const data =
-        await request(
-            "/match/",
-            {
-                sport: SPORT,
-                slug: slug
-            }
-        );
-
-    return (
-        data.match ||
-        data
-    );
-
-}
-
-
-/* =========================================
-   MATCH DETAILS BY ID
-========================================= */
-
-async function getMatchById(
-    id
-) {
-
-    if (!id) return null;
-
-    const matches =
-        await getMatches(50);
-
-    const match =
-        matches.find(
-            item =>
-                String(
-                    item.id ??
-                    item.match_id ??
-                    item.event_id ??
-                    ""
-                ) === String(id)
-        );
-
-    if (!match) {
+    if (!slug) {
 
         return null;
 
     }
 
-    return normalizeMatch(
-        match
+
+    const data =
+        await apiRequest(
+            "/match/",
+            {
+                sport:
+                    SPORT,
+
+                slug:
+                    slug
+            }
+        );
+
+
+    return (
+        data?.match ??
+        data?.data ??
+        data ??
+        null
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
+   MATCH BY ID
+===================================================== */
+
+async function getMatchById(
+    id
+) {
+
+    if (!id) {
+
+        return null;
+
+    }
+
+
+    const matches =
+        await getMatches(
+            50
+        );
+
+
+    const found =
+        matches.find(
+            match => {
+
+                const matchId =
+                    match?.id ??
+                    match?.match_id ??
+                    match?.event_id ??
+                    null;
+
+
+                return String(
+                    matchId
+                ) === String(id);
+
+            }
+        );
+
+
+    if (!found) {
+
+        return null;
+
+    }
+
+
+    return normalizeMatch(
+        found
+    );
+
+}
+
+
+/* =====================================================
+   MATCH DETAILS
+===================================================== */
+
+async function getMatchDetails(
+    slug
+) {
+
+    return await getMatchBySlug(
+        slug
+    );
+
+}
+
+
+/* =====================================================
    STATISTICS
-========================================= */
+===================================================== */
 
 async function getMatchStatistics(
     slug
@@ -570,21 +888,36 @@ async function getMatchStatistics(
             slug
         );
 
-    if (!data) return [];
+
+    if (!data) {
+
+        return [];
+
+    }
+
 
     return (
+
         data.statistics ||
+
         data.stats ||
+
         data.team_stats ||
+
+        data.match_statistics ||
+
+        data.statistics_data ||
+
         []
+
     );
 
 }
 
 
-/* =========================================
-   EVENTS / TIMELINE
-========================================= */
+/* =====================================================
+   EVENTS
+===================================================== */
 
 async function getMatchEvents(
     slug
@@ -595,21 +928,36 @@ async function getMatchEvents(
             slug
         );
 
-    if (!data) return [];
+
+    if (!data) {
+
+        return [];
+
+    }
+
 
     return (
+
         data.timeline ||
+
         data.events ||
+
         data.match_events ||
+
+        data.incidents ||
+
+        data.match_incidents ||
+
         []
+
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    LINEUPS
-========================================= */
+===================================================== */
 
 async function getMatchLineups(
     slug
@@ -620,209 +968,352 @@ async function getMatchLineups(
             slug
         );
 
-    if (!data) return [];
+
+    if (!data) {
+
+        return [];
+
+    }
+
 
     return (
+
         data.lineups ||
+
         data.lineup ||
+
+        data.players ||
+
+        data.squads ||
+
         []
+
     );
 
 }
 
 
-/* =========================================
-   TEAM
-========================================= */
+/* =====================================================
+   TEAM INFO
+===================================================== */
 
 async function getTeamInfo(
     slug
 ) {
 
-    if (!slug) return null;
+    if (!slug) {
 
-    return await request(
-        "/team/",
-        {
-            sport: SPORT,
-            slug: slug
-        }
+        return null;
+
+    }
+
+
+    const data =
+        await apiRequest(
+            "/team/",
+            {
+                sport:
+                    SPORT,
+
+                slug:
+                    slug
+            }
+        );
+
+
+    return (
+        data?.team ??
+        data?.data ??
+        data ??
+        null
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    STANDINGS
-========================================= */
+===================================================== */
 
 async function getStandings(
     slug
 ) {
 
-    if (!slug) return [];
+    if (!slug) {
+
+        return [];
+
+    }
+
 
     const data =
-        await request(
+        await apiRequest(
             "/standings/",
             {
-                sport: SPORT,
-                slug: slug
+                sport:
+                    SPORT,
+
+                slug:
+                    slug
             }
         );
 
+
     return (
-        data.standings ||
-        data.table ||
-        data.teams ||
+
+        data?.standings ||
+
+        data?.table ||
+
+        data?.rows ||
+
+        data?.teams ||
+
+        data?.data ||
+
         []
+
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    TOP SCORERS
-========================================= */
+===================================================== */
 
 async function getTopScorers(
     slug
 ) {
 
-    if (!slug) return [];
+    if (!slug) {
+
+        return [];
+
+    }
+
 
     const data =
-        await request(
+        await apiRequest(
             "/topscorers/",
             {
-                sport: SPORT,
-                slug: slug,
-                stat: "goals",
-                limit: 50
+                sport:
+                    SPORT,
+
+                slug:
+                    slug,
+
+                stat:
+                    "goals",
+
+                limit:
+                    50
             }
         );
 
+
     return (
-        data.players ||
-        data.topscorers ||
-        data.results ||
+
+        data?.players ||
+
+        data?.topscorers ||
+
+        data?.results ||
+
+        data?.data ||
+
         []
+
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    TOP ASSISTS
-========================================= */
+===================================================== */
 
 async function getTopAssists(
     slug
 ) {
 
-    if (!slug) return [];
+    if (!slug) {
+
+        return [];
+
+    }
+
 
     const data =
-        await request(
+        await apiRequest(
             "/topscorers/",
             {
-                sport: SPORT,
-                slug: slug,
-                stat: "assists",
-                limit: 50
+                sport:
+                    SPORT,
+
+                slug:
+                    slug,
+
+                stat:
+                    "assists",
+
+                limit:
+                    50
             }
         );
 
+
     return (
-        data.players ||
-        data.topscorers ||
-        data.results ||
+
+        data?.players ||
+
+        data?.topscorers ||
+
+        data?.results ||
+
+        data?.data ||
+
         []
+
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    PLAYER
-========================================= */
+===================================================== */
 
 async function getPlayer(
     slug
 ) {
 
-    if (!slug) return null;
+    if (!slug) {
+
+        return null;
+
+    }
+
 
     const data =
-        await request(
+        await apiRequest(
             "/player/",
             {
-                sport: SPORT,
-                slug: slug
+                sport:
+                    SPORT,
+
+                slug:
+                    slug
             }
         );
 
+
     return (
-        data.player ||
-        data
+
+        data?.player ||
+
+        data?.data ||
+
+        data ||
+
+        null
+
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    BRACKET
-========================================= */
+===================================================== */
 
 async function getBracket(
     slug
 ) {
 
-    if (!slug) return [];
+    if (!slug) {
+
+        return [];
+
+    }
+
 
     const data =
-        await request(
+        await apiRequest(
             "/bracket/",
             {
-                sport: SPORT,
-                slug: slug
+                sport:
+                    SPORT,
+
+                slug:
+                    slug
             }
         );
 
+
     return (
-        data.bracket ||
-        data.rounds ||
-        data.matches ||
+
+        data?.bracket ||
+
+        data?.rounds ||
+
+        data?.matches ||
+
+        data?.data ||
+
         []
+
     );
 
 }
 
 
-/* =========================================
+/* =====================================================
    LIVE TRACKER
-========================================= */
+===================================================== */
 
 async function getTracker(
     id
 ) {
 
-    if (!id) return null;
+    if (!id) {
 
-    return await request(
-        "/tracker/",
-        {
-            sport: SPORT,
-            id: id
-        }
+        return null;
+
+    }
+
+
+    const data =
+        await apiRequest(
+            "/tracker/",
+            {
+                sport:
+                    SPORT,
+
+                id:
+                    id
+            }
+        );
+
+
+    return (
+
+        data?.tracker ||
+
+        data?.data ||
+
+        data ||
+
+        null
+
     );
 
 }
 
 
-/* =========================================
-   CLEAR CACHE
-========================================= */
+/* =====================================================
+   CACHE CLEAR
+===================================================== */
 
 function clearCache() {
 
@@ -835,9 +1326,9 @@ function clearCache() {
 }
 
 
-/* =========================================
-   API INFORMATION
-========================================= */
+/* =====================================================
+   API STATUS
+===================================================== */
 
 function getAPIStatus() {
 
@@ -866,9 +1357,9 @@ function getAPIStatus() {
 }
 
 
-/* =========================================
-   GLOBAL API
-========================================= */
+/* =====================================================
+   GLOBAL PREZISCORE API
+===================================================== */
 
 window.PreziAPI = {
 
@@ -887,11 +1378,13 @@ window.PreziAPI = {
     getUpcomingMatches,
 
 
-    /* MATCH */
+    /* MATCH DETAILS */
 
     getMatchBySlug,
 
     getMatchById,
+
+    getMatchDetails,
 
     getMatchStatistics,
 
@@ -900,12 +1393,12 @@ window.PreziAPI = {
     getMatchLineups,
 
 
-    /* TEAM */
+    /* TEAMS */
 
     getTeamInfo,
 
 
-    /* COMPETITION */
+    /* COMPETITIONS */
 
     getStandings,
 
@@ -916,17 +1409,17 @@ window.PreziAPI = {
     getBracket,
 
 
-    /* PLAYER */
+    /* PLAYERS */
 
     getPlayer,
 
 
-    /* TRACKER */
+    /* LIVE */
 
     getTracker,
 
 
-    /* UTILITIES */
+    /* HELPERS */
 
     normalizeMatch,
 
@@ -937,12 +1430,12 @@ window.PreziAPI = {
 };
 
 
-/* =========================================
-   READY
-========================================= */
+/* =====================================================
+   PREZISCORE READY
+===================================================== */
 
 console.log(
-    "================================="
+    "===================================="
 );
 
 console.log(
@@ -950,11 +1443,11 @@ console.log(
 );
 
 console.log(
-    "🌐 Provider: SportScore"
+    "🌐 SportScore"
 );
 
 console.log(
-    "🔑 API KEY: NOT REQUIRED"
+    "🔑 API KEY: NONE"
 );
 
 console.log(
@@ -962,5 +1455,5 @@ console.log(
 );
 
 console.log(
-    "================================="
+    "===================================="
 );
