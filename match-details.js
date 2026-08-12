@@ -588,34 +588,54 @@ function renderMatchHeader(match) {
             </div>
 
 
-            <!-- SCORE -->
+           <!-- SCORE -->
 
-            <div class="detail-score">
+<div class="detail-score">
 
-                ${safe(homeScore)}
+    <span class="${
+        Number(homeScore) > Number(awayScore)
+            ? "score-winner"
+            : Number(homeScore) < Number(awayScore)
+                ? "score-loser"
+                : "score-draw"
+    }">
 
-                :
+        ${safe(homeScore)}
 
-                ${safe(awayScore)}
+    </span>
+
+    :
+
+    <span class="${
+        Number(awayScore) > Number(homeScore)
+            ? "score-winner"
+            : Number(awayScore) < Number(homeScore)
+                ? "score-loser"
+                : "score-draw"
+    }">
+
+        ${safe(awayScore)}
+
+    </span>
 
 
-                <small>
+    <small>
 
-                    ${
-                        status === "live"
-                        ?
-                        `${safe(minute ?? "")}'`
-                        :
-                        status === "finished"
-                        ?
-                        "FT"
-                        :
-                        "À venir"
-                    }
+        ${
+            status === "live"
+            ?
+            `${safe(minute ?? "")}'`
+            :
+            status === "finished"
+            ?
+            "FT"
+            :
+            "À venir"
+        }
 
-                </small>
+    </small>
 
-            </div>
+</div> 
 
 
             <!-- AWAY -->
