@@ -6,15 +6,18 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+content="width=device-width,initial-scale=1">
 
 <meta name="theme-color"
-      content="#080b10">
+content="#080b10">
+
+<meta name="description"
+content="PreziScore — Profil utilisateur">
 
 <title>PreziScore — Profil</title>
 
 <link rel="stylesheet"
-      href="style.css">
+href="style.css">
 
 <style>
 
@@ -22,248 +25,209 @@
    PROFILE
 ===================================================== */
 
-.profile-page {
-    padding-bottom: 100px;
+.profile-page{
+    padding-bottom:100px;
 }
 
 
-/* =====================================================
-   PROFILE HEADER
-===================================================== */
+/* HEADER */
 
-.profile-head {
+.profile-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 0;
+}
 
-    text-align: center;
+.profile-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
 
-    padding: 28px 0 20px;
+.profile-logo{
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    font-size:20px;
+}
 
+.profile-brand h1{
+    font-size:20px;
+    font-weight:900;
+}
+
+.profile-brand h1 span{
+    color:var(--primary);
+}
+
+.profile-brand p{
+    color:var(--muted);
+    font-size:8px;
 }
 
 
-.profile-avatar {
+/* TITLE */
 
-    width: 78px;
-    height: 78px;
+.profile-title{
+    margin-top:15px;
+}
 
-    margin: auto;
+.profile-title h2{
+    font-size:23px;
+}
 
-    display: grid;
-
-    place-items: center;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(0,230,118,.18),
-            rgba(0,230,118,.04)
-        );
-
-    border: 1px solid
-        rgba(0,230,118,.25);
-
-    border-radius: 50%;
-
-    font-size: 34px;
-
+.profile-title p{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:10px;
 }
 
 
-.profile-head h2 {
+/* PROFILE CARD */
 
-    margin-top: 12px;
+.profile-card{
+    margin-top:18px;
+    padding:20px 15px;
+    text-align:center;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+}
 
-    font-size: 20px;
+.avatar{
+    width:75px;
+    height:75px;
+    margin:auto;
+    display:grid;
+    place-items:center;
+    background:var(--card-2);
+    border:2px solid rgba(0,230,118,.25);
+    border-radius:50%;
+    font-size:35px;
+}
 
+.profile-name{
+    margin-top:10px;
+    font-size:15px;
+    font-weight:900;
+}
+
+.profile-email{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:9px;
+}
+
+.edit-profile{
+    margin-top:12px;
+    padding:9px 15px;
+    border:1px solid rgba(0,230,118,.3);
+    background:rgba(0,230,118,.1);
+    color:var(--primary);
+    border-radius:10px;
+    font-size:9px;
+    font-weight:800;
 }
 
 
-.profile-head p {
+/* SECTIONS */
 
-    margin-top: 5px;
+.profile-section{
+    margin-top:20px;
+}
 
-    color: var(--muted);
-
-    font-size: 10px;
-
+.profile-section h3{
+    margin-bottom:9px;
+    font-size:13px;
 }
 
 
-/* =====================================================
-   LOGIN CARD
-===================================================== */
+/* MENU */
 
-.profile-card {
+.profile-menu{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
 
-    padding: 17px;
+.profile-item{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    width:100%;
+    padding:13px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    color:white;
+    text-decoration:none;
+}
 
-    background: var(--card);
+.profile-icon{
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    flex-shrink:0;
+    background:var(--card-2);
+    border-radius:11px;
+    font-size:18px;
+}
 
-    border: 1px solid var(--border);
+.profile-info{
+    flex:1;
+}
 
-    border-radius: 17px;
+.profile-info strong{
+    display:block;
+    font-size:10px;
+}
 
+.profile-info span{
+    display:block;
+    margin-top:3px;
+    color:var(--muted);
+    font-size:8px;
+}
+
+.profile-arrow{
+    color:var(--muted);
+    font-size:14px;
 }
 
 
-.profile-card h3 {
+/* STATS */
 
-    font-size: 14px;
-
+.profile-stats{
+    display:grid;
+    grid-template-columns:
+    repeat(3,1fr);
+    gap:8px;
 }
 
-
-.profile-card p {
-
-    margin-top: 6px;
-
-    color: var(--muted);
-
-    font-size: 9px;
-
-    line-height: 1.5;
-
+.stat-box{
+    padding:13px 5px;
+    text-align:center;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:13px;
 }
 
-
-/* =====================================================
-   BUTTON
-===================================================== */
-
-.profile-button {
-
-    width: 100%;
-
-    margin-top: 15px;
-
-    padding: 12px;
-
-    border: 0;
-
-    border-radius: 11px;
-
-    background: var(--primary);
-
-    color: #050505;
-
-    font-family: inherit;
-
-    font-size: 10px;
-
-    font-weight: 900;
-
-    cursor: pointer;
-
+.stat-box strong{
+    display:block;
+    font-size:15px;
 }
 
-
-/* =====================================================
-   OPTIONS
-===================================================== */
-
-.profile-options {
-
-    margin-top: 18px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 8px;
-
-}
-
-
-.profile-option {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
-
-    padding: 13px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 14px;
-
-}
-
-
-.option-icon {
-
-    width: 36px;
-    height: 36px;
-
-    display: grid;
-
-    place-items: center;
-
-    flex-shrink: 0;
-
-    background: var(--card-2);
-
-    border-radius: 10px;
-
-    font-size: 16px;
-
-}
-
-
-.option-text {
-
-    flex: 1;
-
-}
-
-
-.option-text strong {
-
-    display: block;
-
-    font-size: 10px;
-
-}
-
-
-.option-text span {
-
-    display: block;
-
-    margin-top: 3px;
-
-    color: var(--muted);
-
-    font-size: 8px;
-
-}
-
-
-.option-arrow {
-
-    color: var(--muted);
-
-    font-size: 15px;
-
-}
-
-
-/* =====================================================
-   VERSION
-===================================================== */
-
-.version {
-
-    margin-top: 22px;
-
-    text-align: center;
-
-    color: #58616e;
-
-    font-size: 8px;
-
+.stat-box span{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:7px;
 }
 
 </style>
@@ -277,220 +241,281 @@
 <main class="main-content profile-page">
 
 
-<!-- =====================================================
-     PROFILE HEADER
-===================================================== -->
+<!-- HEADER -->
 
-<section class="profile-head">
+<header class="profile-head">
 
-    <div class="profile-avatar">
-        ⚽
-    </div>
+<div class="profile-brand">
 
-    <h2>
-        Mon Profil
-    </h2>
+<div class="profile-logo">
+👤
+</div>
 
-    <p>
-        Bienvenue sur PreziScore
-    </p>
+<div>
+
+<h1>
+Prezi<span>Score</span>
+</h1>
+
+<p>
+Football en direct
+</p>
+
+</div>
+
+</div>
+
+</header>
+
+
+<!-- TITLE -->
+
+<section class="profile-title">
+
+<h2>
+👤 Mon Profil
+</h2>
+
+<p>
+Gérez votre profil et vos préférences.
+</p>
 
 </section>
 
 
-<!-- =====================================================
-     LOGIN
-===================================================== -->
+<!-- PROFILE -->
 
 <section class="profile-card">
 
-    <h3>
-        👤 Votre compte
-    </h3>
+<div class="avatar">
+👤
+</div>
 
-    <p>
-        Connectez-vous pour personnaliser
-        votre expérience PreziScore et
-        suivre vos équipes préférées.
-    </p>
+<div class="profile-name">
+Utilisateur PreziScore
+</div>
 
-    <button
-        class="profile-button"
-        onclick="loginMessage()"
-    >
-        Se connecter
-    </button>
+<div class="profile-email">
+Bienvenue sur PreziScore
+</div>
+
+<button
+class="edit-profile"
+onclick="editProfile()">
+
+✏️ Modifier le profil
+
+</button>
 
 </section>
 
 
+<!-- STATS -->
+
+<section class="profile-section">
+
+<h3>
+📊 Mon activité
+</h3>
+
+<div class="profile-stats">
+
+<div class="stat-box">
+<strong id="favoriteCount">0</strong>
+<span>Favoris</span>
+</div>
+
+<div class="stat-box">
+<strong id="matchCount">0</strong>
+<span>Matchs vus</span>
+</div>
+
+<div class="stat-box">
+<strong id="newsCount">0</strong>
+<span>News</span>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- MENU -->
+
+<section class="profile-section">
+
+<h3>
+⚙️ Paramètres
+</h3>
+
+<div class="profile-menu">
+
+<a
+href="#"
+class="profile-item"
+onclick="openFavorites(event)">
+
+<div class="profile-icon">
+⭐
+</div>
+
+<div class="profile-info">
+
+<strong>
+Mes favoris
+</strong>
+
+<span>
+Équipes et compétitions favorites
+</span>
+
+</div>
+
+<div class="profile-arrow">
+→
+</div>
+
+</a>
+
+
+<a
+href="#"
+class="profile-item"
+onclick="openSettings(event)">
+
+<div class="profile-icon">
+⚙️
+</div>
+
+<div class="profile-info">
+
+<strong>
+Paramètres
+</strong>
+
+<span>
+Préférences de l'application
+</span>
+
+</div>
+
+<div class="profile-arrow">
+→
+</div>
+
+</a>
+
+
+<a
+href="#"
+class="profile-item"
+onclick="showAbout(event)">
+
+<div class="profile-icon">
+ℹ️
+</div>
+
+<div class="profile-info">
+
+<strong>
+À propos de PreziScore
+</strong>
+
+<span>
+Informations sur l'application
+</span>
+
+</div>
+
+<div class="profile-arrow">
+→
+</div>
+
+</a>
+
+</div>
+
+</section>
 <!-- =====================================================
-     OPTIONS
+     MESSAGE BOX
 ===================================================== -->
 
-<section class="profile-options">
-
-
-    <div class="profile-option">
-
-        <div class="option-icon">
-            ⭐
-        </div>
-
-        <div class="option-text">
-
-            <strong>
-                Mes équipes
-            </strong>
-
-            <span>
-                Retrouvez vos équipes préférées
-            </span>
-
-        </div>
-
-        <div class="option-arrow">
-            ›
-        </div>
-
-    </div>
-
-
-    <div class="profile-option">
-
-        <div class="option-icon">
-            🔔
-        </div>
-
-        <div class="option-text">
-
-            <strong>
-                Notifications
-            </strong>
-
-            <span>
-                Recevez les alertes de matchs
-            </span>
-
-        </div>
-
-        <div class="option-arrow">
-            ›
-        </div>
-
-    </div>
-
-
-    <div class="profile-option">
-
-        <div class="option-icon">
-            ⚙️
-        </div>
-
-        <div class="option-text">
-
-            <strong>
-                Paramètres
-            </strong>
-
-            <span>
-                Gérez vos préférences
-            </span>
-
-        </div>
-
-        <div class="option-arrow">
-            ›
-        </div>
-
-    </div>
-
-
-    <div class="profile-option">
-
-        <div class="option-icon">
-            ℹ️
-        </div>
-
-        <div class="option-text">
-
-            <strong>
-                À propos
-            </strong>
-
-            <span>
-                Informations sur PreziScore
-            </span>
-
-        </div>
-
-        <div class="option-arrow">
-            ›
-        </div>
-
-    </div>
-
-</section>
-
-
-<div class="version">
-    PreziScore v1.0
+<div
+id="profileMessage"
+style="
+display:none;
+margin-top:15px;
+padding:13px;
+text-align:center;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:14px;
+color:var(--muted);
+font-size:9px;
+">
 </div>
+
+
 <!-- =====================================================
      BOTTOM NAVIGATION
 ===================================================== -->
 
 <nav class="bottom-nav">
 
-    <a
-        href="index.html"
-        class="nav-item"
-    >
-        <span>⌂</span>
-        <small>Accueil</small>
-    </a>
+<a
+href="index.html"
+class="nav-item">
+
+<span>⌂</span>
+<small>Accueil</small>
+
+</a>
 
 
-    <a
-        href="match.html"
-        class="nav-item"
-    >
-        <span>⚽</span>
-        <small>Matchs</small>
-    </a>
+<a
+href="match.html"
+class="nav-item">
+
+<span>⚽</span>
+<small>Matchs</small>
+
+</a>
 
 
-    <a
-        href="competitions.html"
-        class="nav-item"
-    >
-        <span>🏆</span>
-        <small>Compétitions</small>
-    </a>
+<a
+href="competitions.html"
+class="nav-item">
+
+<span>🏆</span>
+<small>Compétitions</small>
+
+</a>
 
 
-    <a
-        href="news.html"
-        class="nav-item"
-    >
-        <span>📰</span>
-        <small>News</small>
-    </a>
+<a
+href="news.html"
+class="nav-item">
+
+<span>📰</span>
+<small>News</small>
+
+</a>
 
 
-    <a
-        href="profile.html"
-        class="nav-item active"
-    >
-        <span>👤</span>
-        <small>Profil</small>
-    </a>
+<a
+href="profile.html"
+class="nav-item active">
+
+<span>👤</span>
+<small>Profil</small>
+
+</a>
 
 </nav>
 
 
 <!-- =====================================================
-     PROFILE JAVASCRIPT
+     JAVASCRIPT
 ===================================================== -->
 
 <script>
@@ -498,26 +523,231 @@
 "use strict";
 
 
-function loginMessage() {
+/* =====================================================
+   MESSAGE
+===================================================== */
 
-    alert(
-        "👤 Connexion\n\n" +
-        "Cette fonction sera disponible " +
-        "dans une prochaine version de PreziScore."
-    );
+const message =
+document.getElementById(
+"profileMessage"
+);
+
+
+function showMessage(text){
+
+message.textContent =
+text;
+
+message.style.display =
+"block";
+
+
+setTimeout(() => {
+
+message.style.display =
+"none";
+
+},3000);
 
 }
 
 
-console.log(
-    "👤 PreziScore Profil chargé"
+/* =====================================================
+   EDIT PROFILE
+===================================================== */
+
+function editProfile(){
+
+const name =
+prompt(
+"Entrez votre nom :"
 );
+
+
+if(
+name &&
+name.trim()
+){
+
+const cleanName =
+name.trim();
+
+localStorage.setItem(
+"preziProfileName",
+cleanName
+);
+
+updateProfile();
+
+showMessage(
+"✅ Profil modifié avec succès."
+);
+
+}
+
+}
+
+
+/* =====================================================
+   LOAD PROFILE
+===================================================== */
+
+function updateProfile(){
+
+const savedName =
+localStorage.getItem(
+"preziProfileName"
+);
+
+
+const nameElement =
+document.querySelector(
+".profile-name"
+);
+
+
+if(
+savedName &&
+nameElement
+){
+
+nameElement.textContent =
+savedName;
+
+}
+
+}
+
+
+/* =====================================================
+   FAVORITES
+===================================================== */
+
+function openFavorites(event){
+
+event.preventDefault();
+
+showMessage(
+"⭐ Vos favoris seront affichés ici."
+);
+
+}
+
+
+/* =====================================================
+   SETTINGS
+===================================================== */
+
+function openSettings(event){
+
+event.preventDefault();
+
+showMessage(
+"⚙️ Les paramètres de PreziScore seront disponibles ici."
+);
+
+}
+
+
+/* =====================================================
+   ABOUT
+===================================================== */
+
+function showAbout(event){
+
+event.preventDefault();
+
+showMessage(
+"⚽ PreziScore — Football en direct."
+);
+
+}
+
+
+/* =====================================================
+   ACTIVITY
+===================================================== */
+
+function loadActivity(){
+
+const favorites =
+JSON.parse(
+localStorage.getItem(
+"preziFavorites"
+) || "[]"
+);
+
+
+const matches =
+Number(
+localStorage.getItem(
+"preziMatchesViewed"
+) || 0
+);
+
+
+const news =
+Number(
+localStorage.getItem(
+"preziNewsViewed"
+) || 0
+);
+
+
+const favElement =
+document.getElementById(
+"favoriteCount"
+);
+
+const matchElement =
+document.getElementById(
+"matchCount"
+);
+
+const newsElement =
+document.getElementById(
+"newsCount"
+);
+
+
+if(favElement){
+
+favElement.textContent =
+favorites.length;
+
+}
+
+
+if(matchElement){
+
+matchElement.textContent =
+matches;
+
+}
+
+
+if(newsElement){
+
+newsElement.textContent =
+news;
+
+}
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+updateProfile();
+
+loadActivity();
 
 </script>
 
 
 </main>
-
 
 </body>
 
