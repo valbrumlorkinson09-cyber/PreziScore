@@ -881,3 +881,373 @@ loadToday();
 
 
 <!-- FIN PARTIE 1 -->
+<!-- =====================================================
+     PARTIE 2 — VRAIS MATCHS
+===================================================== -->
+
+<script>
+
+"use strict";
+
+/* =====================================================
+   CHARGER LES VRAIS MATCHS
+===================================================== */
+
+async function chargerAccueil() {
+
+    try {
+
+        if (
+            !window.PreziAPI ||
+            typeof PreziAPI.getMatches !== "function"
+        ) {
+            console.warn("PreziAPI.getMatches indisponible");
+            return;
+        }
+
+        const matchs =
+            await PreziAPI.getMatches();
+
+        if (!Array.isArray(matchs)) {
+            return;
+        }
+
+        afficherMatchVedette(matchs);
+        afficherMatchsDuJour(matchs);
+
+    } catch (error) {
+
+        console.error(
+            "Erreur chargement accueil:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   MATCH VEDETTE
+===================================================== */
+
+function afficherMatchVedette(matchs) {
+
+    const container =
+        document.querySelector(".feature-match");
+
+    if (!container) return;
+
+    const match =
+        matchs.find(m =>
+            m?.status === "live"
+        ) || matchs[0];
+
+    if (!match) {
+
+        container.innerHTML = `
+            <div class="feature-league">
+                Aucun match disponible
+            </div>
+        `;
+
+        return;
+    }
+
+    const home =
+        match?.home?.name || "Équipe A";
+
+    const away =
+        match?.away?.name || "Équipe B";
+
+    const homeScore =
+        match?.home?.score ?? "-";
+
+    const awayScore =
+        match?.away?.score ?? "-";
+
+    const competition =
+        match?.competition || "Football";
+
+    const status =
+        match?.status || "upcoming";
+
+    const minute =
+        match?.minute != null
+            ? `${match.minute}'`
+            : "";
+
+    container.innerHTML = `
+
+        <div class="feature-league">
+            ${escapeHTML(competition)}
+        </div>
+
+        <div class="feature-teams">
+
+            <div class="feature-team">
+
+                <div class="feature-logo">
+                    ⚽
+                </div>
+
+                <strong>
+                    ${escapeHTML(home)}
+                </strong>
+
+            </div>
+
+            <div class="feature-score">
+
+                <strong>
+                    ${homeScore} : ${awayScore}
+                </strong>
+
+                <span>
+                    ${
+                        status === "live"
+                            ? `🔴 LIVE ${minute}`
+                            : status === "finished"
+                                ? "TERMINÉ"
+                                : "À VENIR"
+                    }
+                </span>
+
+            </div>
+
+            <div class="feature-team">
+
+                <div class="feature-logo">
+                    ⚽
+                </div>
+
+                <strong>
+                    ${escapeHTML(away)}
+                </strong>
+
+            </div>
+
+        </div>
+
+    `;
+
+    container.style.cursor = "pointer";
+
+    container.onclick = function() {
+
+        if (match.id) {
+
+            window.location.href =
+                `match-details.html?match=${encodeURIComponent(match.id)}`;
+
+        }
+
+    };
+
+}
+
+
+/* =====================================================
+   MATCHS DU JOUR
+===================================================== */
+
+function afficherMatchsDuJour(matchs) {
+
+    const container =
+        document.querySelector(".today-card");
+
+    if (!container) return;
+
+    container.innerHTML = `
+
+        <div class="today-top">
+
+            <strong>
+                Aujourd'hui
+            </strong>
+
+            <span>
+                Football
+            </span>
+
+        </div>
+
+    `;
+
+    if (!matchs.length) {
+
+        container.innerHTML += `
+
+            <div class="detail-loading">
+                Aucun match disponible.
+            </div>
+
+        `;
+
+        return;
+    }
+
+    matchs
+        .slice(0, 10)
+        .forEach(match => {
+
+            const home =
+                match?.home?.name ||
+                "Équipe A";
+
+            const away =
+                match?.away?.name ||
+                "Équipe B";
+
+            const status =
+                match?.status ||
+                "upcoming";
+
+            let heure = "--:--";
+
+            if (match?.time) {
+
+                const date =
+                    new Date(match.time);
+
+                if (!Number.isNaN(
+                    date.getTime()
+                )) {
+
+                    heure =
+                        date.toLocaleTimeString(
+                            "fr-FR",
+                            {
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            }
+                        );
+
+                }
+
+            }
+
+            const scoreHome =
+                match?.home?.score;
+
+            const scoreAway =
+                match?.away?.score;
+
+            let centre =
+                heure;
+
+            if (status === "live") {
+
+                centre =
+                    `${scoreHome ?? 0} : ${scoreAway ?? 0}`;
+
+            }
+
+            if (status === "finished") {
+
+                centre =
+                    `${scoreHome ?? "-"} : ${scoreAway ?? "-"}`;
+
+            }
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "today-game";
+
+            row.innerHTML = `
+
+                <div class="today-team">
+
+                    <div class="mini-logo">
+                        ⚽
+                    </div>
+
+                    <span>
+                        ${escapeHTML(home)}
+                    </span>
+
+                </div>
+
+                <div class="today-time">
+
+                    ${escapeHTML(centre)}
+
+                </div>
+
+                <div class="today-team away">
+
+                    <span>
+                        ${escapeHTML(away)}
+                    </span>
+
+                    <div class="mini-logo">
+                        ⚽
+                    </div>
+
+                </div>
+
+            `;
+
+            row.style.cursor = "pointer";
+
+            row.onclick = function() {
+
+                if (match.id) {
+
+                    window.location.href =
+                        `match-details.html?match=${encodeURIComponent(match.id)}`;
+
+                }
+
+            };
+
+            container.appendChild(row);
+
+        });
+
+}
+
+
+/* =====================================================
+   SÉCURITÉ
+===================================================== */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[char])
+        );
+
+}
+
+
+/* =====================================================
+   LANCEMENT
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    chargerAccueil
+);
+
+
+/* =====================================================
+   ACTUALISATION AUTOMATIQUE
+===================================================== */
+
+setInterval(
+    chargerAccueil,
+    30000
+);
+
+                  </script>
