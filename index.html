@@ -21,473 +21,306 @@
 
 <style>
 
-/* =====================================================
-   ACCUEIL — PREZISCORE
-===================================================== */
+/* ===============================
+   ACCUEIL
+================================ */
 
 .home-page {
     padding-bottom: 100px;
 }
 
-
-/* =====================================================
-   HEADER
-===================================================== */
-
 .home-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 0;
 }
 
 .home-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
 .home-ball {
-    width: 42px;
-    height: 42px;
-
-    display: grid;
-    place-items: center;
-
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 13px;
-
-    font-size: 21px;
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:13px;
+    font-size:21px;
 }
 
 .home-brand h1 {
-    font-size: 21px;
-    font-weight: 900;
+    font-size:21px;
+    font-weight:900;
 }
 
 .home-brand h1 span {
-    color: var(--primary);
+    color:var(--primary);
 }
 
 .home-brand p {
-    margin-top: 2px;
-    color: var(--muted);
-    font-size: 9px;
+    margin-top:2px;
+    color:var(--muted);
+    font-size:9px;
 }
 
 .home-search {
-    width: 40px;
-    height: 40px;
-
-    display: grid;
-    place-items: center;
-
-    border: 1px solid var(--border);
-    border-radius: 12px;
-
-    background: var(--card);
-
-    color: white;
-    font-size: 16px;
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--card);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
 }
 
 
-/* =====================================================
+/* ===============================
    WELCOME
-===================================================== */
+================================ */
 
 .welcome-box {
-    position: relative;
-
-    overflow: hidden;
-
-    margin-top: 8px;
-    padding: 20px;
-
+    position:relative;
+    overflow:hidden;
+    margin-top:8px;
+    padding:20px;
     background:
         linear-gradient(
             135deg,
             rgba(0,230,118,.14),
             rgba(0,230,118,.03)
         );
-
-    border: 1px solid
-        rgba(0,230,118,.18);
-
-    border-radius: 20px;
-}
-
-.welcome-box::after {
-    content: "⚽";
-
-    position: absolute;
-
-    right: -10px;
-    bottom: -20px;
-
-    font-size: 95px;
-
-    opacity: .07;
+    border:1px solid rgba(0,230,118,.18);
+    border-radius:20px;
 }
 
 .welcome-box small {
-    color: var(--primary);
-
-    font-size: 9px;
-    font-weight: 900;
-
-    text-transform: uppercase;
+    color:var(--primary);
+    font-size:9px;
+    font-weight:900;
+    text-transform:uppercase;
 }
 
 .welcome-box h2 {
-    margin-top: 7px;
-
-    font-size: 23px;
-    line-height: 1.15;
+    margin-top:7px;
+    font-size:23px;
+    line-height:1.15;
 }
 
 .welcome-box p {
-    max-width: 260px;
-
-    margin-top: 8px;
-
-    color: var(--muted);
-
-    font-size: 10px;
-    line-height: 1.6;
+    max-width:270px;
+    margin-top:8px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.6;
 }
 
 
-/* =====================================================
-   SECTION TITLE
-===================================================== */
+/* ===============================
+   SECTIONS
+================================ */
 
 .home-section {
-    margin-top: 23px;
+    margin-top:23px;
 }
 
 .section-title {
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    margin-bottom: 11px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:11px;
 }
 
 .section-title h2 {
-    font-size: 14px;
+    font-size:14px;
 }
 
 .section-title a {
-    color: var(--primary);
-
-    font-size: 9px;
-    font-weight: 800;
-
-    text-decoration: none;
+    color:var(--primary);
+    font-size:9px;
+    font-weight:800;
+    text-decoration:none;
 }
 
 
-/* =====================================================
-   LIVE BANNER
-===================================================== */
+/* ===============================
+   LIVE
+================================ */
 
 .live-banner {
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 14px;
-
-    background: var(--card);
-
-    border: 1px solid
-        rgba(255,48,79,.20);
-
-    border-radius: 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px;
+    background:var(--card);
+    border:1px solid rgba(255,48,79,.20);
+    border-radius:16px;
 }
 
 .live-left {
-    display: flex;
-    align-items: center;
-    gap: 9px;
+    display:flex;
+    align-items:center;
+    gap:9px;
 }
 
 .live-dot {
-    width: 9px;
-    height: 9px;
-
-    border-radius: 50%;
-
-    background: #ff304f;
-
-    animation: pulse 1.2s infinite;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#ff304f;
+    animation:pulse 1.2s infinite;
 }
 
 @keyframes pulse {
-
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: .35;
-        transform: scale(.7);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
+    0% {opacity:1}
+    50% {opacity:.35}
+    100% {opacity:1}
 }
 
 .live-left strong {
-    font-size: 11px;
+    font-size:11px;
 }
 
 .live-left span {
-    display: block;
-
-    margin-top: 2px;
-
-    color: var(--muted);
-
-    font-size: 8px;
+    display:block;
+    margin-top:2px;
+    color:var(--muted);
+    font-size:8px;
 }
 
 .live-arrow {
-    color: #ff304f;
-    font-size: 16px;
+    color:#ff304f;
+    font-size:16px;
 }
 
 
-/* =====================================================
-   FEATURE MATCH
-===================================================== */
+/* ===============================
+   MATCH CARDS
+================================ */
 
-.feature-match {
-    margin-top: 9px;
-
-    padding: 16px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 18px;
+.home-matches {
+    margin-top:9px;
 }
 
-.feature-league {
-    text-align: center;
-
-    color: var(--muted);
-
-    font-size: 8px;
-    font-weight: 800;
-
-    text-transform: uppercase;
+.home-match {
+    display:grid;
+    grid-template-columns:1fr 65px 1fr;
+    align-items:center;
+    gap:7px;
+    padding:13px 11px;
+    margin-bottom:7px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    color:white;
+    text-decoration:none;
 }
 
-.feature-teams {
-    display: grid;
-
-    grid-template-columns:
-        1fr 70px 1fr;
-
-    align-items: center;
-
-    gap: 8px;
-
-    margin-top: 15px;
-
-    text-align: center;
+.home-team {
+    display:flex;
+    align-items:center;
+    gap:7px;
+    min-width:0;
 }
 
-.feature-team {
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 7px;
+.home-team.away {
+    justify-content:flex-end;
+    text-align:right;
 }
 
-.feature-logo {
-    width: 44px;
-    height: 44px;
-
-    display: grid;
-    place-items: center;
-
-    background: var(--card-2);
-
-    border: 1px solid var(--border);
-
-    border-radius: 13px;
-
-    font-size: 20px;
+.home-team-name {
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-size:9px;
+    font-weight:800;
 }
 
-.feature-team strong {
-    width: 100%;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-
-    font-size: 9px;
+.home-logo {
+    width:27px;
+    height:27px;
+    flex-shrink:0;
+    display:grid;
+    place-items:center;
+    background:var(--card-2);
+    border-radius:8px;
+    overflow:hidden;
 }
 
-.feature-score {
-    text-align: center;
+.home-logo img {
+    width:22px;
+    height:22px;
+    object-fit:contain;
 }
 
-.feature-score strong {
-    display: block;
-
-    font-size: 19px;
-    font-weight: 900;
+.home-score {
+    text-align:center;
 }
 
-.feature-score span {
-    display: block;
+.home-score strong {
+    display:block;
+    font-size:11px;
+    font-weight:900;
+}
 
-    margin-top: 4px;
+.home-score span {
+    display:block;
+    margin-top:3px;
+    color:var(--muted);
+    font-size:7px;
+    font-weight:800;
+}
 
-    color: var(--primary);
+.home-score.live span {
+    color:#ff304f;
+}
 
-    font-size: 8px;
-    font-weight: 800;
+.home-empty {
+    padding:25px 10px;
+    text-align:center;
+    color:var(--muted);
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    font-size:10px;
 }
 
 
-/* =====================================================
-   TODAY CARD
-===================================================== */
+/* ===============================
+   LOADING
+================================ */
 
-.today-card {
-    padding: 15px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 17px;
-}
-
-.today-top {
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    margin-bottom: 12px;
-}
-
-.today-top strong {
-    font-size: 11px;
-}
-
-.today-top span {
-    color: var(--muted);
-
-    font-size: 8px;
-}
-
-.today-game {
-    display: grid;
-
-    grid-template-columns:
-        1fr 55px 1fr;
-
-    align-items: center;
-
-    gap: 7px;
-
-    padding: 11px 0;
-
-    border-top: 1px solid var(--border);
-
-    text-align: center;
-}
-
-.today-game:first-child {
-    border-top: 0;
-}
-
-.today-team {
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    min-width: 0;
-}
-
-.today-team.away {
-    justify-content: flex-end;
-}
-
-.today-team span {
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-
-    font-size: 9px;
-    font-weight: 700;
-}
-
-.mini-logo {
-    width: 25px;
-    height: 25px;
-
-    display: grid;
-    place-items: center;
-
-    flex-shrink: 0;
-
-    background: var(--card-2);
-
-    border-radius: 8px;
-
-    font-size: 12px;
-}
-
-.today-time {
-    color: var(--muted);
-
-    font-size: 8px;
-    font-weight: 800;
+.home-loading {
+    padding:25px 10px;
+    text-align:center;
+    color:var(--muted);
+    font-size:10px;
 }
 
 
-/* =====================================================
-   DESKTOP
-===================================================== */
+/* ===============================
+   RESPONSIVE
+================================ */
 
-@media (min-width: 768px) {
+@media (min-width:768px) {
 
     .home-header {
-        padding-top: 25px;
+        padding-top:25px;
     }
 
     .welcome-box {
-        padding: 28px;
+        padding:28px;
     }
 
     .welcome-box h2 {
-        font-size: 28px;
+        font-size:28px;
     }
 
 }
@@ -502,9 +335,9 @@
 <main class="main-content home-page">
 
 
-<!-- =====================================================
+<!-- ===============================
      HEADER
-===================================================== -->
+================================ -->
 
 <header class="home-header">
 
@@ -528,10 +361,9 @@
 
     </div>
 
-
     <button
         class="home-search"
-        onclick="goToMatches()"
+        onclick="location.href='match.html'"
         aria-label="Rechercher"
     >
         🔍
@@ -540,9 +372,9 @@
 </header>
 
 
-<!-- =====================================================
+<!-- ===============================
      WELCOME
-===================================================== -->
+================================ -->
 
 <section class="welcome-box">
 
@@ -564,9 +396,9 @@
 </section>
 
 
-<!-- =====================================================
-     LIVE
-===================================================== -->
+<!-- ===============================
+     MATCHS EN DIRECT
+================================ -->
 
 <section class="home-section">
 
@@ -596,7 +428,7 @@
                 </strong>
 
                 <span>
-                    Suivez les scores en temps réel
+                    Scores en temps réel
                 </span>
 
             </div>
@@ -610,55 +442,13 @@
     </div>
 
 
-    <!-- FEATURE MATCH -->
+    <div
+        id="liveMatches"
+        class="home-matches"
+    >
 
-    <div class="feature-match">
-
-        <div class="feature-league">
-            International Club Friendly
-        </div>
-
-
-        <div class="feature-teams">
-
-            <div class="feature-team">
-
-                <div class="feature-logo">
-                    ⚽
-                </div>
-
-                <strong>
-                    Johor Darul Ta'zim
-                </strong>
-
-            </div>
-
-
-            <div class="feature-score">
-
-                <strong>
-                    - : -
-                </strong>
-
-                <span>
-                    À VENIR
-                </span>
-
-            </div>
-
-
-            <div class="feature-team">
-
-                <div class="feature-logo">
-                    ⚽
-                </div>
-
-                <strong>
-                    Chelsea
-                </strong>
-
-            </div>
-
+        <div class="home-loading">
+            🔄 Chargement des matchs...
         </div>
 
     </div>
@@ -666,9 +456,9 @@
 </section>
 
 
-<!-- =====================================================
+<!-- ===============================
      MATCHS DU JOUR
-===================================================== -->
+================================ -->
 
 <section class="home-section">
 
@@ -685,123 +475,13 @@
     </div>
 
 
-    <div class="today-card">
+    <div
+        id="todayMatches"
+        class="home-matches"
+    >
 
-        <div class="today-top">
-
-            <strong>
-                Aujourd'hui
-            </strong>
-
-            <span>
-                Football
-            </span>
-
-        </div>
-
-
-        <div class="today-game">
-
-            <div class="today-team">
-
-                <div class="mini-logo">
-                    ⚽
-                </div>
-
-                <span>
-                    Fleetwood Town U21
-                </span>
-
-            </div>
-
-
-            <div class="today-time">
-                --:--
-            </div>
-
-
-            <div class="today-team away">
-
-                <span>
-                    Preston U21
-                </span>
-
-                <div class="mini-logo">
-                    ⚽
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="today-game">
-
-            <div class="today-team">
-
-                <div class="mini-logo">
-                    ⚽
-                </div>
-
-                <span>
-                    IFK Göteborg U21
-                </span>
-
-            </div>
-
-
-            <div class="today-time">
-                --:--
-            </div>
-
-
-            <div class="today-team away">
-
-                <span>
-                    Örgryte U21
-                </span>
-
-                <div class="mini-logo">
-                    ⚽
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="today-game">
-
-            <div class="today-team">
-
-                <div class="mini-logo">
-                    ⚽
-                </div>
-
-                <span>
-                    Kalmar U21
-                </span>
-
-            </div>
-
-
-            <div class="today-time">
-                --:--
-            </div>
-
-
-            <div class="today-team away">
-
-                <span>
-                    Helsingborg U21
-                </span>
-
-                <div class="mini-logo">
-                    ⚽
-                </div>
-
-            </div>
-
+        <div class="home-loading">
+            🔄 Chargement des matchs...
         </div>
 
     </div>
@@ -809,900 +489,395 @@
 </section>
 
 
-<script>
+<!-- ===============================
+     API
+================================ -->
 
-function goToMatches() {
-    window.location.href =
-        "match.html";
-}
+<script src="api.js"></script>
 
-    </script>
-    <!-- =====================================================
-     COMPÉTITIONS POPULAIRES
-===================================================== -->
-
-<section class="home-section">
-
-    <div class="section-title">
-
-        <h2>
-            🏆 Compétitions
-        </h2>
-
-        <a href="competitions.html">
-            Voir tout
-        </a>
-
-    </div>
-
-
-    <div class="competition-grid">
-
-        <a
-            href="competitions.html"
-            class="competition-card"
-        >
-
-            <div class="competition-icon">
-                🇬🇧
-            </div>
-
-            <div>
-                <strong>
-                    Premier League
-                </strong>
-
-                <span>
-                    Angleterre
-                </span>
-            </div>
-
-        </a>
-
-
-        <a
-            href="competitions.html"
-            class="competition-card"
-        >
-
-            <div class="competition-icon">
-                🇪🇸
-            </div>
-
-            <div>
-                <strong>
-                    La Liga
-                </strong>
-
-                <span>
-                    Espagne
-                </span>
-            </div>
-
-        </a>
-
-
-        <a
-            href="competitions.html"
-            class="competition-card"
-        >
-
-            <div class="competition-icon">
-                🇮🇹
-            </div>
-
-            <div>
-                <strong>
-                    Serie A
-                </strong>
-
-                <span>
-                    Italie
-                </span>
-            </div>
-
-        </a>
-
-
-        <a
-            href="competitions.html"
-            class="competition-card"
-        >
-
-            <div class="competition-icon">
-                🇩🇪
-            </div>
-
-            <div>
-                <strong>
-                    Bundesliga
-                </strong>
-
-                <span>
-                    Allemagne
-                </span>
-            </div>
-
-        </a>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     ÉQUIPES POPULAIRES
-===================================================== -->
-
-<section class="home-section">
-
-    <div class="section-title">
-
-        <h2>
-            ⭐ Équipes populaires
-        </h2>
-
-        <a href="match.html">
-            Explorer
-        </a>
-
-    </div>
-
-
-    <div class="teams-scroll">
-
-
-        <a
-            href="match.html"
-            class="popular-team"
-        >
-
-            <div class="popular-logo">
-                🔵
-            </div>
-
-            <strong>
-                Chelsea
-            </strong>
-
-            <span>
-                Angleterre
-            </span>
-
-        </a>
-
-
-        <a
-            href="match.html"
-            class="popular-team"
-        >
-
-            <div class="popular-logo">
-                🔴
-            </div>
-
-            <strong>
-                Arsenal
-            </strong>
-
-            <span>
-                Angleterre
-            </span>
-
-        </a>
-
-
-        <a
-            href="match.html"
-            class="popular-team"
-        >
-
-            <div class="popular-logo">
-                ⚪
-            </div>
-
-            <strong>
-                Real Madrid
-            </strong>
-
-            <span>
-                Espagne
-            </span>
-
-        </a>
-
-
-        <a
-            href="match.html"
-            class="popular-team"
-        >
-
-            <div class="popular-logo">
-                🔴
-            </div>
-
-            <strong>
-                Barcelona
-            </strong>
-
-            <span>
-                Espagne
-            </span>
-
-        </a>
-
-
-        <a
-            href="match.html"
-            class="popular-team"
-        >
-
-            <div class="popular-logo">
-                🔴
-            </div>
-
-            <strong>
-                Bayern
-            </strong>
-
-            <span>
-                Allemagne
-            </span>
-
-        </a>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     NEWS
-===================================================== -->
-
-<section class="home-section">
-
-    <div class="section-title">
-
-        <h2>
-            📰 Dernières actualités
-        </h2>
-
-        <a href="news.html">
-            Voir tout
-        </a>
-
-    </div>
-
-
-    <div class="news-list">
-
-
-        <a
-            href="news.html"
-            class="news-card"
-        >
-
-            <div class="news-image">
-                ⚽
-            </div>
-
-            <div class="news-content">
-
-                <span>
-                    FOOTBALL
-                </span>
-
-                <h3>
-                    Toute l'actualité
-                    football au même endroit
-                </h3>
-
-                <p>
-                    Résultats, matchs et
-                    informations football.
-                </p>
-
-            </div>
-
-        </a>
-
-
-        <a
-            href="news.html"
-            class="news-card"
-        >
-
-            <div class="news-image">
-                🏆
-            </div>
-
-            <div class="news-content">
-
-                <span>
-                    COMPÉTITIONS
-                </span>
-
-                <h3>
-                    Suivez vos compétitions
-                    préférées
-                </h3>
-
-                <p>
-                    Retrouvez les grands
-                    championnats du monde.
-                </p>
-
-            </div>
-
-        </a>
-
-
-        <a
-            href="news.html"
-            class="news-card"
-        >
-
-            <div class="news-image">
-                🔥
-            </div>
-
-            <div class="news-content">
-
-                <span>
-                    PREZISCORE
-                </span>
-
-                <h3>
-                    Votre football,
-                    votre plateforme
-                </h3>
-
-                <p>
-                    PreziScore évolue pour
-                    devenir votre référence.
-                </p>
-
-            </div>
-
-        </a>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     PREZISCORE MESSAGE
-===================================================== -->
-
-<section class="prezi-message">
-
-    <div class="prezi-message-icon">
-        ⚽
-    </div>
-
-    <div>
-
-        <h3>
-            PreziScore
-        </h3>
-
-        <p>
-            Le football simplement,
-            rapidement et partout.
-        </p>
-
-    </div>
-
-</section>
-
-
-<style>
-
-/* =====================================================
-   COMPÉTITIONS
-===================================================== */
-
-.competition-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 8px;
-
-}
-
-
-.competition-card {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    min-width: 0;
-
-    padding: 13px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 15px;
-
-    color: white;
-
-    text-decoration: none;
-
-}
-
-
-.competition-card:active,
-.popular-team:active,
-.news-card:active {
-
-    transform: scale(.97);
-
-}
-
-
-.competition-icon {
-
-    width: 35px;
-    height: 35px;
-
-    display: grid;
-
-    place-items: center;
-
-    flex-shrink: 0;
-
-    background: var(--card-2);
-
-    border-radius: 10px;
-
-    font-size: 18px;
-
-}
-
-
-.competition-card strong {
-
-    display: block;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-
-    font-size: 9px;
-
-}
-
-
-.competition-card span {
-
-    display: block;
-
-    margin-top: 3px;
-
-    color: var(--muted);
-
-    font-size: 7px;
-
-}
-
-
-/* =====================================================
-   TEAMS
-===================================================== */
-
-.teams-scroll {
-
-    display: flex;
-
-    gap: 9px;
-
-    overflow-x: auto;
-
-    padding-bottom: 5px;
-
-    scrollbar-width: none;
-
-}
-
-
-.teams-scroll::-webkit-scrollbar {
-    display: none;
-}
-
-
-.popular-team {
-
-    width: 92px;
-
-    flex-shrink: 0;
-
-    padding: 12px 8px;
-
-    text-align: center;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 15px;
-
-    color: white;
-
-    text-decoration: none;
-
-}
-
-
-.popular-logo {
-
-    width: 40px;
-    height: 40px;
-
-    display: grid;
-
-    place-items: center;
-
-    margin: 0 auto 7px;
-
-    background: var(--card-2);
-
-    border-radius: 12px;
-
-    font-size: 18px;
-
-}
-
-
-.popular-team strong {
-
-    display: block;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-
-    font-size: 8px;
-
-}
-
-
-.popular-team span {
-
-    display: block;
-
-    margin-top: 3px;
-
-    color: var(--muted);
-
-    font-size: 7px;
-
-}
-
-
-/* =====================================================
-   NEWS
-===================================================== */
-
-.news-list {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 8px;
-
-}
-
-
-.news-card {
-
-    display: grid;
-
-    grid-template-columns:
-        75px 1fr;
-
-    gap: 11px;
-
-    padding: 10px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 15px;
-
-    color: white;
-
-    text-decoration: none;
-
-}
-
-
-.news-image {
-
-    min-height: 72px;
-
-    display: grid;
-
-    place-items: center;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--card-2),
-            var(--card)
-        );
-
-    border-radius: 11px;
-
-    font-size: 25px;
-
-}
-
-
-.news-content {
-
-    min-width: 0;
-
-}
-
-
-.news-content span {
-
-    color: var(--primary);
-
-    font-size: 7px;
-
-    font-weight: 900;
-
-}
-
-
-.news-content h3 {
-
-    margin-top: 5px;
-
-    font-size: 10px;
-
-    line-height: 1.35;
-
-}
-
-
-.news-content p {
-
-    margin-top: 4px;
-
-    color: var(--muted);
-
-    font-size: 7px;
-
-    line-height: 1.4;
-
-}
-
-
-/* =====================================================
-   MESSAGE
-===================================================== */
-
-.prezi-message {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 11px;
-
-    margin-top: 22px;
-
-    padding: 15px;
-
-    background:
-        rgba(0,230,118,.06);
-
-    border: 1px solid
-        rgba(0,230,118,.12);
-
-    border-radius: 16px;
-
-}
-
-
-.prezi-message-icon {
-
-    width: 38px;
-    height: 38px;
-
-    display: grid;
-
-    place-items: center;
-
-    flex-shrink: 0;
-
-    background:
-        rgba(0,230,118,.10);
-
-    border-radius: 11px;
-
-    font-size: 18px;
-
-}
-
-
-.prezi-message h3 {
-
-    font-size: 11px;
-
-}
-
-
-.prezi-message p {
-
-    margin-top: 3px;
-
-    color: var(--muted);
-
-    font-size: 8px;
-
-}
-
-
-@media (min-width: 768px) {
-
-    .competition-grid {
-
-        grid-template-columns:
-            repeat(4, 1fr);
-
-    }
-
-    .news-list {
-
-        display: grid;
-
-        grid-template-columns:
-            repeat(3, 1fr);
-
-    }
-
-}
-
-        </style>
-        <!-- =====================================================
-     BOTTOM NAVIGATION
-===================================================== -->
-
-<nav class="bottom-nav">
-
-    <a
-        href="index.html"
-        class="nav-item active"
-    >
-        <span>⌂</span>
-        <small>Accueil</small>
-    </a>
-
-
-    <a
-        href="match.html"
-        class="nav-item"
-    >
-        <span>⚽</span>
-        <small>Matchs</small>
-    </a>
-
-
-    <a
-        href="competitions.html"
-        class="nav-item"
-    >
-        <span>🏆</span>
-        <small>Compétitions</small>
-    </a>
-
-
-    <a
-        href="news.html"
-        class="nav-item"
-    >
-        <span>📰</span>
-        <small>News</small>
-    </a>
-
-
-    <a
-        href="profile.html"
-        class="nav-item"
-    >
-        <span>👤</span>
-        <small>Profil</small>
-    </a>
-
-</nav>
-
-
-<!-- =====================================================
-     ACCUEIL — JAVASCRIPT
-===================================================== -->
 
 <script>
 
 "use strict";
 
 
-/* =====================================================
-   SEARCH
-===================================================== */
+/* ===============================
+   ELEMENTS
+================================ */
 
-function goToMatches() {
+const liveBox =
+    document.getElementById(
+        "liveMatches"
+    );
 
-    window.location.href =
-        "match.html";
-
-}
-
-
-/* =====================================================
-   ACTIVE NAVIGATION
-===================================================== */
-
-document
-    .querySelectorAll(".nav-item")
-    .forEach(item => {
-
-        item.addEventListener(
-            "click",
-            function() {
-
-                document
-                    .querySelectorAll(
-                        ".nav-item"
-                    )
-                    .forEach(nav => {
-
-                        nav.classList.remove(
-                            "active"
-                        );
-
-                    });
+const todayBox =
+    document.getElementById(
+        "todayMatches"
+    );
 
 
-                this.classList.add(
-                    "active"
-                );
+/* ===============================
+   SAFE
+================================ */
+
+function safe(value) {
+
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            function(char) {
+
+                return {
+                    "&":"&amp;",
+                    "<":"&lt;",
+                    ">":"&gt;",
+                    '"':"&quot;",
+                    "'":"&#039;"
+                }[char];
 
             }
         );
 
-    });
+}
 
 
-/* =====================================================
-   CURRENT YEAR
-===================================================== */
+/* ===============================
+   MATCH DATA
+================================ */
 
-console.log(
-    "⚽ PreziScore Accueil chargé"
-);
+function team(match, side) {
+
+    return match?.[side] || {};
+
+}
+
+
+function teamName(match, side) {
+
+    return (
+        team(match, side).name ||
+        "Équipe"
+    );
+
+}
+
+
+function teamLogo(match, side) {
+
+    return (
+        team(match, side).logo ||
+        ""
+    );
+
+}
+
+
+function score(match, side) {
+
+    const value =
+        team(match, side).score;
+
+    return value ?? "-";
+
+}
+
+
+function status(match) {
+
+    return (
+        match?.status ||
+        "upcoming"
+    );
+
+}
+
+
+function minute(match) {
+
+    return (
+        match?.minute ??
+        ""
+    );
+
+}
+
+
+/* ===============================
+   MATCH CARD
+================================ */
+
+function matchCard(match) {
+
+    const home =
+        teamName(match,"home");
+
+    const away =
+        teamName(match,"away");
+
+    const homeLogo =
+        teamLogo(match,"home");
+
+    const awayLogo =
+        teamLogo(match,"away");
+
+    const state =
+        status(match);
+
+    let statusLabel = "À VENIR";
+
+    if (state === "live") {
+
+        statusLabel =
+            minute(match)
+                ? `🔴 ${minute(match)}'`
+                : "🔴 LIVE";
+
+    }
+
+    if (state === "finished") {
+        statusLabel = "TERMINÉ";
+    }
+
+    const scoreText =
+        state === "upcoming"
+            ? "-- : --"
+            : `${score(match,"home")} : ${score(match,"away")}`;
+
+
+    const id =
+        match?.id ??
+        match?.fixture?.id ??
+        "";
+
+
+    return `
+
+        <a
+            class="home-match"
+            href="match-detail.html?match=${encodeURIComponent(id)}"
+        >
+
+            <div class="home-team">
+
+                <div class="home-logo">
+
+                    ${
+                        homeLogo
+                        ? `
+                            <img
+                                src="${safe(homeLogo)}"
+                                alt="${safe(home)}"
+                            >
+                          `
+                        : "⚽"
+                    }
+
+                </div>
+
+                <span class="home-team-name">
+                    ${safe(home)}
+                </span>
+
+            </div>
+
+
+            <div class="home-score ${
+                state === "live"
+                    ? "live"
+                    : ""
+            }">
+
+                <strong>
+                    ${safe(scoreText)}
+                </strong>
+
+                <span>
+                    ${safe(statusLabel)}
+                </span>
+
+            </div>
+
+
+            <div class="home-team away">
+
+                <span class="home-team-name">
+                    ${safe(away)}
+                </span>
+
+                <div class="home-logo">
+
+                    ${
+                        awayLogo
+                        ? `
+                            <img
+                                src="${safe(awayLogo)}"
+                                alt="${safe(away)}"
+                            >
+                          `
+                        : "⚽"
+                    }
+
+                </div>
+
+            </div>
+
+        </a>
+
+    `;
+
+}
+
+
+/* ===============================
+   RENDER
+================================ */
+
+function renderMatches(
+    container,
+    matches,
+    emptyText
+) {
+
+    if (
+        !Array.isArray(matches) ||
+        matches.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="home-empty">
+                ${safe(emptyText)}
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        matches
+            .map(matchCard)
+            .join("");
+
+}
+
+
+/* ===============================
+   LOAD LIVE
+================================ */
+
+async function loadLive() {
+
+    try {
+
+        if (
+            !window.PreziAPI ||
+            typeof PreziAPI.getLiveMatches !==
+            "function"
+        ) {
+
+            throw new Error(
+                "getLiveMatches indisponible"
+            );
+
+        }
+
+
+        const matches =
+            await PreziAPI.getLiveMatches();
+
+
+        renderMatches(
+            liveBox,
+            matches,
+            "Aucun match en direct actuellement."
+        );
+
+
+    } catch(error) {
+
+        console.error(
+            "Erreur LIVE:",
+            error
+        );
+
+        liveBox.innerHTML = `
+
+            <div class="home-empty">
+                Impossible de charger les matchs en direct.
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* ===============================
+   LOAD TODAY
+================================ */
+
+async function loadToday() {
+
+    try {
+
+        if (
+            !window.PreziAPI ||
+            typeof PreziAPI.getTodayMatches !==
+            "function"
+        ) {
+
+            throw new Error(
+                "getTodayMatches indisponible"
+            );
+
+        }
+
+
+        const matches =
+            await PreziAPI.getTodayMatches();
+
+
+        renderMatches(
+            todayBox,
+            matches,
+            "Aucun match disponible aujourd'hui."
+        );
+
+
+    } catch(error) {
+
+        console.error(
+            "Erreur matchs du jour:",
+            error
+        );
+
+        todayBox.innerHTML = `
+
+            <div class="home-empty">
+                Impossible de charger les matchs.
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* ===============================
+   START
+================================ */
+
+loadLive();
+
+loadToday();
+
 
 </script>
 
 
-</body>
-
-</html>
+<!-- FIN PARTIE 1 -->
