@@ -859,11 +859,11 @@ function createMatchCard(match) {
             "click",
             () => {
 
-                window.location.href =
-                    "match-details.html?id=" +
-                    encodeURIComponent(
-                        matchId
-                    );
+             window.location.href =
+    "match-details.html?match=" +
+    encodeURIComponent(
+        matchId
+    );  
 
             }
         );
