@@ -6,744 +6,354 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0">
 
 <meta name="theme-color"
-      content="#080b10">
-
-<meta name="description"
-      content="PreziScore — Détails du match">
+content="#080b10">
 
 <title>PreziScore — Match</title>
 
 <link rel="stylesheet" href="style.css">
 
-
 <style>
 
-/* =====================================================
-   PREZISCORE — MATCH DETAILS
-===================================================== */
+/* ===============================
+   MATCH DETAILS
+================================ */
 
-.details-page {
-    padding-bottom: 100px;
+.details-page{
+    padding-bottom:100px;
 }
 
-
-/* =====================================================
-   RETOUR
-===================================================== */
-
-.back-row {
-    padding: 18px 0 8px;
+.back-row{
+    padding:16px 0 8px;
 }
 
-.back-btn {
-    border: 0;
-    background: transparent;
-
-    color: var(--muted);
-
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 800;
-
-    cursor: pointer;
+.back-btn{
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:800;
 }
 
-
-/* =====================================================
+/* ===============================
    HEADER MATCH
-===================================================== */
+================================ */
 
-.match-header-card {
-    margin-top: 10px;
-
-    padding: 20px 14px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 20px;
-
-    text-align: center;
+.match-header-card{
+    margin-top:8px;
+    padding:20px 12px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    text-align:center;
 }
 
-
-/* =====================================================
-   COMPÉTITION
-===================================================== */
-
-.detail-competition {
-    color: var(--muted);
-
-    font-size: 10px;
-    font-weight: 800;
-
-    margin-bottom: 12px;
+.detail-competition{
+    color:var(--muted);
+    font-size:10px;
+    font-weight:800;
+    margin-bottom:12px;
 }
 
-
-/* =====================================================
-   STATUT
-===================================================== */
-
-.detail-status {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 6px;
-
-    padding: 5px 9px;
-
-    border-radius: 8px;
-
-    font-size: 9px;
-    font-weight: 900;
-
-    margin-bottom: 18px;
+.detail-status{
+    display:inline-flex;
+    padding:5px 9px;
+    border-radius:8px;
+    font-size:9px;
+    font-weight:900;
+    margin-bottom:18px;
 }
 
-.detail-status.live {
-    color: #ff304f;
-
-    background:
-        rgba(255,48,79,0.10);
+.detail-status.live{
+    color:#ff304f;
+    background:rgba(255,48,79,.10);
 }
 
-.detail-status.finished {
-    color: #8b95a3;
-
-    background:
-        rgba(139,149,163,0.10);
+.detail-status.finished{
+    color:#8b95a3;
+    background:rgba(139,149,163,.10);
 }
 
-.detail-status.upcoming {
-    color: var(--primary);
-
-    background:
-        rgba(0,230,118,0.08);
+.detail-status.upcoming{
+    color:var(--primary);
+    background:rgba(0,230,118,.08);
 }
 
+/* ===============================
+   TEAMS
+================================ */
 
-/* =====================================================
-   ÉQUIPES
-===================================================== */
-
-.detail-teams {
-    display: grid;
-
-    grid-template-columns:
-        1fr 80px 1fr;
-
-    align-items: center;
-
-    gap: 8px;
+.detail-teams{
+    display:grid;
+    grid-template-columns:1fr 75px 1fr;
+    align-items:center;
+    gap:8px;
 }
 
-
-.detail-team {
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 9px;
-
-    min-width: 0;
+.detail-team{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    min-width:0;
 }
 
-
-.detail-logo {
-    width: 58px;
-    height: 58px;
-
-    display: grid;
-
-    place-items: center;
-
-    background: var(--card-2);
-
-    border: 1px solid var(--border);
-
-    border-radius: 15px;
-
-    font-size: 23px;
-
-    overflow: hidden;
+.detail-logo{
+    width:56px;
+    height:56px;
+    display:grid;
+    place-items:center;
+    background:var(--card-2);
+    border:1px solid var(--border);
+    border-radius:14px;
+    font-size:22px;
+    overflow:hidden;
 }
 
-
-.detail-logo img {
-    width: 44px;
-    height: 44px;
-
-    object-fit: contain;
+.detail-logo img{
+    width:43px;
+    height:43px;
+    object-fit:contain;
 }
 
-
-.detail-team-name {
-    width: 100%;
-
-    font-size: 10px;
-
-    font-weight: 800;
-
-    line-height: 1.3;
+.detail-team-name{
+    width:100%;
+    font-size:10px;
+    font-weight:800;
+    line-height:1.3;
 }
 
-
-.detail-score {
-    font-size: 27px;
-
-    font-weight: 900;
-
-    letter-spacing: -1px;
+.detail-score{
+    font-size:26px;
+    font-weight:900;
 }
 
-
-.detail-score small {
-    display: block;
-
-    margin-top: 6px;
-
-    color: var(--muted);
-
-    font-size: 9px;
-
-    font-weight: 700;
+.detail-score small{
+    display:block;
+    margin-top:5px;
+    color:var(--muted);
+    font-size:9px;
 }
 
+/* ===============================
+   INFO
+================================ */
 
-/* =====================================================
-   INFORMATIONS MATCH
-===================================================== */
-
-.match-info {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 7px;
-
-    margin-top: 17px;
+.match-info{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:6px;
+    margin-top:17px;
 }
 
-
-.info-box {
-    padding: 10px 5px;
-
-    background: var(--card-2);
-
-    border-radius: 11px;
-
-    text-align: center;
+.info-box{
+    padding:9px 4px;
+    background:var(--card-2);
+    border-radius:10px;
+    text-align:center;
 }
 
-
-.info-box span {
-    display: block;
-
-    color: var(--muted);
-
-    font-size: 8px;
-
-    margin-bottom: 4px;
+.info-box span{
+    display:block;
+    color:var(--muted);
+    font-size:8px;
+    margin-bottom:4px;
 }
 
-
-.info-box strong {
-    display: block;
-
-    font-size: 9px;
-
-    line-height: 1.3;
+.info-box strong{
+    display:block;
+    font-size:8px;
 }
 
+/* ===============================
+   TABS
+================================ */
 
-/* =====================================================
-   ONGLETS
-===================================================== */
-
-.detail-tabs {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 7px;
-
-    margin-top: 18px;
+.detail-tabs{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:6px;
+    margin-top:16px;
 }
 
-
-.detail-tab {
-    height: 40px;
-
-    border: 1px solid var(--border);
-
-    border-radius: 11px;
-
-    background: var(--card);
-
-    color: var(--muted);
-
-    font-family: inherit;
-
-    font-size: 9px;
-
-    font-weight: 900;
-
-    cursor: pointer;
+.detail-tab{
+    height:40px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--card);
+    color:var(--muted);
+    font-size:9px;
+    font-weight:900;
 }
 
-
-.detail-tab.active {
-    color: var(--primary);
-
-    border-color:
-        rgba(0,230,118,0.30);
-
-    background:
-        rgba(0,230,118,0.08);
+.detail-tab.active{
+    color:var(--primary);
+    border-color:rgba(0,230,118,.3);
+    background:rgba(0,230,118,.08);
 }
 
+/* ===============================
+   CONTENT
+================================ */
 
-/* =====================================================
-   CONTENU
-===================================================== */
-
-.detail-content {
-    margin-top: 12px;
+.detail-content{
+    margin-top:12px;
 }
 
-
-.detail-panel {
-    padding: 16px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 16px;
+.detail-panel{
+    padding:15px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
 }
 
-
-.panel-title {
-    margin-bottom: 13px;
-
-    font-size: 12px;
-
-    font-weight: 900;
+.panel-title{
+    margin-bottom:14px;
+    font-size:12px;
+    font-weight:900;
 }
 
-
-/* =====================================================
-   LOADING
-===================================================== */
-
-.detail-loading {
-    padding: 35px 10px;
-
-    text-align: center;
-
-    color: var(--muted);
-
-    font-size: 10px;
+.detail-loading{
+    padding:30px 10px;
+    text-align:center;
+    color:var(--muted);
+    font-size:10px;
 }
 
-
-/* =====================================================
-   ERREUR
-===================================================== */
-
-.detail-error {
-    padding: 30px 15px;
-
-    text-align: center;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 16px;
+.detail-error{
+    padding:28px 12px;
+    text-align:center;
 }
 
-
-.detail-error div {
-    font-size: 30px;
+.detail-error div{
+    font-size:30px;
 }
 
-
-.detail-error h3 {
-    margin-top: 8px;
-
-    font-size: 13px;
+.detail-error h3{
+    font-size:13px;
+    margin:8px 0;
 }
 
-
-.detail-error p {
-    margin-top: 6px;
-
-    color: var(--muted);
-
-    font-size: 10px;
+.detail-error p{
+    color:var(--muted);
+    font-size:10px;
 }
 
+/* ===============================
+   STATISTICS
+================================ */
 
-/* =====================================================
-   STATISTIQUES — HEADER ÉQUIPES
-===================================================== */
-
-.stats-container {
-    width: 100%;
+.statistics-box{
+    width:100%;
 }
 
-
-.stats-title {
-    padding: 5px 0 14px;
-
-    font-size: 14px;
-
-    font-weight: 900;
+.stats-teams{
+    display:grid;
+    grid-template-columns:1fr 90px 1fr;
+    align-items:center;
+    margin-bottom:18px;
 }
 
-
-.stats-teams {
-    display: grid;
-
-    grid-template-columns:
-        1fr 90px 1fr;
-
-    align-items: center;
-
-    gap: 6px;
-
-    padding: 13px 10px;
-
-    margin-bottom: 12px;
-
-    background: var(--card-2);
-
-    border-radius: 14px;
-
-    text-align: center;
+.stats-team{
+    font-size:10px;
+    font-weight:900;
 }
 
-
-.stats-team-home,
-.stats-team-away {
-    font-size: 10px;
-
-    font-weight: 900;
-
-    line-height: 1.3;
+.stats-team.home{
+    text-align:left;
 }
 
-
-.stats-team-home {
-    text-align: left;
+.stats-team.away{
+    text-align:right;
 }
 
-
-.stats-team-away {
-    text-align: right;
+.stats-title{
+    text-align:center;
+    color:var(--muted);
+    font-size:9px;
+    font-weight:900;
 }
 
-
-.stats-vs {
-    color: var(--muted);
-
-    font-size: 8px;
-
-    font-weight: 900;
+.stat-item{
+    margin-bottom:14px;
 }
 
-
-/* =====================================================
-   SECTION STATISTIQUES
-===================================================== */
-
-.stats-section {
-    margin-top: 12px;
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 14px;
-
-    overflow: hidden;
+.stat-values{
+    display:grid;
+    grid-template-columns:42px 1fr 42px;
+    align-items:center;
+    gap:7px;
 }
 
-
-.stats-section-title {
-    padding: 11px 12px;
-
-    background: var(--card-2);
-
-    color: var(--primary);
-
-    font-size: 9px;
-
-    font-weight: 900;
-
-    letter-spacing: .4px;
+.stat-value{
+    font-size:10px;
+    font-weight:900;
 }
 
-
-/* =====================================================
-   LIGNE STATISTIQUE
-===================================================== */
-
-.stat-line {
-    display: grid;
-
-    grid-template-columns:
-        55px 1fr 55px;
-
-    align-items: center;
-
-    min-height: 42px;
-
-    padding: 7px 10px;
-
-    border-bottom: 1px solid var(--border);
-
-    text-align: center;
+.stat-value.home{
+    text-align:left;
 }
 
-
-.stat-line:last-child {
-    border-bottom: 0;
+.stat-value.away{
+    text-align:right;
 }
 
-
-.stat-value {
-    font-size: 11px;
-
-    font-weight: 900;
+.stat-name{
+    text-align:center;
+    color:var(--muted);
+    font-size:8px;
+    font-weight:800;
 }
 
-
-.stat-value.home {
-    text-align: left;
+.stat-bars{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:3px;
+    margin-top:5px;
 }
 
-
-.stat-value.away {
-    text-align: right;
+.stat-bar{
+    height:5px;
+    background:var(--card-2);
+    border-radius:5px;
+    overflow:hidden;
 }
 
-
-.stat-label {
-    color: var(--muted);
-
-    font-size: 9px;
-
-    font-weight: 700;
-
-    line-height: 1.3;
-
-    text-align: center;
+.stat-fill{
+    height:100%;
+    background:var(--primary);
+    border-radius:5px;
 }
-
-
-/* =====================================================
-   BARRE STATISTIQUE
-===================================================== */
-
-.stat-progress {
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 3px;
-
-    padding: 0 10px 8px;
-}
-
-
-.stat-progress-side {
-    height: 3px;
-
-    background: var(--card-2);
-
-    border-radius: 5px;
-
-    overflow: hidden;
-}
-
-
-.stat-progress-fill {
-    height: 100%;
-
-    background: var(--primary);
-
-    border-radius: 5px;
-}
-
-
-.stat-progress-fill.away {
-    margin-left: auto;
-}
-
-
-/* =====================================================
-   AUCUNE STATISTIQUE
-===================================================== */
-
-.stats-empty {
-    padding: 20px 5px;
-
-    color: var(--muted);
-
-    font-size: 10px;
-
-    line-height: 1.6;
-
-    text-align: center;
-}
-
-
-/* =====================================================
-   ÉVÉNEMENTS
-===================================================== */
-
-.event-row {
-    display: grid;
-
-    grid-template-columns:
-        45px 1fr 45px;
-
-    align-items: center;
-
-    gap: 8px;
-
-    padding: 11px 0;
-
-    border-bottom: 1px solid var(--border);
-
-    font-size: 9px;
-}
-
-
-.event-row:last-child {
-    border-bottom: 0;
-}
-
-
-.event-time {
-    color: var(--primary);
-
-    font-weight: 900;
-}
-
-
-.event-center {
-    text-align: center;
-
-    font-weight: 700;
-}
-
-
-.event-team {
-    color: var(--muted);
-
-    font-size: 8px;
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 360px) {
-
-    .detail-teams {
-        grid-template-columns:
-            1fr 70px 1fr;
-    }
-
-
-    .detail-score {
-        font-size: 23px;
-    }
-
-
-    .stats-teams {
-        grid-template-columns:
-            1fr 45px 1fr;
-    }
-
-
-    .stat-line {
-        grid-template-columns:
-            48px 1fr 48px;
-    }
-
-}
-
 </style>
 
 </head>
 
-
 <body>
-
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
 
 <header class="top-header">
 
     <div class="brand">
 
-        <div class="brand-ball">
-            ⚽
-        </div>
+        <div class="brand-ball">⚽</div>
 
         <div>
-
-            <h1>
-                Prezi<span>Score</span>
-            </h1>
-
-            <p>
-                Football en direct
-            </p>
-
+            <h1>Prezi<span>Score</span></h1>
+            <p>Football en direct</p>
         </div>
 
     </div>
 
-
     <button
         class="search-btn"
         onclick="location.href='match.html'"
-        aria-label="Rechercher"
-    >
-        🔍
-    </button>
+    >🔍</button>
 
 </header>
 
 
-<!-- =====================================================
-     MAIN
-===================================================== -->
-
 <main class="main-content details-page">
-
-
-    <!-- RETOUR -->
 
     <div class="back-row">
 
@@ -757,10 +367,6 @@
     </div>
 
 
-    <!-- =================================================
-         MATCH HEADER
-    ================================================= -->
-
     <section
         id="matchHeader"
         class="match-header-card"
@@ -773,10 +379,6 @@
     </section>
 
 
-    <!-- =================================================
-         TABS
-    ================================================= -->
-
     <div class="detail-tabs">
 
         <button
@@ -786,14 +388,12 @@
             Résumé
         </button>
 
-
         <button
             class="detail-tab"
             data-tab="stats"
         >
             Statistiques
         </button>
-
 
         <button
             class="detail-tab"
@@ -804,10 +404,6 @@
 
     </div>
 
-
-    <!-- =================================================
-         CONTENT
-    ================================================= -->
 
     <section
         id="detailContent"
@@ -820,112 +416,878 @@
 
     </section>
 
-
 </main>
 
 
-<!-- =====================================================
-     NAVIGATION
-===================================================== -->
-
 <nav class="bottom-nav">
 
-
-    <a
-        href="index.html"
-        class="nav-item"
-    >
+    <a href="index.html" class="nav-item">
 
         <span>⌂</span>
-
-        <small>
-            Accueil
-        </small>
+        <small>Accueil</small>
 
     </a>
 
-
-    <a
-        href="match.html"
-        class="nav-item active"
-    >
+    <a href="match.html" class="nav-item active">
 
         <span>⚽</span>
-
-        <small>
-            Matchs
-        </small>
+        <small>Matchs</small>
 
     </a>
 
-
-    <a
-        href="competitions.html"
-        class="nav-item"
-    >
+    <a href="competitions.html" class="nav-item">
 
         <span>🏆</span>
-
-        <small>
-            Compétitions
-        </small>
+        <small>Compétitions</small>
 
     </a>
 
-
-    <a
-        href="news.html"
-        class="nav-item"
-    >
+    <a href="news.html" class="nav-item">
 
         <span>📰</span>
-
-        <small>
-            News
-        </small>
+        <small>News</small>
 
     </a>
 
-
-    <a
-        href="profile.html"
-        class="nav-item"
-    >
+    <a href="profile.html" class="nav-item">
 
         <span>👤</span>
-
-        <small>
-            Profil
-        </small>
+        <small>Profil</small>
 
     </a>
-
 
 </nav>
 
 
-<!-- =====================================================
-     API
-===================================================== -->
-
 <script src="api.js"></script>
 
 
-<!-- =====================================================
-     PARTIE 2 APRE
-===================================================== -->
-
 <script>
 
-/*
-   ⚠️ PA KOLE ANYEN LA ANKÒ.
+"use strict";
 
-   Pati 2 ap kontinye egzakteman
-   anba liy sa a.
-*/
+
+const matchHeader =
+    document.getElementById("matchHeader");
+
+const detailContent =
+    document.getElementById("detailContent");
+
+const tabs =
+    document.querySelectorAll(".detail-tab");
+
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+/* SUPPORT ?match= ET ?id= */
+
+const matchId =
+    params.get("match") ||
+    params.get("id");
+
+
+console.log(
+    "⚽ PREZISCORE MATCH:",
+    matchId
+);
+
+
+/* ===============================
+   HELPERS
+================================ */
+
+function safe(value){
+
+    return String(value ?? "")
+        .replace(/[&<>"']/g,char => ({
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+        }[char]));
+
+}
+
+
+function statusOf(match){
+
+    return String(
+        match?.status || "upcoming"
+    ).toLowerCase();
+
+}
+
+
+function nameOf(match,side){
+
+    return (
+        match?.[side]?.name ||
+        "Équipe"
+    );
+
+}
+
+
+function logoOf(match,side){
+
+    return (
+        match?.[side]?.logo ||
+        ""
+    );
+
+}
+
+
+function scoreOf(match,side){
+
+    return (
+        match?.[side]?.score ??
+        "-"
+    );
+
+}
+
+
+function minuteOf(match){
+
+    return (
+        match?.minute ??
+        null
+    );
+
+}
+
+
+function statusLabel(match){
+
+    const status =
+        statusOf(match);
+
+    if(status === "live"){
+
+        const minute =
+            minuteOf(match);
+
+        return minute !== null
+            ? `🔴 LIVE • ${minute}'`
+            : "🔴 LIVE";
+
+    }
+
+    if(status === "finished")
+        return "TERMINÉ";
+
+    return "À VENIR";
+
+}
+
+
+/* ===============================
+   LOAD MATCH
+================================ */
+
+async function loadMatch(){
+
+    if(!matchId){
+
+        showError(
+            "Match introuvable",
+            "Aucun identifiant de match n'a été fourni."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !window.PreziAPI ||
+        typeof PreziAPI.getMatchById !==
+        "function"
+    ){
+
+        showError(
+            "API indisponible",
+            "La fonction du match est absente de api.js."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const match =
+            await PreziAPI.getMatchById(
+                matchId
+            );
+
+
+        if(!match){
+
+            showError(
+                "Match introuvable",
+                "Impossible de trouver ce match."
+            );
+
+            return;
+
+        }
+
+
+        window.currentMatch =
+            match;
+
+
+        renderHeader(match);
+
+        renderSummary(match);
+
+    }
+
+    catch(error){
+
+        console.error(
+            "❌ Match:",
+            error
+        );
+
+        showError(
+            "Erreur de chargement",
+            "Impossible de charger le match."
+        );
+
+    }
+
+}
+
+
+/* ===============================
+   HEADER
+================================ */
+
+function renderHeader(match){
+
+    const home =
+        nameOf(match,"home");
+
+    const away =
+        nameOf(match,"away");
+
+    const homeLogo =
+        logoOf(match,"home");
+
+    const awayLogo =
+        logoOf(match,"away");
+
+    const status =
+        statusOf(match);
+
+
+    matchHeader.innerHTML = `
+
+        <div class="detail-competition">
+
+            🏆 ${safe(
+                match.competition ||
+                "Football"
+            )}
+
+        </div>
+
+
+        <div class="detail-status ${safe(status)}">
+
+            ${safe(
+                statusLabel(match)
+            )}
+
+        </div>
+
+
+        <div class="detail-teams">
+
+
+            <div class="detail-team">
+
+                <div class="detail-logo">
+
+                    ${
+                        homeLogo
+                        ? `<img
+                            src="${safe(homeLogo)}"
+                            alt="${safe(home)}"
+                          >`
+                        : "⚽"
+                    }
+
+                </div>
+
+                <div class="detail-team-name">
+                    ${safe(home)}
+                </div>
+
+            </div>
+
+
+            <div class="detail-score">
+
+                ${safe(scoreOf(match,"home"))}
+                :
+                ${safe(scoreOf(match,"away"))}
+
+                <small>
+
+                    ${
+                        status === "live"
+                        ? `${safe(minuteOf(match) ?? "")}'`
+                        : status === "finished"
+                        ? "FT"
+                        : "À venir"
+                    }
+
+                </small>
+
+            </div>
+
+
+            <div class="detail-team">
+
+                <div class="detail-logo">
+
+                    ${
+                        awayLogo
+                        ? `<img
+                            src="${safe(awayLogo)}"
+                            alt="${safe(away)}"
+                          >`
+                        : "⚽"
+                    }
+
+                </div>
+
+                <div class="detail-team-name">
+                    ${safe(away)}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="match-info">
+
+            <div class="info-box">
+
+                <span>DATE</span>
+
+                <strong>
+                    ${formatDate(match.time)}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>STADE</span>
+
+                <strong>
+                    ${safe(match.venue || "—")}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>ARBITRE</span>
+
+                <strong>
+                    ${safe(match.referee || "—")}
+                </strong>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+function formatDate(value){
+
+    if(!value)
+        return "—";
+
+    const date =
+        new Date(value);
+
+    if(
+        Number.isNaN(
+            date.getTime()
+        )
+    )
+        return "—";
+
+    return date.toLocaleString(
+        "fr-FR",
+        {
+            day:"2-digit",
+            month:"2-digit",
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+/* ===============================
+   SUMMARY
+================================ */
+
+function renderSummary(match){
+
+    detailContent.innerHTML = `
+
+        <div class="detail-panel">
+
+            <div class="panel-title">
+                📋 Résumé du match
+            </div>
+
+            <p style="
+                color:var(--muted);
+                font-size:10px;
+                line-height:1.7;
+            ">
+
+                ${
+                    statusOf(match) === "live"
+                    ? "Le match est actuellement en direct."
+                    : statusOf(match) === "finished"
+                    ? "Ce match est terminé."
+                    : "Le match n'a pas encore commencé."
+                }
+
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+/* ===============================
+   STATISTICS
+================================ */
+
+async function loadStatistics(){
+
+    const match =
+        window.currentMatch;
+
+    if(!match)
+        return;
+
+
+    detailContent.innerHTML = `
+
+        <div class="detail-panel">
+
+            <div class="detail-loading">
+                📊 Chargement des statistiques...
+            </div>
+
+        </div>
+
+    `;
+
+
+    try{
+
+        const data =
+            await apiRequest(
+                "/fixtures/statistics",
+                {
+                    fixture: match.id
+                }
+            );
+
+
+        const response =
+            data?.response || [];
+
+
+        renderStatistics(
+            response,
+            match
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+            "❌ Statistics:",
+            error
+        );
+
+        detailContent.innerHTML = `
+
+            <div class="detail-panel">
+
+                <div class="panel-title">
+                    📊 Statistiques
+                </div>
+
+                <p style="
+                    color:var(--muted);
+                    font-size:10px;
+                ">
+                    Statistiques non disponibles.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* ===============================
+   STATISTICS RENDER
+================================ */
+
+function renderStatistics(
+    data,
+    match
+){
+
+    const home =
+        nameOf(match,"home");
+
+    const away =
+        nameOf(match,"away");
+
+
+    if(!Array.isArray(data) || !data.length){
+
+        detailContent.innerHTML = `
+
+            <div class="detail-panel">
+
+                <div class="panel-title">
+                    📊 Statistiques
+                </div>
+
+                <p style="
+                    color:var(--muted);
+                    font-size:10px;
+                ">
+                    Statistiques non disponibles.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const homeStats =
+        data[0]?.statistics || [];
+
+    const awayStats =
+        data[1]?.statistics || [];
+
+
+    const mapStats =
+        list => {
+
+            const obj = {};
+
+            list.forEach(item => {
+
+                if(item?.type){
+
+                    obj[
+                        normalizeStat(
+                            item.type
+                        )
+                    ] =
+                        item.value;
+
+                }
+
+            });
+
+            return obj;
+
+        };
+
+
+    const H =
+        mapStats(homeStats);
+
+    const A =
+        mapStats(awayStats);
+
+
+    const stats = [
+
+        ["Tirs cadrés","shots_on_goal"],
+
+        ["Tirs non cadrés","shots_off_goal"],
+
+        ["Tirs totaux","total_shots"],
+
+        ["Tirs bloqués","blocked_shots"],
+
+        ["Tirs dans la surface","shots_insidebox"],
+
+        ["Tirs hors surface","shots_outsidebox"],
+
+        ["Fautes","fouls"],
+
+        ["Corners","corner_kicks"],
+
+        ["Hors-jeu","offsides"],
+
+        ["Possession","ball_possession"],
+
+        ["Cartons jaunes","yellow_cards"],
+
+        ["Cartons rouges","red_cards"],
+
+        ["Arrêts du gardien","goalkeeper_saves"],
+
+        ["Passes","total_passes"],
+
+        ["Passes réussies","passes_accurate"],
+
+        ["Précision des passes","passes_percent"],
+
+        ["Buts attendus (xG)","expected_goals"],
+
+        ["Buts évités","goals_prevented"]
+
+    ];
+
+
+    let html = `
+
+        <div class="detail-panel statistics-box">
+
+            <div class="panel-title">
+                📊 Statistiques
+            </div>
+
+
+            <div class="stats-teams">
+
+                <div class="stats-team home">
+                    ${safe(home)}
+                </div>
+
+                <div class="stats-title">
+                    STATISTIQUES
+                </div>
+
+                <div class="stats-team away">
+                    ${safe(away)}
+                </div>
+
+            </div>
+
+    `;
+
+
+    stats.forEach(
+        ([label,key]) => {
+
+            let hv =
+                H[key] ??
+                "-";
+
+            let av =
+                A[key] ??
+                "-";
+
+
+            html += `
+
+                <div class="stat-item">
+
+                    <div class="stat-values">
+
+                        <span class="stat-value home">
+                            ${safe(hv)}
+                        </span>
+
+                        <span class="stat-name">
+                            ${safe(label)}
+                        </span>
+
+                        <span class="stat-value away">
+                            ${safe(av)}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `</div>`;
+
+
+    detailContent.innerHTML =
+        html;
+
+}
+
+
+function normalizeStat(value){
+
+    return String(value)
+        .toLowerCase()
+        .replace(/\s+/g,"_")
+        .replace(/%/g,"percent");
+
+}
+
+
+/* ===============================
+   TABS
+================================ */
+
+tabs.forEach(tab => {
+
+    tab.addEventListener(
+        "click",
+        () => {
+
+            tabs.forEach(item =>
+                item.classList.remove(
+                    "active"
+                )
+            );
+
+            tab.classList.add(
+                "active"
+            );
+
+
+            const type =
+                tab.dataset.tab;
+
+
+            if(!window.currentMatch)
+                return;
+
+
+            if(type === "summary"){
+
+                renderSummary(
+                    window.currentMatch
+                );
+
+            }
+
+
+            if(type === "stats"){
+
+                loadStatistics();
+
+            }
+
+
+            if(type === "events"){
+
+                detailContent.innerHTML = `
+
+                    <div class="detail-panel">
+
+                        <div class="panel-title">
+                            ⚡ Événements
+                        </div>
+
+                        <p style="
+                            color:var(--muted);
+                            font-size:10px;
+                        ">
+                            Les événements du match
+                            seront affichés ici.
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+    );
+
+});
+
+
+/* ===============================
+   ERROR
+================================ */
+
+function showError(title,text){
+
+    matchHeader.innerHTML = `
+
+        <div class="detail-error">
+
+            <div>⚠️</div>
+
+            <h3>
+                ${safe(title)}
+            </h3>
+
+            <p>
+                ${safe(text)}
+            </p>
+
+        </div>
+
+    `;
+
+
+    detailContent.innerHTML = "";
+
+}
+
+
+/* ===============================
+   START
+================================ */
+
+loadMatch();
 
 </script>
 
 </body>
 
-</html>
+</html>      
