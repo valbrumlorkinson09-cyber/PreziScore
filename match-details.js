@@ -2,23 +2,29 @@
 
 /* =====================================================
    PREZISCORE — MATCH DETAILS
+   PARTIE 1/2
+   🇫🇷 FRANÇAIS
 ===================================================== */
 
-console.log("⚽ MATCH DETAILS OK");
-
-
-const loading =
-    document.getElementById("detailsLoading");
-
-const errorBox =
-    document.getElementById("detailsError");
-
-const details =
-    document.getElementById("matchDetails");
+console.log("⚽ PREZISCORE MATCH DETAILS OK");
 
 
 /* =====================================================
-   GET MATCH ID
+   ELEMENTS
+===================================================== */
+
+const matchHeader =
+    document.getElementById("matchHeader");
+
+const detailContent =
+    document.getElementById("detailContent");
+
+const tabs =
+    document.querySelectorAll(".detail-tab");
+
+
+/* =====================================================
+   MATCH ID
 ===================================================== */
 
 const params =
@@ -30,295 +36,81 @@ const matchId =
     params.get("match");
 
 
+console.log(
+    "⚽ Match ID:",
+    matchId
+);
+
+
 /* =====================================================
-   START
+   HELPERS
 ===================================================== */
 
-async function loadMatchDetails() {
+function safe(value) {
 
-    if (!matchId) {
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            char => ({
 
-        showError();
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
 
-        return;
-
-    }
-
-
-    if (!window.PreziAPI) {
-
-        console.error(
-            "PreziAPI pa chaje."
+            }[char])
         );
-
-        showError();
-
-        return;
-
-    }
-
-
-    try {
-
-        /*
-         * Nou pran match yo nan API a
-         * epi nou jwenn match ki koresponn
-         * ak ID ki nan URL la.
-         */
-
-        const matches =
-            await PreziAPI.getNormalizedMatches();
-
-
-        if (
-            !Array.isArray(matches)
-        ) {
-
-            showError();
-
-            return;
-
-        }
-
-
-        const match =
-            matches.find(item => {
-
-                return (
-
-                    String(item?.id) ===
-                        String(matchId)
-
-                    ||
-
-                    String(item?.slug) ===
-                        String(matchId)
-
-                    ||
-
-                    String(item?.raw?.id) ===
-                        String(matchId)
-
-                    ||
-
-                    String(item?.raw?.slug) ===
-                        String(matchId)
-
-                );
-
-            });
-
-
-        if (!match) {
-
-            console.error(
-                "Match pa jwenn:",
-                matchId
-            );
-
-            showError();
-
-            return;
-
-        }
-
-
-        renderMatch(match);
-
-
-    }
-
-    catch (err) {
-
-        console.error(
-            "❌ Match Details:",
-            err
-        );
-
-        showError();
-
-    }
 
 }
 
 
-/* =====================================================
-   RENDER MATCH
-===================================================== */
+function getName(match, side) {
 
-function renderMatch(match) {
-
-    const home =
-        match?.home || {};
-
-    const away =
-        match?.away || {};
-
-
-    const homeName =
-        home.name ||
-        "Équipe domicile";
-
-
-    const awayName =
-        away.name ||
-        "Équipe visiteuse";
-
-
-    const homeScore =
-        home.score ??
-        "-";
-
-
-    const awayScore =
-        away.score ??
-        "-";
-
-
-    const competition =
-        getCompetition(match);
-
-
-    const status =
-        getStatus(match);
-
-
-    const time =
-        getTime(match);
-
-
-    /* NAMES */
-
-    document.getElementById(
-        "homeName"
-    ).textContent =
-        homeName;
-
-
-    document.getElementById(
-        "awayName"
-    ).textContent =
-        awayName;
-
-
-    /* SCORES */
-
-    document.getElementById(
-        "homeScore"
-    ).textContent =
-        homeScore;
-
-
-    document.getElementById(
-        "awayScore"
-    ).textContent =
-        awayScore;
-
-
-    /* COMPETITION */
-
-    document.getElementById(
-        "competitionName"
-    ).textContent =
-        competition;
-
-
-    document.getElementById(
-        "infoCompetition"
-    ).textContent =
-        competition;
-
-
-    /* STATUS */
-
-    const statusElement =
-        document.getElementById(
-            "matchStatus"
-        );
-
-
-    statusElement.textContent =
-        status.text;
-
-
-    document.getElementById(
-        "infoStatus"
-    ).textContent =
-        status.text;
-
-
-    document.getElementById(
-        "scoreInfo"
-    ).textContent =
-        status.text;
-
-
-    if (status.live) {
-
-        statusElement.classList.add(
-            "live"
-        );
-
-    }
-
-
-    /* TIME */
-
-    document.getElementById(
-        "matchDate"
-    ).textContent =
-        time;
-
-
-    document.getElementById(
-        "infoTime"
-    ).textContent =
-        time;
-
-
-    /* LOGOS */
-
-    setLogo(
-        "homeLogo",
-        "homeLogoFallback",
-        home.logo,
-        homeName
+    return (
+        match?.[side]?.name ||
+        "Équipe"
     );
 
+}
 
-    setLogo(
-        "awayLogo",
-        "awayLogoFallback",
-        away.logo,
-        awayName
+
+function getLogo(match, side) {
+
+    return (
+        match?.[side]?.logo ||
+        ""
     );
 
-
-    /* SHOW */
-
-    if (loading) {
-
-        loading.style.display =
-            "none";
-
-    }
+}
 
 
-    if (errorBox) {
+function getScore(match, side) {
 
-        errorBox.classList.remove(
-            "show"
-        );
+    return (
+        match?.[side]?.score ??
+        "-"
+    );
 
-    }
+}
 
 
-    if (details) {
+function getStatus(match) {
 
-        details.style.display =
-            "block";
+    return (
+        match?.status ||
+        "upcoming"
+    );
 
-    }
+}
+
+
+function getMinute(match) {
+
+    return (
+        match?.minute ??
+        null
+    );
 
 }
 
@@ -327,239 +119,426 @@ function renderMatch(match) {
    STATUS
 ===================================================== */
 
-function getStatus(match) {
+function statusText(match) {
 
     const status =
-        String(
-            match?.status || ""
-        )
-        .toLowerCase();
+        getStatus(match);
 
 
-    if (
-        status === "live" ||
-        status.includes("live") ||
-        status.includes("progress")
-    ) {
+    if (status === "live") {
 
         const minute =
-            match?.minute ??
-            match?.elapsed ??
-            null;
+            getMinute(match);
 
 
-        return {
-
-            text:
-                minute !== null
-                    ? `LIVE • ${minute}'`
-                    : "LIVE",
-
-            live: true
-
-        };
+        return minute !== null
+            ? `🔴 EN DIRECT • ${minute}'`
+            : "🔴 EN DIRECT";
 
     }
 
 
-    if (
-        status === "finished" ||
-        status.includes("finished") ||
-        status.includes("ended")
-    ) {
+    if (status === "finished") {
 
-        return {
-
-            text: "TERMINÉ",
-
-            live: false
-
-        };
+        return "TERMINÉ";
 
     }
 
 
-    return {
-
-        text: "À VENIR",
-
-        live: false
-
-    };
+    return "À VENIR";
 
 }
 
 
 /* =====================================================
-   COMPETITION
+   LOAD MATCH
 ===================================================== */
 
-function getCompetition(match) {
+async function loadMatch() {
 
-    let name =
-        match?.competition;
+    if (!matchId) {
 
-
-    if (
-        typeof name === "object"
-    ) {
-
-        name =
-            name.name ||
-            name.title;
-
-    }
-
-
-    if (!name) {
-
-        name =
-            match?.raw?.competition_name ||
-            match?.raw?.league_name ||
-            match?.raw?.tournament_name ||
-            match?.raw?.competition?.name ||
-            match?.raw?.league?.name;
-
-    }
-
-
-    return (
-        String(
-            name || "Football"
-        )
-    );
-
-}
-
-
-/* =====================================================
-   TIME
-===================================================== */
-
-function getTime(match) {
-
-    const raw =
-        match?.raw || {};
-
-
-    const value =
-        match?.date ||
-        match?.startTime ||
-        match?.start_time ||
-        match?.kickoff ||
-        raw.date ||
-        raw.start_time ||
-        raw.startTime ||
-        raw.kickoff ||
-        raw.match_date;
-
-
-    if (!value) {
-
-        return "Heure indisponible";
-
-    }
-
-
-    try {
-
-        const date =
-            new Date(value);
-
-
-        if (
-            Number.isNaN(
-                date.getTime()
-            )
-        ) {
-
-            return String(value);
-
-        }
-
-
-        return date.toLocaleString(
-            "fr-FR",
-            {
-                day: "2-digit",
-                month: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit"
-            }
+        showError(
+            "Match introuvable",
+            "Aucun identifiant de match n'a été fourni."
         );
-
-    }
-
-    catch {
-
-        return String(value);
-
-    }
-
-}
-
-
-/* =====================================================
-   LOGO
-===================================================== */
-
-function setLogo(
-    imageId,
-    fallbackId,
-    url,
-    teamName
-) {
-
-    const img =
-        document.getElementById(
-            imageId
-        );
-
-    const fallback =
-        document.getElementById(
-            fallbackId
-        );
-
-
-    if (
-        !img ||
-        !url
-    ) {
 
         return;
 
     }
 
 
-    img.src =
-        url;
+    if (
+        !window.PreziAPI ||
+        typeof PreziAPI.getMatchById !==
+        "function"
+    ) {
 
-    img.alt =
-        teamName;
+        showError(
+            "API indisponible",
+            "La fonction du match n'est pas disponible."
+        );
+
+        return;
+
+    }
 
 
-    img.onload = () => {
+    try {
 
-        img.style.display =
-            "block";
+        const match =
+            await PreziAPI.getMatchById(
+                matchId
+            );
 
 
-        if (fallback) {
+        if (!match) {
 
-            fallback.style.display =
-                "none";
+            showError(
+                "Match introuvable",
+                "Impossible de trouver ce match."
+            );
+
+            return;
 
         }
 
-    };
+
+        window.currentMatch =
+            match;
 
 
-    img.onerror = () => {
+        renderMatchHeader(
+            match
+        );
 
-        img.style.display =
-            "none";
 
-    };
+        renderSummary(
+            match
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Erreur match:",
+            error
+        );
+
+
+        showError(
+            "Erreur de chargement",
+            "Impossible de charger les informations du match."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   MATCH HEADER
+===================================================== */
+
+function renderMatchHeader(match) {
+
+    const home =
+        getName(
+            match,
+            "home"
+        );
+
+
+    const away =
+        getName(
+            match,
+            "away"
+        );
+
+
+    const homeLogo =
+        getLogo(
+            match,
+            "home"
+        );
+
+
+    const awayLogo =
+        getLogo(
+            match,
+            "away"
+        );
+
+
+    const status =
+        getStatus(match);
+
+
+    matchHeader.innerHTML = `
+
+        <div class="detail-competition">
+
+            🏆 ${safe(
+                match.competition ||
+                "Football"
+            )}
+
+        </div>
+
+
+        <div class="detail-status ${safe(status)}">
+
+            ${safe(
+                statusText(match)
+            )}
+
+        </div>
+
+
+        <div class="detail-teams">
+
+
+            <!-- ÉQUIPE A -->
+
+            <div class="detail-team">
+
+                <div class="detail-logo">
+
+                    ${
+                        homeLogo
+                        ? `
+                            <img
+                                src="${safe(homeLogo)}"
+                                alt="${safe(home)}"
+                            >
+                          `
+                        : "⚽"
+                    }
+
+                </div>
+
+
+                <div class="detail-team-name">
+
+                    ${safe(home)}
+
+                </div>
+
+            </div>
+
+
+            <!-- SCORE -->
+
+            <div class="detail-score">
+
+                ${safe(
+                    getScore(
+                        match,
+                        "home"
+                    )
+                )}
+
+                :
+
+                ${safe(
+                    getScore(
+                        match,
+                        "away"
+                    )
+                )}
+
+                <small>
+
+                    ${
+                        status === "live"
+                        ? `${safe(
+                            getMinute(match) ?? ""
+                          )}'`
+
+                        : status === "finished"
+                        ? "FT"
+
+                        : "À venir"
+                    }
+
+                </small>
+
+            </div>
+
+
+            <!-- ÉQUIPE B -->
+
+            <div class="detail-team">
+
+                <div class="detail-logo">
+
+                    ${
+                        awayLogo
+                        ? `
+                            <img
+                                src="${safe(awayLogo)}"
+                                alt="${safe(away)}"
+                            >
+                          `
+                        : "⚽"
+                    }
+
+                </div>
+
+
+                <div class="detail-team-name">
+
+                    ${safe(away)}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="match-info">
+
+            <div class="info-box">
+
+                <span>
+                    DATE
+                </span>
+
+                <strong>
+                    ${formatDate(match.time)}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    STADE
+                </span>
+
+                <strong>
+                    ${safe(
+                        match.venue ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    ARBITRE
+                </span>
+
+                <strong>
+                    ${safe(
+                        match.referee ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   DATE
+===================================================== */
+
+function formatDate(value) {
+
+    if (!value) {
+
+        return "—";
+
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "—";
+
+    }
+
+
+    return date.toLocaleString(
+        "fr-FR",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+function renderSummary(match) {
+
+    const status =
+        getStatus(match);
+
+
+    detailContent.innerHTML = `
+
+        <div class="detail-panel">
+
+            <div class="panel-title">
+
+                📋 Résumé du match
+
+            </div>
+
+
+            <p style="
+                color:var(--muted);
+                font-size:10px;
+                line-height:1.7;
+                margin:0;
+            ">
+
+                ${
+                    status === "live"
+
+                    ? "Le match est actuellement en direct. Les informations sont mises à jour automatiquement."
+
+                    : status === "finished"
+
+                    ? "Ce match est terminé. Consultez les statistiques et les événements."
+
+                    : "Le match n'a pas encore commencé."
+
+                }
+
+            </p>
+
+        </div>
+
+    `;
 
 }
 
@@ -568,29 +547,37 @@ function setLogo(
    ERROR
 ===================================================== */
 
-function showError() {
+function showError(title, text) {
 
-    if (loading) {
-
-        loading.style.display =
-            "none";
-
-    }
+    if (!matchHeader) return;
 
 
-    if (details) {
+    matchHeader.innerHTML = `
 
-        details.style.display =
-            "none";
+        <div class="detail-error">
 
-    }
+            <div>
+                ⚠️
+            </div>
 
 
-    if (errorBox) {
+            <h3>
+                ${safe(title)}
+            </h3>
 
-        errorBox.classList.add(
-            "show"
-        );
+
+            <p>
+                ${safe(text)}
+            </p>
+
+        </div>
+
+    `;
+
+
+    if (detailContent) {
+
+        detailContent.innerHTML = "";
 
     }
 
@@ -598,7 +585,76 @@ function showError() {
 
 
 /* =====================================================
+   TABS
+===================================================== */
+
+tabs.forEach(tab => {
+
+    tab.addEventListener(
+        "click",
+        () => {
+
+            tabs.forEach(item => {
+
+                item.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+            tab.classList.add(
+                "active"
+            );
+
+
+            const type =
+                tab.dataset.tab;
+
+
+            if (!window.currentMatch) {
+
+                return;
+
+            }
+
+
+            if (
+                type === "summary"
+            ) {
+
+                renderSummary(
+                    window.currentMatch
+                );
+
+            }
+
+
+            if (
+                type === "stats"
+            ) {
+
+                loadStatistics();
+
+            }
+
+
+            if (
+                type === "events"
+            ) {
+
+                loadEvents();
+
+            }
+
+        }
+    );
+
+});
+
+
+/* =====================================================
    START
 ===================================================== */
 
-loadMatchDetails();
+loadMatch();
