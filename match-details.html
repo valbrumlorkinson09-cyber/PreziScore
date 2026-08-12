@@ -1355,6 +1355,7 @@ tabs.forEach(
    LOAD STATISTICS
 ===================================================== */
 
+
 async function loadStatistics() {
 
     const match =
@@ -1391,12 +1392,337 @@ async function loadStatistics() {
             data?.response || [];
 
 
-        renderStatistics(
-            stats
-        );
+        if (!Array.isArray(stats) || !stats.length) {
+
+            detailContent.innerHTML = `
+
+                <div class="detail-panel">
+
+                    <div class="panel-title">
+                        📊 Statistiques
+                    </div>
+
+                    <p style="
+                        color:var(--muted);
+                        font-size:10px;
+                        text-align:center;
+                        padding:15px 0;
+                    ">
+                        Statistiques non disponibles
+                        pour ce match.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
 
 
-    } catch (error) {
+        /* =========================================
+           ÉQUIPES
+        ========================================= */
+
+        const homeTeam =
+            match?.home?.name ||
+            stats[0]?.team?.name ||
+            "Équipe A";
+
+
+        const awayTeam =
+            match?.away?.name ||
+            stats[1]?.team?.name ||
+            "Équipe B";
+
+
+        /* =========================================
+           STATISTIQUES API
+        ========================================= */
+
+        const homeStats =
+            stats[0]?.statistics || [];
+
+
+        const awayStats =
+            stats[1]?.statistics || [];
+
+
+        const awayMap = {};
+
+
+        awayStats.forEach(item => {
+
+            if (item?.type) {
+
+                awayMap[item.type] =
+                    item.value;
+
+            }
+
+        });
+
+
+        /* =========================================
+           TRADUCTION FRANÇAISE
+        ========================================= */
+
+        const labels = {
+
+            "Shots on Goal":
+                "Tirs cadrés",
+
+            "Shots off Goal":
+                "Tirs non cadrés",
+
+            "Total Shots":
+                "Tirs totaux",
+
+            "Blocked Shots":
+                "Tirs bloqués",
+
+            "Shots insidebox":
+                "Tirs dans la surface",
+
+            "Shots outsidebox":
+                "Tirs hors surface",
+
+            "Fouls":
+                "Fautes",
+
+            "Corner Kicks":
+                "Corners",
+
+            "Offsides":
+                "Hors-jeu",
+
+            "Ball Possession":
+                "Possession",
+
+            "Yellow Cards":
+                "Cartons jaunes",
+
+            "Red Cards":
+                "Cartons rouges",
+
+            "Goalkeeper Saves":
+                "Arrêts du gardien",
+
+            "Total passes":
+                "Passes",
+
+            "Passes accurate":
+                "Passes réussies",
+
+            "Passes %":
+                "Précision des passes",
+
+            "expected_goals":
+                "Buts attendus (xG)",
+
+            "goals_prevented":
+                "Buts évités"
+
+        };
+
+
+        /* =========================================
+           VALEUR NUMÉRIQUE
+        ========================================= */
+
+        function getNumber(value) {
+
+            if (
+                value === null ||
+                value === undefined ||
+                value === "-"
+            ) {
+
+                return 0;
+
+            }
+
+
+            return parseFloat(
+                String(value)
+                    .replace("%", "")
+                    .replace(",", ".")
+            ) || 0;
+
+        }
+
+
+        /* =========================================
+           CRÉATION DES LIGNES
+        ========================================= */
+
+        let rows = "";
+
+
+        homeStats.forEach(item => {
+
+            const original =
+                item?.type;
+
+
+            if (!original) return;
+
+
+            const label =
+                labels[original] ||
+                original;
+
+
+            const homeValue =
+                item?.value ??
+                "-";
+
+
+            const awayValue =
+                awayMap[original] ??
+                "-";
+
+
+            const homeNumber =
+                getNumber(homeValue);
+
+
+            const awayNumber =
+                getNumber(awayValue);
+
+
+            let homeWidth = 50;
+            let awayWidth = 50;
+
+
+            if (
+                homeNumber +
+                awayNumber >
+                0
+            ) {
+
+                homeWidth =
+                    (
+                        homeNumber /
+                        (
+                            homeNumber +
+                            awayNumber
+                        )
+                    ) * 100;
+
+
+                awayWidth =
+                    (
+                        awayNumber /
+                        (
+                            homeNumber +
+                            awayNumber
+                        )
+                    ) * 100;
+
+            }
+
+
+            rows += `
+
+                <div class="prezi-stat-row">
+
+                    <div class="prezi-stat-values">
+
+                        <strong>
+                            ${safe(homeValue)}
+                        </strong>
+
+
+                        <span>
+                            ${safe(label)}
+                        </span>
+
+
+                        <strong>
+                            ${safe(awayValue)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="prezi-stat-bars">
+
+                        <div class="prezi-bar home">
+
+                            <div
+                                class="prezi-fill"
+                                style="
+                                    width:${homeWidth}%;
+                                "
+                            ></div>
+
+                        </div>
+
+
+                        <div class="prezi-bar away">
+
+                            <div
+                                class="prezi-fill"
+                                style="
+                                    width:${awayWidth}%;
+                                "
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+        /* =========================================
+           AFFICHAGE FINAL
+        ========================================= */
+
+        detailContent.innerHTML = `
+
+            <div class="detail-panel prezi-statistics">
+
+                <div class="panel-title">
+                    📊 Statistiques
+                </div>
+
+
+                <div class="prezi-stat-teams">
+
+                    <div>
+                        ${safe(homeTeam)}
+                    </div>
+
+
+                    <span>
+                        -
+                    </span>
+
+
+                    <div>
+                        ${safe(awayTeam)}
+                    </div>
+
+                </div>
+
+
+                ${rows}
+
+            </div>
+
+        `;
+
+    }
+
+
+    catch (error) {
 
         console.error(
             "Statistics error:",
@@ -1415,9 +1741,12 @@ async function loadStatistics() {
                 <p style="
                     color:var(--muted);
                     font-size:10px;
+                    text-align:center;
                 ">
+
                     Statistiques non disponibles
                     pour ce match.
+
                 </p>
 
             </div>
@@ -1426,9 +1755,7 @@ async function loadStatistics() {
 
     }
 
-}
-
-
+      }
 /* =====================================================
    RENDER STATISTICS
 ===================================================== */
