@@ -1323,3 +1323,22 @@ input:focus-visible {
     }
 
   }
+/* ===============================
+   PREZISCORE — SCORE COLORS
+================================ */
+
+.score-winner {
+    color: #00e676 !important;
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(0,230,118,.35);
+}
+
+.score-loser {
+    color: #ff304f !important;
+    font-weight: 900;
+}
+
+.score-draw {
+    color: #ffffff !important;
+    font-weight: 900;
+}
