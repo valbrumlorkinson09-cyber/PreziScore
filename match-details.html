@@ -13,1281 +13,1472 @@ content="#080b10">
 
 <title>PreziScore — Match</title>
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet"
+href="style.css">
 
 <style>
 
-/* ===============================
-   MATCH DETAILS
-================================ */
-
 .details-page{
-    padding-bottom:100px;
+    padding-bottom:110px;
 }
 
-.back-row{
-    padding:16px 0 8px;
+.details-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:18px 0;
 }
 
 .back-btn{
-    border:0;
-    background:transparent;
-    color:var(--muted);
-    font-size:11px;
-    font-weight:800;
+    width:40px;
+    height:40px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:white;
+    border-radius:12px;
+    font-size:18px;
 }
 
-/* ===============================
-   HEADER MATCH
-================================ */
+.details-title{
+    font-size:16px;
+    font-weight:900;
+}
 
-.match-header-card{
-    margin-top:8px;
-    padding:20px 12px;
+.details-subtitle{
+    color:var(--muted);
+    font-size:8px;
+    margin-top:3px;
+}
+
+.match-hero{
+    padding:20px 14px;
     background:var(--card);
     border:1px solid var(--border);
     border-radius:20px;
     text-align:center;
 }
 
-.detail-competition{
+.hero-competition{
     color:var(--muted);
-    font-size:10px;
+    font-size:9px;
     font-weight:800;
-    margin-bottom:12px;
 }
 
-.detail-status{
-    display:inline-flex;
-    padding:5px 9px;
-    border-radius:8px;
+.hero-status{
+    margin-top:8px;
+    color:var(--primary);
     font-size:9px;
     font-weight:900;
-    margin-bottom:18px;
 }
 
-.detail-status.live{
-    color:#ff304f;
-    background:rgba(255,48,79,.10);
-}
-
-.detail-status.finished{
-    color:#8b95a3;
-    background:rgba(139,149,163,.10);
-}
-
-.detail-status.upcoming{
-    color:var(--primary);
-    background:rgba(0,230,118,.08);
-}
-
-/* ===============================
-   TEAMS
-================================ */
-
-.detail-teams{
+.hero-teams{
     display:grid;
-    grid-template-columns:1fr 75px 1fr;
+    grid-template-columns:1fr 90px 1fr;
     align-items:center;
     gap:8px;
+    margin-top:22px;
 }
 
-.detail-team{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:8px;
+.hero-team{
     min-width:0;
 }
 
-.detail-logo{
-    width:56px;
-    height:56px;
+.hero-logo{
+    width:62px;
+    height:62px;
+    margin:auto;
     display:grid;
     place-items:center;
     background:var(--card-2);
     border:1px solid var(--border);
-    border-radius:14px;
-    font-size:22px;
-    overflow:hidden;
+    border-radius:17px;
 }
 
-.detail-logo img{
-    width:43px;
-    height:43px;
+.hero-logo img{
+    width:48px;
+    height:48px;
     object-fit:contain;
 }
 
-.detail-team-name{
-    width:100%;
+.hero-team-name{
+    margin-top:9px;
     font-size:10px;
-    font-weight:800;
-    line-height:1.3;
-}
-
-.detail-score{
-    font-size:26px;
     font-weight:900;
 }
 
-.detail-score small{
+.hero-score{
+    font-size:25px;
+    font-weight:900;
+}
+
+.hero-score small{
     display:block;
     margin-top:5px;
     color:var(--muted);
-    font-size:9px;
-}
-
-/* ===============================
-   INFO
-================================ */
-
-.match-info{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:6px;
-    margin-top:17px;
-}
-
-.info-box{
-    padding:9px 4px;
-    background:var(--card-2);
-    border-radius:10px;
-    text-align:center;
-}
-
-.info-box span{
-    display:block;
-    color:var(--muted);
-    font-size:8px;
-    margin-bottom:4px;
-}
-
-.info-box strong{
-    display:block;
     font-size:8px;
 }
-
-/* ===============================
-   TABS
-================================ */
 
 .detail-tabs{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:6px;
-    margin-top:16px;
+    display:flex;
+    gap:7px;
+    overflow-x:auto;
+    margin-top:14px;
+    scrollbar-width:none;
+}
+
+.detail-tabs::-webkit-scrollbar{
+    display:none;
 }
 
 .detail-tab{
-    height:40px;
+    flex-shrink:0;
+    padding:10px 13px;
     border:1px solid var(--border);
-    border-radius:10px;
+    border-radius:11px;
     background:var(--card);
     color:var(--muted);
     font-size:9px;
-    font-weight:900;
+    font-weight:800;
 }
 
 .detail-tab.active{
-    color:var(--primary);
-    border-color:rgba(0,230,118,.3);
-    background:rgba(0,230,118,.08);
+    color:white;
+    background:var(--primary);
+    border-color:var(--primary);
 }
 
-/* ===============================
-   CONTENT
-================================ */
-
-.detail-content{
-    margin-top:12px;
+.detail-section{
+    margin-top:16px;
 }
 
-.detail-panel{
+.detail-card{
     padding:15px;
     background:var(--card);
     border:1px solid var(--border);
     border-radius:16px;
 }
 
-.panel-title{
-    margin-bottom:14px;
+.detail-card h3{
     font-size:12px;
-    font-weight:900;
+    margin-bottom:12px;
 }
 
-.detail-loading{
-    padding:30px 10px;
+.loading-detail{
+    padding:25px;
     text-align:center;
     color:var(--muted);
     font-size:10px;
 }
 
-.detail-error{
-    padding:28px 12px;
-    text-align:center;
-}
-
-.detail-error div{
-    font-size:30px;
-}
-
-.detail-error h3{
-    font-size:13px;
-    margin:8px 0;
-}
-
-.detail-error p{
-    color:var(--muted);
-    font-size:10px;
-}
-
-/* ===============================
-   STATISTICS
-================================ */
-
-.statistics-box{
-    width:100%;
-}
-
-.stats-teams{
-    display:grid;
-    grid-template-columns:1fr 90px 1fr;
-    align-items:center;
-    margin-bottom:18px;
-}
-
-.stats-team{
-    font-size:10px;
-    font-weight:900;
-}
-
-.stats-team.home{
-    text-align:left;
-}
-
-.stats-team.away{
-    text-align:right;
-}
-
-.stats-title{
-    text-align:center;
-    color:var(--muted);
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
     font-size:9px;
-    font-weight:900;
 }
 
-.stat-item{
-    margin-bottom:14px;
+.info-row:last-child{
+    border-bottom:0;
 }
 
-.stat-values{
+.info-row span{
+    color:var(--muted);
+}
+
+.stat-row{
     display:grid;
-    grid-template-columns:42px 1fr 42px;
+    grid-template-columns:45px 1fr 45px;
     align-items:center;
-    gap:7px;
+    gap:8px;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
 }
 
-.stat-value{
+.stat-number{
     font-size:10px;
     font-weight:900;
+    text-align:center;
 }
 
-.stat-value.home{
-    text-align:left;
-}
-
-.stat-value.away{
-    text-align:right;
-}
-
-.stat-name{
+.stat-label{
     text-align:center;
     color:var(--muted);
     font-size:8px;
-    font-weight:800;
 }
 
-.stat-bars{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:3px;
-    margin-top:5px;
+.event-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+    font-size:9px;
 }
 
-.stat-bar{
-    height:5px;
-    background:var(--card-2);
-    border-radius:5px;
-    overflow:hidden;
+.event-time{
+    width:35px;
+    color:var(--primary);
+    font-weight:900;
 }
 
-.stat-fill{
-    height:100%;
-    background:var(--primary);
-    border-radius:5px;
+.event-icon{
+    width:28px;
+    text-align:center;
 }
+
+.event-text{
+    flex:1;
+}
+
+.lineup-team{
+    margin-top:15px;
+}
+
+.lineup-title{
+    font-size:10px;
+    font-weight:900;
+    margin-bottom:8px;
+}
+
+.player-row{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    border-bottom:1px solid var(--border);
+    font-size:9px;
+}
+
+.empty-detail{
+    padding:25px 12px;
+    text-align:center;
+    color:var(--muted);
+    font-size:9px;
+}
+
 </style>
 
 </head>
 
+
 <body>
 
-<header class="top-header">
+<main class="main-content details-page">
 
-    <div class="brand">
 
-        <div class="brand-ball">⚽</div>
+<!-- HEADER -->
 
-        <div>
-            <h1>Prezi<span>Score</span></h1>
-            <p>Football en direct</p>
-        </div>
+<header class="details-header">
 
-    </div>
+<button
+class="back-btn"
+onclick="history.back()"
+>
+←
+</button>
 
-    <button
-        class="search-btn"
-        onclick="location.href='match.html'"
-    >🔍</button>
+<div>
+
+<div class="details-title">
+Détails du match
+</div>
+
+<div class="details-subtitle">
+PreziScore Football
+</div>
+
+</div>
 
 </header>
 
 
-<main class="main-content details-page">
+<!-- MATCH HERO -->
 
-    <div class="back-row">
+<section
+id="matchHero"
+class="match-hero"
+>
 
-        <button
-            class="back-btn"
-            onclick="history.back()"
-        >
-            ← Retour aux matchs
-        </button>
+<div class="loading-detail">
+Chargement du match...
+</div>
 
-    </div>
-
-
-    <section
-        id="matchHeader"
-        class="match-header-card"
-    >
-
-        <div class="detail-loading">
-            Chargement du match...
-        </div>
-
-    </section>
+</section>
 
 
-    <div class="detail-tabs">
+<!-- TABS -->
 
-        <button
-            class="detail-tab active"
-            data-tab="summary"
-        >
-            Résumé
-        </button>
+<div class="detail-tabs">
 
-        <button
-            class="detail-tab"
-            data-tab="stats"
-        >
-            Statistiques
-        </button>
+<button
+class="detail-tab active"
+data-tab="stats"
+>
+📊 Stats
+</button>
 
-        <button
-            class="detail-tab"
-            data-tab="events"
-        >
-            Événements
-        </button>
+<button
+class="detail-tab"
+data-tab="events"
+>
+⚡ Événements
+</button>
 
-    </div>
+<button
+class="detail-tab"
+data-tab="lineups"
+>
+👥 Compos
+</button>
+
+<button
+class="detail-tab"
+data-tab="info"
+>
+ℹ️ Infos
+</button>
+
+</div>
 
 
-    <section
-        id="detailContent"
-        class="detail-content"
-    >
+<!-- CONTENT -->
 
-        <div class="detail-loading">
-            Chargement des informations...
-        </div>
+<section
+id="detailContent"
+class="detail-section"
+>
 
-    </section>
+<div class="detail-card">
+
+<div class="loading-detail">
+Chargement des statistiques...
+</div>
+
+</div>
+
+</section>
+
 
 </main>
 
 
+<!-- NAVIGATION -->
+
 <nav class="bottom-nav">
 
-    <a href="index.html" class="nav-item">
+<a
+href="index.html"
+class="nav-item"
+>
 
-        <span>⌂</span>
-        <small>Accueil</small>
+<span>⌂</span>
 
-    </a>
+<small>
+Accueil
+</small>
 
-    <a href="match.html" class="nav-item active">
+</a>
 
-        <span>⚽</span>
-        <small>Matchs</small>
 
-    </a>
+<a
+href="match.html"
+class="nav-item active"
+>
 
-    <a href="competitions.html" class="nav-item">
+<span>⚽</span>
 
-        <span>🏆</span>
-        <small>Compétitions</small>
+<small>
+Matchs
+</small>
 
-    </a>
+</a>
 
-    <a href="news.html" class="nav-item">
 
-        <span>📰</span>
-        <small>News</small>
+<a
+href="competitions.html"
+class="nav-item"
+>
 
-    </a>
+<span>🏆</span>
 
-    <a href="profile.html" class="nav-item">
+<small>
+Compétitions
+</small>
 
-        <span>👤</span>
-        <small>Profil</small>
+</a>
 
-    </a>
+
+<a
+href="news.html"
+class="nav-item"
+>
+
+<span>📰</span>
+
+<small>
+News
+</small>
+
+</a>
+
+
+<a
+href="profile.html"
+class="nav-item"
+>
+
+<span>👤</span>
+
+<small>
+Profil
+</small>
+
+</a>
 
 </nav>
 
 
 <script src="api.js"></script>
 
-
 <script>
-
 "use strict";
 
 
-const matchHeader =
-    document.getElementById("matchHeader");
-
-const detailContent =
-    document.getElementById("detailContent");
-
-const tabs =
-    document.querySelectorAll(".detail-tab");
-
+/* =====================================================
+   MATCH ID / SLUG
+===================================================== */
 
 const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
-
-/* SUPPORT ?match= ET ?id= */
-
-const matchId =
-    params.get("match") ||
-    params.get("id");
-
-
-console.log(
-    "⚽ PREZISCORE MATCH:",
-    matchId
+new URLSearchParams(
+window.location.search
 );
 
 
-/* ===============================
+const matchParam =
+params.get("match");
+
+
+const hero =
+document.getElementById(
+"matchHero"
+);
+
+
+const content =
+document.getElementById(
+"detailContent"
+);
+
+
+let currentMatch = null;
+
+
+/* =====================================================
    HELPERS
-================================ */
+===================================================== */
 
 function safe(value){
 
-    return String(value ?? "")
-        .replace(/[&<>"']/g,char => ({
-            "&":"&amp;",
-            "<":"&lt;",
-            ">":"&gt;",
-            '"':"&quot;",
-            "'":"&#039;"
-        }[char]));
+return String(value ?? "")
+.replace(/[&<>"']/g,c=>({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+
+}[c]));
 
 }
 
 
-function statusOf(match){
+function getTeam(match, side){
 
-    return String(
-        match?.status || "upcoming"
-    ).toLowerCase();
-
-}
+let team =
+match?.[side];
 
 
-function nameOf(match,side){
+if(typeof team === "string"){
 
-    return (
-        match?.[side]?.name ||
-        "Équipe"
-    );
+return {
+name:team,
+logo:""
+};
 
 }
 
 
-function logoOf(match,side){
+return {
 
-    return (
-        match?.[side]?.logo ||
-        ""
-    );
+name:
+team?.name ||
+match?.raw?.[
+    side
+] ||
+match?.raw?.[
+    side+"_name"
+] ||
+"Équipe",
 
-}
+logo:
+team?.logo ||
+match?.raw?.[
+    side+"_logo"
+] ||
+"",
 
+score:
+team?.score ??
+match?.raw?.[
+    side+"_score"
+] ??
+"-"
 
-function scoreOf(match,side){
-
-    return (
-        match?.[side]?.score ??
-        "-"
-    );
-
-}
-
-
-function minuteOf(match){
-
-    return (
-        match?.minute ??
-        null
-    );
-
-}
-
-
-function statusLabel(match){
-
-    const status =
-        statusOf(match);
-
-    if(status === "live"){
-
-        const minute =
-            minuteOf(match);
-
-        return minute !== null
-            ? `🔴 LIVE • ${minute}'`
-            : "🔴 LIVE";
-
-    }
-
-    if(status === "finished")
-        return "TERMINÉ";
-
-    return "À VENIR";
+};
 
 }
 
 
-/* ===============================
+function getStatus(match){
+
+return String(
+match?.status ||
+match?.raw?.status ||
+""
+).toLowerCase();
+
+}
+
+
+/* =====================================================
    LOAD MATCH
-================================ */
+===================================================== */
 
 async function loadMatch(){
 
-    if(!matchId){
+if(!matchParam){
 
-        showError(
-            "Match introuvable",
-            "Aucun identifiant de match n'a été fourni."
-        );
+hero.innerHTML = `
+<div class="empty-detail">
+Match introuvable.
+</div>
+`;
 
-        return;
-
-    }
-
-
-    if(
-        !window.PreziAPI ||
-        typeof PreziAPI.getMatchById !==
-        "function"
-    ){
-
-        showError(
-            "API indisponible",
-            "La fonction du match est absente de api.js."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const match =
-            await PreziAPI.getMatchById(
-                matchId
-            );
-
-
-        if(!match){
-
-            showError(
-                "Match introuvable",
-                "Impossible de trouver ce match."
-            );
-
-            return;
-
-        }
-
-
-        window.currentMatch =
-            match;
-
-
-        renderHeader(match);
-
-        renderSummary(match);
-
-    }
-
-    catch(error){
-
-        console.error(
-            "❌ Match:",
-            error
-        );
-
-        showError(
-            "Erreur de chargement",
-            "Impossible de charger le match."
-        );
-
-    }
+return;
 
 }
 
 
-/* ===============================
-   HEADER
-================================ */
+try{
 
-function renderHeader(match){
+let match = null;
 
-    const home =
-        nameOf(match,"home");
 
-    const away =
-        nameOf(match,"away");
+/*
+   Nou itilize slug/url
+*/
 
-    const homeLogo =
-        logoOf(match,"home");
-
-    const awayLogo =
-        logoOf(match,"away");
-
-    const status =
-        statusOf(match);
-
-
-    matchHeader.innerHTML = `
-
-        <div class="detail-competition">
-
-            🏆 ${safe(
-                match.competition ||
-                "Football"
-            )}
-
-        </div>
-
-
-        <div class="detail-status ${safe(status)}">
-
-            ${safe(
-                statusLabel(match)
-            )}
-
-        </div>
-
-
-        <div class="detail-teams">
-
-
-            <div class="detail-team">
-
-                <div class="detail-logo">
-
-                    ${
-                        homeLogo
-                        ? `<img
-                            src="${safe(homeLogo)}"
-                            alt="${safe(home)}"
-                          >`
-                        : "⚽"
-                    }
-
-                </div>
-
-                <div class="detail-team-name">
-                    ${safe(home)}
-                </div>
-
-            </div>
-
-
-            <div class="detail-score">
-
-                ${safe(scoreOf(match,"home"))}
-                :
-                ${safe(scoreOf(match,"away"))}
-
-                <small>
-
-                    ${
-                        status === "live"
-                        ? `${safe(minuteOf(match) ?? "")}'`
-                        : status === "finished"
-                        ? "FT"
-                        : "À venir"
-                    }
-
-                </small>
-
-            </div>
-
-
-            <div class="detail-team">
-
-                <div class="detail-logo">
-
-                    ${
-                        awayLogo
-                        ? `<img
-                            src="${safe(awayLogo)}"
-                            alt="${safe(away)}"
-                          >`
-                        : "⚽"
-                    }
-
-                </div>
-
-                <div class="detail-team-name">
-                    ${safe(away)}
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="match-info">
-
-            <div class="info-box">
-
-                <span>DATE</span>
-
-                <strong>
-                    ${formatDate(match.time)}
-                </strong>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <span>STADE</span>
-
-                <strong>
-                    ${safe(match.venue || "—")}
-                </strong>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <span>ARBITRE</span>
-
-                <strong>
-                    ${safe(match.referee || "—")}
-                </strong>
-
-            </div>
-
-        </div>
-
-    `;
-
-}
-
-
-function formatDate(value){
-
-    if(!value)
-        return "—";
-
-    const date =
-        new Date(value);
-
-    if(
-        Number.isNaN(
-            date.getTime()
-        )
-    )
-        return "—";
-
-    return date.toLocaleString(
-        "fr-FR",
-        {
-            day:"2-digit",
-            month:"2-digit",
-            hour:"2-digit",
-            minute:"2-digit"
-        }
-    );
-
-}
-
-
-/* ===============================
-   SUMMARY
-================================ */
-
-function renderSummary(match){
-
-    detailContent.innerHTML = `
-
-        <div class="detail-panel">
-
-            <div class="panel-title">
-                📋 Résumé du match
-            </div>
-
-            <p style="
-                color:var(--muted);
-                font-size:10px;
-                line-height:1.7;
-            ">
-
-                ${
-                    statusOf(match) === "live"
-                    ? "Le match est actuellement en direct."
-                    : statusOf(match) === "finished"
-                    ? "Ce match est terminé."
-                    : "Le match n'a pas encore commencé."
-                }
-
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-
-/* ===============================
-   STATISTICS
-================================ */
-
-async function loadStatistics(){
-
-    const match =
-        window.currentMatch;
-
-    if(!match)
-        return;
-
-
-    detailContent.innerHTML = `
-
-        <div class="detail-panel">
-
-            <div class="detail-loading">
-                📊 Chargement des statistiques...
-            </div>
-
-        </div>
-
-    `;
-
-
-    try{
-
-        const data =
-            await apiRequest(
-                "/fixtures/statistics",
-                {
-                    fixture: match.id
-                }
-            );
-
-
-        const response =
-            data?.response || [];
-
-
-        renderStatistics(
-            response,
-            match
-        );
-
-    }
-
-    catch(error){
-
-        console.error(
-            "❌ Statistics:",
-            error
-        );
-
-        detailContent.innerHTML = `
-
-            <div class="detail-panel">
-
-                <div class="panel-title">
-                    📊 Statistiques
-                </div>
-
-                <p style="
-                    color:var(--muted);
-                    font-size:10px;
-                ">
-                    Statistiques non disponibles.
-                </p>
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* ===============================
-   STATISTICS RENDER
-================================ */
-
-function renderStatistics(
-    data,
-    match
+if(
+typeof PreziAPI.getMatchDetails ===
+"function"
 ){
 
-    const home =
-        nameOf(match,"home");
-
-    const away =
-        nameOf(match,"away");
-
-
-    if(!Array.isArray(data) || !data.length){
-
-        detailContent.innerHTML = `
-
-            <div class="detail-panel">
-
-                <div class="panel-title">
-                    📊 Statistiques
-                </div>
-
-                <p style="
-                    color:var(--muted);
-                    font-size:10px;
-                ">
-                    Statistiques non disponibles.
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    const homeStats =
-        data[0]?.statistics || [];
-
-    const awayStats =
-        data[1]?.statistics || [];
-
-
-    const mapStats =
-        list => {
-
-            const obj = {};
-
-            list.forEach(item => {
-
-                if(item?.type){
-
-                    obj[
-                        normalizeStat(
-                            item.type
-                        )
-                    ] =
-                        item.value;
-
-                }
-
-            });
-
-            return obj;
-
-        };
-
-
-    const H =
-        mapStats(homeStats);
-
-    const A =
-        mapStats(awayStats);
-
-
-    const stats = [
-
-        ["Tirs cadrés","shots_on_goal"],
-
-        ["Tirs non cadrés","shots_off_goal"],
-
-        ["Tirs totaux","total_shots"],
-
-        ["Tirs bloqués","blocked_shots"],
-
-        ["Tirs dans la surface","shots_insidebox"],
-
-        ["Tirs hors surface","shots_outsidebox"],
-
-        ["Fautes","fouls"],
-
-        ["Corners","corner_kicks"],
-
-        ["Hors-jeu","offsides"],
-
-        ["Possession","ball_possession"],
-
-        ["Cartons jaunes","yellow_cards"],
-
-        ["Cartons rouges","red_cards"],
-
-        ["Arrêts du gardien","goalkeeper_saves"],
-
-        ["Passes","total_passes"],
-
-        ["Passes réussies","passes_accurate"],
-
-        ["Précision des passes","passes_percent"],
-
-        ["Buts attendus (xG)","expected_goals"],
-
-        ["Buts évités","goals_prevented"]
-
-    ];
-
-
-    let html = `
-
-        <div class="detail-panel statistics-box">
-
-            <div class="panel-title">
-                📊 Statistiques
-            </div>
-
-
-            <div class="stats-teams">
-
-                <div class="stats-team home">
-                    ${safe(home)}
-                </div>
-
-                <div class="stats-title">
-                    STATISTIQUES
-                </div>
-
-                <div class="stats-team away">
-                    ${safe(away)}
-                </div>
-
-            </div>
-
-    `;
-
-
-    stats.forEach(
-        ([label,key]) => {
-
-            let hv =
-                H[key] ??
-                "-";
-
-            let av =
-                A[key] ??
-                "-";
-
-
-            html += `
-
-                <div class="stat-item">
-
-                    <div class="stat-values">
-
-                        <span class="stat-value home">
-                            ${safe(hv)}
-                        </span>
-
-                        <span class="stat-name">
-                            ${safe(label)}
-                        </span>
-
-                        <span class="stat-value away">
-                            ${safe(av)}
-                        </span>
-
-                    </div>
-
-                </div>
-
-            `;
-
-        }
-    );
-
-
-    html += `</div>`;
-
-
-    detailContent.innerHTML =
-        html;
+match =
+await PreziAPI.getMatchDetails(
+matchParam
+);
 
 }
 
 
-function normalizeStat(value){
+if(!match){
 
-    return String(value)
-        .toLowerCase()
-        .replace(/\s+/g,"_")
-        .replace(/%/g,"percent");
+hero.innerHTML = `
+<div class="empty-detail">
+Impossible de trouver ce match.
+</div>
+`;
+
+return;
 
 }
 
 
-/* ===============================
-   TABS
-================================ */
-
-tabs.forEach(tab => {
-
-    tab.addEventListener(
-        "click",
-        () => {
-
-            tabs.forEach(item =>
-                item.classList.remove(
-                    "active"
-                )
-            );
-
-            tab.classList.add(
-                "active"
-            );
+currentMatch =
+match;
 
 
-            const type =
-                tab.dataset.tab;
+renderHero(match);
+
+await loadStats();
 
 
-            if(!window.currentMatch)
-                return;
+}catch(error){
+
+console.error(
+"Match details:",
+error
+);
+
+hero.innerHTML = `
+<div class="empty-detail">
+Erreur de chargement du match.
+</div>
+`;
+
+}
+
+}
 
 
-            if(type === "summary"){
+/* =====================================================
+   HERO
+===================================================== */
 
-                renderSummary(
-                    window.currentMatch
-                );
+function renderHero(match){
 
-            }
+const home =
+getTeam(match,"home");
 
-
-            if(type === "stats"){
-
-                loadStatistics();
-
-            }
+const away =
+getTeam(match,"away");
 
 
-            if(type === "events"){
+const status =
+getStatus(match);
 
-                detailContent.innerHTML = `
 
-                    <div class="detail-panel">
+let statusText =
+"À VENIR";
 
-                        <div class="panel-title">
-                            ⚡ Événements
-                        </div>
 
-                        <p style="
-                            color:var(--muted);
-                            font-size:10px;
-                        ">
-                            Les événements du match
-                            seront affichés ici.
-                        </p>
+if(
+status === "live" ||
+status.includes("live")
+){
 
-                    </div>
+statusText =
+"🔴 LIVE";
 
-                `;
+}
 
-            }
+else if(
+status === "finished" ||
+status === "ft" ||
+status === "ended"
+){
 
-        }
-    );
+statusText =
+"TERMINÉ";
+
+}
+
+
+hero.innerHTML = `
+
+<div class="hero-competition">
+
+${safe(
+match?.competition ||
+match?.raw?.competition ||
+"Football"
+)}
+
+</div>
+
+
+<div class="hero-status">
+
+${statusText}
+
+</div>
+
+
+<div class="hero-teams">
+
+
+<div class="hero-team">
+
+<div class="hero-logo">
+
+${
+home.logo
+?
+`<img src="${safe(home.logo)}">`
+:
+"⚽"
+}
+
+</div>
+
+<div class="hero-team-name">
+${safe(home.name)}
+</div>
+
+</div>
+
+
+<div>
+
+<div class="hero-score">
+
+${safe(home.score)}
+-
+${safe(away.score)}
+
+</div>
+
+<small class="hero-score">
+
+${status === "live"
+    ? "LIVE"
+    : status === "finished"
+    ? "FT"
+    : "Match"}
+
+</small>
+
+</div>
+
+
+<div class="hero-team">
+
+<div class="hero-logo">
+
+${
+away.logo
+?
+`<img src="${safe(away.logo)}">`
+:
+"⚽"
+}
+
+</div>
+
+<div class="hero-team-name">
+${safe(away.name)}
+</div>
+
+</div>
+
+
+</div>
+
+`;
+
+}
+
+
+/* =====================================================
+   STATS
+===================================================== */
+
+async function loadStats(){
+
+content.innerHTML = `
+
+<div class="detail-card">
+
+<div class="loading-detail">
+Chargement des statistiques...
+</div>
+
+</div>
+
+`;
+
+
+let stats = [];
+
+
+try{
+
+if(
+typeof PreziAPI.getMatchStatistics ===
+"function"
+){
+
+stats =
+await PreziAPI.getMatchStatistics(
+matchParam
+);
+
+}
+
+}catch(e){
+
+console.log(e);
+
+}
+
+
+if(
+!Array.isArray(stats) ||
+!stats.length
+){
+
+content.innerHTML = `
+
+<div class="detail-card">
+
+<h3>📊 Statistiques</h3>
+
+<div class="empty-detail">
+Statistiques non disponibles
+pour ce match.
+</div>
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+renderStats(stats);
+
+}
+
+
+/* =====================================================
+   RENDER STATS
+===================================================== */
+
+function renderStats(stats){
+
+let html = `
+
+<div class="detail-card">
+
+<h3>
+📊 Statistiques du match
+</h3>
+
+`;
+
+
+stats.forEach(item=>{
+
+const home =
+item?.home ??
+item?.statistics?.home ??
+"-";
+
+
+const away =
+item?.away ??
+item?.statistics?.away ??
+"-";
+
+
+const label =
+item?.type ||
+item?.name ||
+item?.label ||
+"Statistique";
+
+
+html += `
+
+<div class="stat-row">
+
+<div class="stat-number">
+${safe(home)}
+</div>
+
+<div class="stat-label">
+${safe(label)}
+</div>
+
+<div class="stat-number">
+${safe(away)}
+</div>
+
+</div>
+
+`;
 
 });
 
 
-/* ===============================
-   ERROR
-================================ */
-
-function showError(title,text){
-
-    matchHeader.innerHTML = `
-
-        <div class="detail-error">
-
-            <div>⚠️</div>
-
-            <h3>
-                ${safe(title)}
-            </h3>
-
-            <p>
-                ${safe(text)}
-            </p>
-
-        </div>
-
-    `;
+html += `
+</div>
+`;
 
 
-    detailContent.innerHTML = "";
+content.innerHTML =
+html;
 
 }
-
-
-/* ===============================
-   START
-================================ */
-
-loadMatch();
-
 </script>
 
 </body>
 
-</html>      
+   </html>
+/* =========================================================
+   PREZISCORE — SCRIPT.JS
+   PARTIE 2/2
+   Helpers + Render + Search + Filters
+========================================================= */
+
+
+/* =========================================================
+   TEAM NAME
+========================================================= */
+
+function getTeamName(match, side) {
+
+    const team =
+        side === "home"
+            ? match?.home
+            : match?.away;
+
+    let name = team?.name;
+
+    if (!name && match?.raw) {
+
+        const raw = match.raw;
+
+        if (side === "home") {
+
+            name =
+                raw.home ||
+                raw.home_name ||
+                raw.home_team_name ||
+                raw.home_team?.name ||
+                raw.home?.name;
+
+        } else {
+
+            name =
+                raw.away ||
+                raw.away_name ||
+                raw.away_team_name ||
+                raw.away_team?.name ||
+                raw.away?.name;
+
+        }
+
+    }
+
+    if (typeof name === "object") {
+
+        name =
+            name.name ||
+            name.title ||
+            name.short_name ||
+            name.shortName;
+
+    }
+
+    name =
+        String(name || "").trim();
+
+    return name ||
+        (
+            side === "home"
+                ? "Équipe domicile"
+                : "Équipe visiteuse"
+        );
+
+}
+
+
+/* =========================================================
+   TEAM LOGO
+========================================================= */
+
+function getTeamLogo(match, side) {
+
+    const team =
+        side === "home"
+            ? match?.home
+            : match?.away;
+
+    let logo =
+        team?.logo;
+
+    if (!logo && match?.raw) {
+
+        const raw = match.raw;
+
+        if (side === "home") {
+
+            logo =
+                raw.home_logo ||
+                raw.home_team_logo ||
+                raw.home_team?.logo ||
+                raw.home?.logo;
+
+        } else {
+
+            logo =
+                raw.away_logo ||
+                raw.away_team_logo ||
+                raw.away_team?.logo ||
+                raw.away?.logo;
+
+        }
+
+    }
+
+    return typeof logo === "string"
+        ? logo.trim()
+        : "";
+
+}
+
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+function getTeamScore(match, side) {
+
+    const team =
+        side === "home"
+            ? match?.home
+            : match?.away;
+
+    let value =
+        team?.score;
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+
+        const raw =
+            match?.raw;
+
+        if (raw) {
+
+            if (side === "home") {
+
+                value =
+                    raw.home_score ??
+                    raw.homeScore ??
+                    raw.home_team?.score ??
+                    raw.home?.score;
+
+            } else {
+
+                value =
+                    raw.away_score ??
+                    raw.awayScore ??
+                    raw.away_team?.score ??
+                    raw.away?.score;
+
+            }
+
+        }
+
+    }
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+
+        return "-";
+
+    }
+
+    return String(value);
+
+}
+
+
+/* =========================================================
+   COMPETITION NAME
+========================================================= */
+
+function getCompetitionName(match) {
+
+    let name =
+        match?.competition;
+
+    if (typeof name === "object") {
+
+        name =
+            name.name ||
+            name.title;
+
+    }
+
+    if (!name && match?.raw) {
+
+        const raw =
+            match.raw;
+
+        name =
+            raw.competition ||
+            raw.competition_name ||
+            raw.league_name ||
+            raw.tournament_name ||
+            raw.competition?.name ||
+            raw.league?.name ||
+            raw.tournament?.name;
+
+    }
+
+    return String(
+        name || "Football"
+    ).trim();
+
+}
+
+
+/* =========================================================
+   LIVE MINUTE
+========================================================= */
+
+function getLiveMinute(match) {
+
+    const raw =
+        match?.raw || {};
+
+    let value =
+        match?.minute ??
+        match?.elapsed ??
+        raw.minute ??
+        raw.minutes ??
+        raw.elapsed ??
+        raw.elapsed_time ??
+        raw.elapsedTime ??
+        raw.match_time ??
+        raw.matchTime;
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+
+        return null;
+
+    }
+
+    const number =
+        parseInt(value, 10);
+
+    if (Number.isNaN(number)) {
+
+        return null;
+
+    }
+
+    return number;
+
+}
+
+
+/* =========================================================
+   MATCH TIME
+========================================================= */
+
+function formatMatchTime(match, status) {
+
+    if (status === "live") {
+
+        const minute =
+            getLiveMinute(match);
+
+        return minute !== null
+            ? `${minute}'`
+            : "LIVE";
+
+    }
+
+    if (status === "finished") {
+
+        return "FT";
+
+    }
+
+    const value =
+        match?.time ||
+        match?.raw?.time ||
+        match?.raw?.date ||
+        match?.raw?.start_time ||
+        match?.raw?.startTime;
+
+    if (!value) {
+
+        return "--:--";
+
+    }
+
+    const date =
+        new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+
+        return "--:--";
+
+    }
+
+    return date.toLocaleTimeString(
+        "fr-FR",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+function getEmptyIcon() {
+
+    if (currentFilter === "live") {
+
+        return "🔴";
+
+    }
+
+    if (currentFilter === "finished") {
+
+        return "✅";
+
+    }
+
+    return "📅";
+
+}
+
+
+function getEmptyTitle() {
+
+    if (currentFilter === "live") {
+
+        return "Aucun match en direct";
+
+    }
+
+    if (currentFilter === "finished") {
+
+        return "Aucun match terminé";
+
+    }
+
+    return "Aucun match à venir";
+
+}
+
+
+function getEmptyText() {
+
+    if (currentFilter === "live") {
+
+        return "Les matchs en direct apparaîtront ici.";
+
+    }
+
+    if (currentFilter === "finished") {
+
+        return "Aucun résultat terminé pour le moment.";
+
+    }
+
+    return "Les prochains matchs apparaîtront ici.";
+
+}
+
+
+function showEmpty(
+    icon,
+    title,
+    text
+) {
+
+    if (matchesContainer) {
+
+        matchesContainer.innerHTML = "";
+
+    }
+
+    if (noMatches) {
+
+        noMatches.innerHTML = `
+
+            <div>${icon}</div>
+
+            <h3>
+                ${escapeHTML(title)}
+            </h3>
+
+            <p>
+                ${escapeHTML(text)}
+            </p>
+
+        `;
+
+        noMatches.classList.add(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            function(char) {
+
+                return {
+
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+
+                }[char];
+
+            }
+        );
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHTML(value);
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "input",
+        function() {
+
+            renderMatches();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FILTER TABS
+========================================================= */
+
+tabs.forEach(
+    tab => {
+
+        tab.addEventListener(
+            "click",
+            function() {
+
+                tabs.forEach(
+                    item => {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+                tab.classList.add(
+                    "active"
+                );
+
+                currentFilter =
+                    tab.dataset.filter ||
+                    "live";
+
+                renderMatches();
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   SEARCH BUTTON
+========================================================= */
+
+function focusSearch() {
+
+    if (!searchInput) {
+
+        return;
+
+    }
+
+    searchInput.focus();
+
+    searchInput.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+}
+
+
+/* =========================================================
+   AUTO REFRESH
+   LIVE MATCHS YO AP REFRESH
+========================================================= */
+
+setInterval(
+    function() {
+
+        loadMatches();
+
+    },
+    30000
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadMatches();
+
+    }
+);
+
+
+/* =========================================================
+   DEBUG
+========================================================= */
+
+console.log(
+    "✅ PreziScore script.js PARTIE 2 READY"
+);
+   
