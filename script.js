@@ -1,87 +1,133 @@
 "use strict";
 
-const box = document.getElementById("matchesContainer");
-const loading = document.getElementById("loading");
-const empty = document.getElementById("noMatches");
-const search = document.getElementById("searchInput");
-const count = document.getElementById("matchCount");
-const tabs = document.querySelectorAll(".match-tab");
+/* =========================================================
+   PREZISCORE — SCRIPT.JS
+   PARTIE 1 / 2
+   LIVE + UPCOMING + FINISHED
+========================================================= */
+
+console.log("⚽ PREZISCORE SCRIPT — PARTIE 1 OK");
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const box =
+    document.getElementById("matchesContainer");
+
+const loading =
+    document.getElementById("loading");
+
+const empty =
+    document.getElementById("noMatches");
+
+const search =
+    document.getElementById("searchInput");
+
+const count =
+    document.getElementById("matchCount");
+
+const tabs =
+    document.querySelectorAll(".match-tab");
+
+
+/* =========================================================
+   STATE
+========================================================= */
 
 let matches = [];
+
 let filter = "live";
 
 
-function esc(x) {
-    return String(x ?? "").replace(/[&<>"']/g, c => ({
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#039;"
-    }[c]));
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function esc(value) {
+
+    return String(value ?? "")
+        .replace(/[&<>"']/g, char => ({
+
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+
+        }[char]));
+
 }
 
 
-function status(m) {
+/* =========================================================
+   STATUS
+   API SportScore / TheSports
+========================================================= */
 
-    const s = String(
-        m?.status ??
-        m?.statusShort ??
-        m?.raw?.status ??
-        m?.raw?.status_short ??
-        m?.raw?.statusShort ??
-        m?.raw?.status_code ??
-        ""
-    ).toLowerCase().trim();
+function status(match) {
 
+    const values = [
 
-    const text = String(
-        m?.statusText ??
-        m?.statusLong ??
-        m?.raw?.status_text ??
-        m?.raw?.statusText ??
-        m?.raw?.status_long ??
-        ""
-    ).toLowerCase().trim();
+        match?.status,
+        match?.status_text,
+
+        match?.raw?.status,
+        match?.raw?.status_text,
+        match?.raw?.statusText,
+        match?.raw?.state,
+        match?.raw?.match_status
+
+    ];
 
 
-    /* =========================
-       LIVE
-    ========================= */
+    const text =
+        values
+            .filter(Boolean)
+            .map(value =>
+                String(value)
+                    .toLowerCase()
+                    .trim()
+            )
+            .join(" ");
 
-    const liveStatuses = [
+
+    /* ================= LIVE ================= */
+
+    const liveWords = [
+
         "live",
+        "playing",
+        "ongoing",
+        "in_progress",
+        "in progress",
+        "progress",
+        "started",
+
         "1h",
         "2h",
         "ht",
         "et",
         "bt",
-        "p",
-        "playing",
-        "ongoing",
-        "started",
-        "in_progress",
-        "in progress",
-        "progress",
+        "penalty",
+        "penalties",
+
+        "first half",
+        "second half",
         "first_half",
         "second_half",
-        "1st_half",
-        "2nd_half"
+
+        "halftime",
+        "half time"
+
     ];
 
 
     if (
-        liveStatuses.includes(s) ||
-        s.includes("live") ||
-        s.includes("progress") ||
-        s.includes("playing") ||
-        text.includes("live") ||
-        text.includes("progress") ||
-        text.includes("playing") ||
-        text.includes("first half") ||
-        text.includes("second half") ||
-        text.includes("1st half") ||
-        text.includes("2nd half")
+        liveWords.some(word =>
+            text.includes(word)
+        )
     ) {
 
         return "live";
@@ -89,30 +135,26 @@ function status(m) {
     }
 
 
-    /* =========================
-       FINISHED
-    ========================= */
+    /* ================= FINISHED ================= */
 
-    const finishedStatuses = [
+    const finishedWords = [
+
         "finished",
         "finish",
-        "ft",
         "ended",
         "completed",
-        "aet",
-        "pen",
+        "full time",
         "full_time",
-        "full time"
+        "ft",
+        "aet"
+
     ];
 
 
     if (
-        finishedStatuses.includes(s) ||
-        s.includes("finished") ||
-        s.includes("ended") ||
-        text.includes("finished") ||
-        text.includes("ended") ||
-        text.includes("full time")
+        finishedWords.some(word =>
+            text.includes(word)
+        )
     ) {
 
         return "finished";
@@ -120,191 +162,524 @@ function status(m) {
     }
 
 
-    /* =========================
-       UPCOMING
-    ========================= */
+    /* ================= UPCOMING ================= */
 
     return "upcoming";
+
 }
 
 
-function team(m, side) {
+/* =========================================================
+   TEAM NAME
+========================================================= */
 
-    let t = m?.[side];
+function team(match, side) {
 
-    if (typeof t === "string") {
-        return t;
+    let value =
+        match?.[side];
+
+
+    /* API normalized object */
+
+    if (
+        value &&
+        typeof value === "object"
+    ) {
+
+        return (
+            value.name ||
+            value.title ||
+            value.short_name ||
+            value.shortName ||
+            "Équipe"
+        );
+
     }
 
-    let name = t?.name;
 
-    if (!name) {
+    /* API direct string */
+
+    if (
+        typeof value === "string" &&
+        value.trim()
+    ) {
+
+        return value.trim();
+
+    }
+
+
+    /* RAW DATA */
+
+    const raw =
+        match?.raw || {};
+
+
+    let name;
+
+
+    if (side === "home") {
+
         name =
-            m?.raw?.[side] ||
-            m?.raw?.[side + "_name"] ||
-            m?.raw?.[side + "_team"]?.name;
+            raw.home ||
+            raw.home_name ||
+            raw.home_team_name ||
+            raw.home_team?.name ||
+            raw.home?.name;
+
     }
 
-    return name ||
-        (side === "home"
+    else {
+
+        name =
+            raw.away ||
+            raw.away_name ||
+            raw.away_team_name ||
+            raw.away_team?.name ||
+            raw.away?.name;
+
+    }
+
+
+    if (
+        typeof name === "object"
+    ) {
+
+        name =
+            name.name ||
+            name.title ||
+            name.short_name ||
+            name.shortName;
+
+    }
+
+
+    return (
+        String(name || "").trim()
+    ) || (
+
+        side === "home"
             ? "Équipe domicile"
-            : "Équipe visiteuse");
-}
+            : "Équipe visiteuse"
 
-
-function logo(m, side) {
-
-    let t = m?.[side];
-
-    if (typeof t === "string") {
-        t = null;
-    }
-
-    return (
-        t?.logo ||
-        m?.raw?.[side + "_logo"] ||
-        m?.raw?.[side + "_team"]?.logo ||
-        ""
     );
+
 }
 
 
-function score(m, side) {
+/* =========================================================
+   TEAM LOGO
+========================================================= */
 
-    let t = m?.[side];
-
-    if (typeof t === "string") {
-        t = null;
-    }
-
-    return (
-        t?.score ??
-        m?.raw?.[side + "_score"] ??
-        "-"
-    );
-}
-
-
-function competition(m) {
-
-    return (
-        m?.competition ||
-        m?.raw?.competition ||
-        "Football"
-    );
-}
-
-
-function time(m, s) {
-
-    if (s === "live") {
-        return "🔴 LIVE";
-    }
-
-    if (s === "finished") {
-        return "FT";
-    }
+function logo(match, side) {
 
     const value =
-        m?.time ||
-        m?.raw?.time;
+        match?.[side];
 
-    if (!value) {
-        return "--:--";
-    }
 
-    const d = new Date(value);
+    /* Normalized object */
 
-    if (isNaN(d)) {
-        return "--:--";
-    }
+    if (
+        value &&
+        typeof value === "object"
+    ) {
 
-    return d.toLocaleTimeString(
-        "fr-FR",
-        {
-            hour:"2-digit",
-            minute:"2-digit"
+        if (
+            value.logo
+        ) {
+
+            return String(
+                value.logo
+            ).trim();
+
         }
+
+    }
+
+
+    /* RAW */
+
+    const raw =
+        match?.raw || {};
+
+
+    let result;
+
+
+    if (side === "home") {
+
+        result =
+            raw.home_logo ||
+            raw.home_team_logo ||
+            raw.home_team?.logo ||
+            raw.home?.logo;
+
+    }
+
+    else {
+
+        result =
+            raw.away_logo ||
+            raw.away_team_logo ||
+            raw.away_team?.logo ||
+            raw.away?.logo;
+
+    }
+
+
+    return (
+        typeof result === "string"
+            ? result.trim()
+            : ""
     );
+
 }
 
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+function score(match, side) {
+
+    const value =
+        match?.[side];
+
+
+    /* Normalized object */
+
+    if (
+        value &&
+        typeof value === "object"
+    ) {
+
+        if (
+            value.score !== undefined &&
+            value.score !== null
+        ) {
+
+            return value.score;
+
+        }
+
+    }
+
+
+    /* RAW */
+
+    const raw =
+        match?.raw || {};
+
+
+    let result;
+
+
+    if (side === "home") {
+
+        result =
+            raw.home_score ??
+            raw.homeScore ??
+            raw.home_team?.score ??
+            raw.home?.score;
+
+    }
+
+    else {
+
+        result =
+            raw.away_score ??
+            raw.awayScore ??
+            raw.away_team?.score ??
+            raw.away?.score;
+
+    }
+
+
+    if (
+        result === undefined ||
+        result === null ||
+        result === ""
+    ) {
+
+        return "-";
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   COMPETITION
+========================================================= */
+
+function competition(match) {
+
+    let value =
+        match?.competition;
+
+
+    if (
+        value &&
+        typeof value === "object"
+    ) {
+
+        value =
+            value.name ||
+            value.title;
+
+    }
+
+
+    if (!value) {
+
+        const raw =
+            match?.raw || {};
+
+
+        value =
+            raw.competition ||
+            raw.competition_name ||
+            raw.league_name ||
+            raw.tournament_name ||
+            raw.league?.name ||
+            raw.tournament?.name ||
+            raw.competition?.name;
+
+    }
+
+
+    return (
+        String(
+            value || "Football"
+        ).trim()
+    );
+
+}
+
+
+/* =========================================================
+   TIME
+========================================================= */
+
+function time(match, currentStatus) {
+
+    if (
+        currentStatus === "live"
+    ) {
+
+        return "🔴 LIVE";
+
+    }
+
+
+    if (
+        currentStatus === "finished"
+    ) {
+
+        return "FT";
+
+    }
+
+
+    const value =
+        match?.time ||
+        match?.raw?.time ||
+        match?.raw?.date ||
+        match?.raw?.start_time;
+
+
+    if (!value) {
+
+        return "--:--";
+
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "--:--";
+
+    }
+
+
+    return date.toLocaleTimeString(
+        "fr-FR",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
 
 function filtered() {
 
     let list =
         matches.filter(
-            m => status(m) === filter
+            match =>
+                status(match) === filter
         );
 
-    const q =
+
+    /* SEARCH */
+
+    const query =
         search?.value
             ?.toLowerCase()
             .trim();
 
-    if (q) {
 
-        list = list.filter(m => {
+    if (query) {
 
-            return (
-                team(m,"home")
-                    .toLowerCase()
-                    .includes(q) ||
+        list =
+            list.filter(match => {
 
-                team(m,"away")
-                    .toLowerCase()
-                    .includes(q) ||
+                const home =
+                    team(
+                        match,
+                        "home"
+                    )
+                    .toLowerCase();
 
-                String(
-                    competition(m)
-                )
-                .toLowerCase()
-                .includes(q)
-            );
 
-        });
+                const away =
+                    team(
+                        match,
+                        "away"
+                    )
+                    .toLowerCase();
+
+
+                const league =
+                    competition(
+                        match
+                    )
+                    .toLowerCase();
+
+
+                return (
+
+                    home.includes(query) ||
+
+                    away.includes(query) ||
+
+                    league.includes(query)
+
+                );
+
+            });
+
     }
 
+
     return list;
+
 }
 
 
-function card(m) {
+/* =========================================================
+   MATCH CARD
+========================================================= */
 
-    const s = status(m);
+function card(match) {
 
-    const home = team(m,"home");
-    const away = team(m,"away");
+    const currentStatus =
+        status(match);
 
-    const hl = logo(m,"home");
-    const al = logo(m,"away");
 
-    const hs = score(m,"home");
-    const as = score(m,"away");
+    const home =
+        team(match, "home");
 
-    const div =
-        document.createElement("article");
+    const away =
+        team(match, "away");
 
-    div.className =
+
+    const homeLogo =
+        logo(match, "home");
+
+    const awayLogo =
+        logo(match, "away");
+
+
+    const homeScore =
+        score(match, "home");
+
+    const awayScore =
+        score(match, "away");
+
+
+    const article =
+        document.createElement(
+            "article"
+        );
+
+
+    article.className =
         "match-item";
 
-    div.innerHTML = `
+
+    let statusText =
+        "À VENIR";
+
+
+    if (
+        currentStatus === "live"
+    ) {
+
+        statusText =
+            "🔴 LIVE";
+
+    }
+
+
+    if (
+        currentStatus === "finished"
+    ) {
+
+        statusText =
+            "TERMINÉ";
+
+    }
+
+
+    article.innerHTML = `
 
         <div class="match-top">
 
-            <div class="status ${s}">
+            <div class="status ${currentStatus}">
 
                 <span class="status-dot"></span>
 
-                ${s === "live"
-                    ? "🔴 LIVE"
-                    : s === "finished"
-                    ? "TERMINÉ"
-                    : "À VENIR"}
+                ${statusText}
 
             </div>
 
+
             <div class="match-time">
-                ${esc(time(m,s))}
+
+                ${esc(
+                    time(
+                        match,
+                        currentStatus
+                    )
+                )}
+
             </div>
 
         </div>
@@ -312,254 +687,483 @@ function card(m) {
 
         <div class="match-body">
 
+
+            <!-- HOME -->
+
             <div class="club">
 
                 <div class="club-logo">
 
                     ${
-                        hl
-                        ? `<img src="${esc(hl)}"
-                                alt="${esc(home)}"
-                                loading="lazy">`
-                        : "⚽"
+                        homeLogo
+
+                        ?
+
+                        `
+                        <img
+                            src="${esc(homeLogo)}"
+                            alt="${esc(home)}"
+                            loading="lazy"
+                            onerror="this.style.display='none'"
+                        >
+                        `
+
+                        :
+
+                        `⚽`
                     }
 
                 </div>
 
+
                 <div class="club-name">
+
                     ${esc(home)}
+
                 </div>
 
             </div>
 
 
+            <!-- SCORE -->
+
             <div class="score">
 
                 <strong>
-                    ${esc(hs)}
+
+                    ${esc(
+                        String(homeScore)
+                    )}
+
                 </strong>
 
-                <span>-</span>
+
+                <span>
+                    -
+                </span>
+
 
                 <strong>
-                    ${esc(as)}
+
+                    ${esc(
+                        String(awayScore)
+                    )}
+
                 </strong>
 
+
                 <small>
+
                     ${
-                        s === "live"
-                        ? "LIVE"
-                        : s === "finished"
-                        ? "FT"
-                        : "À venir"
+                        currentStatus === "live"
+                            ? "🔴 LIVE"
+
+                            :
+
+                        currentStatus === "finished"
+                            ? "FT"
+
+                            :
+
+                        "À venir"
                     }
+
                 </small>
 
             </div>
 
 
+            <!-- AWAY -->
+
             <div class="club">
 
                 <div class="club-logo">
 
                     ${
-                        al
-                        ? `<img src="${esc(al)}"
-                                alt="${esc(away)}"
-                                loading="lazy">`
-                        : "⚽"
+                        awayLogo
+
+                        ?
+
+                        `
+                        <img
+                            src="${esc(awayLogo)}"
+                            alt="${esc(away)}"
+                            loading="lazy"
+                            onerror="this.style.display='none'"
+                        >
+                        `
+
+                        :
+
+                        `⚽`
                     }
 
                 </div>
 
+
                 <div class="club-name">
+
                     ${esc(away)}
+
                 </div>
 
             </div>
 
+
         </div>
+
     `;
 
 
-    div.onclick = () => {
+    /* ===============================
+       OPEN MATCH DETAILS
+    =============================== */
 
-        const id =
-            m?.slug ||
-            m?.id ||
-            m?.url ||
-            m?.raw?.url ||
-            "";
-
-        if (!id) return;
-
-        location.href =
-            "match-details.html?match=" +
-            encodeURIComponent(id);
-    };
+    const id =
+        match?.id ||
+        match?.slug ||
+        match?.url ||
+        match?.raw?.id ||
+        match?.raw?.url ||
+        "";
 
 
-    return div;
+    if (id) {
+
+        article.style.cursor =
+            "pointer";
+
+
+        article.addEventListener(
+            "click",
+            function() {
+
+                location.href =
+                    "match-details.html?match=" +
+                    encodeURIComponent(id);
+
+            }
+        );
+
+    }
+
+
+    return article;
+
 }
 
 
+/* =========================================================
+   LOAD MATCHES
+========================================================= */
+
 async function loadMatches() {
+
+    console.log(
+        "🔄 PreziScore: chargement..."
+    );
+
 
     try {
 
-        loading.style.display = "block";
+        if (
+            loading
+        ) {
+
+            loading.style.display =
+                "block";
+
+        }
+
+
+        if (!window.PreziAPI) {
+
+            throw new Error(
+                "PreziAPI pa jwenn"
+            );
+
+        }
+
+
+        if (
+            typeof PreziAPI
+                .getNormalizedMatches
+            !== "function"
+        ) {
+
+            throw new Error(
+                "getNormalizedMatches() pa jwenn"
+            );
+
+        }
+
 
         const data =
-            await PreziAPI.getNormalizedMatches();
+            await PreziAPI
+                .getNormalizedMatches();
+
 
         matches =
             Array.isArray(data)
-            ? data
-            : [];
+                ? data
+                : [];
+
+
+        console.log(
+            "⚽ Matchs reçus:",
+            matches.length
+        );
+
 
         render();
 
-    } catch(e) {
+    }
 
-        console.error(e);
+    catch(error) {
 
-        loading.style.display = "none";
+        console.error(
+            "❌ PreziScore API:",
+            error
+        );
+
+
+        if (loading) {
+
+            loading.style.display =
+                "none";
+
+        }
+
 
         showEmpty(
             "⚠️",
             "Erreur API",
             "Impossible de charger les matchs."
         );
+
     }
-               }
 
-/* =====================================================
-   PREZISCORE SCRIPT.JS
+        }
+/* =========================================================
+   PREZISCORE — SCRIPT.JS
    PARTIE 2 / 2
-===================================================== */
+   RENDER + TABS + SEARCH + AUTO REFRESH
+========================================================= */
 
+
+/* =========================================================
+   RENDER
+========================================================= */
 
 function render() {
 
-    loading.style.display = "none";
+    if (loading) {
 
-    const list = filtered();
+        loading.style.display =
+            "none";
 
-    box.innerHTML = "";
+    }
 
+
+    if (!box) {
+
+        console.error(
+            "❌ matchesContainer pa jwenn."
+        );
+
+        return;
+
+    }
+
+
+    const list =
+        filtered();
+
+
+    box.innerHTML =
+        "";
+
+
+    /* MATCH COUNT */
 
     if (count) {
 
         count.textContent =
             list.length +
-            (list.length > 1 ? " matchs" : " match");
+            (
+                list.length > 1
+                    ? " matchs"
+                    : " match"
+            );
 
     }
 
 
-    if (!list.length) {
+    /* NO MATCH */
+
+    if (
+        list.length === 0
+    ) {
 
         showEmpty(
+
             filter === "live"
                 ? "🔴"
+
                 : filter === "finished"
                 ? "✅"
+
                 : "📅",
 
             filter === "live"
                 ? "Aucun match en direct"
+
                 : filter === "finished"
                 ? "Aucun match terminé"
+
                 : "Aucun match à venir",
 
-            "Aucun match ne correspond actuellement."
+            filter === "live"
+                ? "Les matchs en direct apparaîtront ici."
+
+                : filter === "finished"
+                ? "Les matchs terminés apparaîtront ici."
+
+                : "Les prochains matchs apparaîtront ici."
+
         );
 
         return;
+
     }
 
+
+    /* HIDE EMPTY */
 
     if (empty) {
 
-        empty.classList.remove("show");
+        empty.classList.remove(
+            "show"
+        );
 
-        empty.style.display = "none";
+        empty.style.display =
+            "none";
 
     }
 
 
-    /*
+    /* =====================================================
        GROUP BY COMPETITION
-    */
+    ===================================================== */
 
     const groups = {};
 
 
-    list.forEach(m => {
+    list.forEach(
+        match => {
 
-        const name =
-            competition(m);
-
-        if (!groups[name]) {
-            groups[name] = [];
-        }
-
-        groups[name].push(m);
-
-    });
+            const name =
+                competition(match);
 
 
-    Object.entries(groups).forEach(
-        ([name, games]) => {
+            if (
+                !groups[name]
+            ) {
 
-            const section =
-                document.createElement("section");
+                groups[name] =
+                    [];
 
-            section.className =
-                "competition";
-
-
-            const head =
-                document.createElement("div");
-
-            head.className =
-                "competition-head";
+            }
 
 
-            head.innerHTML = `
-                <div class="competition-icon">
-                    🏆
-                </div>
-
-                <span>
-                    ${esc(name)}
-                </span>
-            `;
-
-
-            section.appendChild(head);
-
-
-            games.forEach(m => {
-
-                section.appendChild(
-                    card(m)
-                );
-
-            });
-
-
-            box.appendChild(section);
+            groups[name].push(
+                match
+            );
 
         }
     );
 
+
+    /* =====================================================
+       CREATE COMPETITIONS
+    ===================================================== */
+
+    Object.entries(groups)
+        .forEach(
+            ([name, games]) => {
+
+
+                const section =
+                    document.createElement(
+                        "section"
+                    );
+
+
+                section.className =
+                    "competition";
+
+
+                /* HEADER */
+
+                const header =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                header.className =
+                    "competition-head";
+
+
+                header.innerHTML = `
+
+                    <div class="competition-icon">
+
+                        🏆
+
+                    </div>
+
+
+                    <span>
+
+                        ${esc(name)}
+
+                    </span>
+
+                `;
+
+
+                section.appendChild(
+                    header
+                );
+
+
+                /* MATCHES */
+
+                games.forEach(
+                    match => {
+
+                        section.appendChild(
+                            card(match)
+                        );
+
+                    }
+                );
+
+
+                box.appendChild(
+                    section
+                );
+
+            }
+        );
+
 }
 
 
-/* =====================================================
+/* =========================================================
    EMPTY MESSAGE
-===================================================== */
+========================================================= */
 
 function showEmpty(
     icon,
@@ -567,93 +1171,108 @@ function showEmpty(
     text
 ) {
 
-    if (!empty) return;
+    if (!empty) {
+
+        return;
+
+    }
 
 
     empty.innerHTML = `
 
-        <div>${icon}</div>
+        <div>
+
+            ${esc(icon)}
+
+        </div>
+
 
         <h3>
+
             ${esc(title)}
+
         </h3>
 
+
         <p>
+
             ${esc(text)}
+
         </p>
 
     `;
 
 
-    empty.style.display = "block";
+    empty.style.display =
+        "block";
 
-    empty.classList.add("show");
+
+    empty.classList.add(
+        "show"
+    );
 
 }
 
 
-/* =====================================================
-   EMPTY TEXT
-===================================================== */
-
-function emptyTitle() {
-
-    if (filter === "live") {
-
-        return "Aucun match en direct";
-
-    }
-
-    if (filter === "finished") {
-
-        return "Aucun match terminé";
-
-    }
-
-    return "Aucun match à venir";
-}
-
-
-/* =====================================================
+/* =========================================================
    TABS
-===================================================== */
+========================================================= */
 
-tabs.forEach(tab => {
+tabs.forEach(
+    tab => {
 
-    tab.addEventListener(
-        "click",
-        function() {
+        tab.addEventListener(
+            "click",
+            function() {
 
-            tabs.forEach(t => {
 
-                t.classList.remove(
+                /* REMOVE ACTIVE */
+
+                tabs.forEach(
+                    item => {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                /* ACTIVE TAB */
+
+                this.classList.add(
                     "active"
                 );
 
-            });
+
+                /* FILTER */
+
+                filter =
+                    this.dataset.filter ||
+                    "live";
 
 
-            this.classList.add(
-                "active"
-            );
+                console.log(
+                    "📌 Filter:",
+                    filter
+                );
 
 
-            filter =
-                this.dataset.filter ||
-                "live";
+                /* RENDER */
+
+                render();
+
+            }
+        );
+
+    }
+);
 
 
-            render();
-
-        }
-    );
-
-});
-
-
-/* =====================================================
+/* =========================================================
    SEARCH
-===================================================== */
+========================================================= */
 
 if (search) {
 
@@ -669,32 +1288,68 @@ if (search) {
 }
 
 
-/* =====================================================
+/* =========================================================
    SEARCH BUTTON
-===================================================== */
+========================================================= */
 
-function focusSearch() {
+window.focusSearch =
+function() {
 
-    if (!search) return;
+    if (!search) {
+
+        return;
+
+    }
+
 
     search.focus();
 
+
     search.scrollIntoView({
+
         behavior: "smooth",
+
         block: "center"
+
     });
 
-}
+};
 
 
-/* =====================================================
+/* =========================================================
    AUTO REFRESH
-===================================================== */
+   Chak 30 segonn
+========================================================= */
 
 setInterval(
     async function() {
 
         try {
+
+            if (
+                !window.PreziAPI
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                typeof PreziAPI
+                    .getNormalizedMatches
+                !== "function"
+            ) {
+
+                return;
+
+            }
+
+
+            console.log(
+                "🔄 Auto refresh..."
+            );
+
 
             const data =
                 await PreziAPI
@@ -705,34 +1360,44 @@ setInterval(
                 Array.isArray(data)
             ) {
 
-                matches = data;
+                matches =
+                    data;
+
 
                 render();
 
             }
 
         }
+
         catch(error) {
 
             console.log(
-                "Auto refresh:",
+                "⚠️ Auto refresh error:",
                 error
             );
 
         }
 
     },
-    60000
+
+    30000
+
 );
 
 
-/* =====================================================
+/* =========================================================
    START
-===================================================== */
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
     function() {
+
+        console.log(
+            "🚀 PreziScore START"
+        );
+
 
         loadMatches();
 
@@ -740,21 +1405,65 @@ document.addEventListener(
 );
 
 
-/* =====================================================
-   GLOBAL
-===================================================== */
+/* =========================================================
+   GLOBAL API
+========================================================= */
 
 window.PreziMatches = {
 
-    reload: loadMatches,
+    reload:
+        loadMatches,
 
-    render: render,
+    render:
+        render,
 
-    getAll: () => matches
+    getAll:
+        function() {
+
+            return matches;
+
+        },
+
+    getLive:
+        function() {
+
+            return matches.filter(
+                match =>
+                    status(match) ===
+                    "live"
+            );
+
+        },
+
+    getUpcoming:
+        function() {
+
+            return matches.filter(
+                match =>
+                    status(match) ===
+                    "upcoming"
+            );
+
+        },
+
+    getFinished:
+        function() {
+
+            return matches.filter(
+                match =>
+                    status(match) ===
+                    "finished"
+            );
+
+        }
 
 };
 
 
+/* =========================================================
+   READY
+========================================================= */
+
 console.log(
-    "✅ PreziScore script.js FULL READY"
+    "✅ PREZISCORE SCRIPT.JS FULL READY"
 );
