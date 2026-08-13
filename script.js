@@ -23,26 +23,106 @@ function esc(x) {
 
 
 function status(m) {
-    let s = String(
-        m?.status ||
-        m?.raw?.status ||
+
+    const s = String(
+        m?.status ??
+        m?.statusShort ??
+        m?.raw?.status ??
+        m?.raw?.status_short ??
+        m?.raw?.statusShort ??
+        m?.raw?.status_code ??
         ""
-    ).toLowerCase();
+    ).toLowerCase().trim();
+
+
+    const text = String(
+        m?.statusText ??
+        m?.statusLong ??
+        m?.raw?.status_text ??
+        m?.raw?.statusText ??
+        m?.raw?.status_long ??
+        ""
+    ).toLowerCase().trim();
+
+
+    /* =========================
+       LIVE
+    ========================= */
+
+    const liveStatuses = [
+        "live",
+        "1h",
+        "2h",
+        "ht",
+        "et",
+        "bt",
+        "p",
+        "playing",
+        "ongoing",
+        "started",
+        "in_progress",
+        "in progress",
+        "progress",
+        "first_half",
+        "second_half",
+        "1st_half",
+        "2nd_half"
+    ];
+
 
     if (
-        ["live","1h","2h","ht","et","bt","p","playing","ongoing"]
-        .includes(s) ||
-        s.includes("live")
+        liveStatuses.includes(s) ||
+        s.includes("live") ||
+        s.includes("progress") ||
+        s.includes("playing") ||
+        text.includes("live") ||
+        text.includes("progress") ||
+        text.includes("playing") ||
+        text.includes("first half") ||
+        text.includes("second half") ||
+        text.includes("1st half") ||
+        text.includes("2nd half")
     ) {
+
         return "live";
+
     }
 
+
+    /* =========================
+       FINISHED
+    ========================= */
+
+    const finishedStatuses = [
+        "finished",
+        "finish",
+        "ft",
+        "ended",
+        "completed",
+        "aet",
+        "pen",
+        "full_time",
+        "full time"
+    ];
+
+
     if (
-        ["finished","ft","ended","completed","aet","pen"]
-        .includes(s)
+        finishedStatuses.includes(s) ||
+        s.includes("finished") ||
+        s.includes("ended") ||
+        text.includes("finished") ||
+        text.includes("ended") ||
+        text.includes("full time")
     ) {
+
         return "finished";
+
     }
+
+
+    /* =========================
+       UPCOMING
+    ========================= */
 
     return "upcoming";
 }
