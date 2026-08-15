@@ -3,6 +3,7 @@
 /* =====================================================
    PREZISCORE — API CENTRAL
    VERCEL BACKEND
+   VERSION SOLID
    NO API KEY
 ===================================================== */
 
@@ -10,50 +11,260 @@ const PREZI_API_BASE =
     "https://prezi-score.vercel.app";
 
 const PREZI_CACHE_TIME = 15000;
-const PREZI_CACHE = new Map();
+
+const PREZI_CACHE =
+    new Map();
 
 
 /* =====================================================
-   REQUEST
+   REQUEST CENTRAL
 ===================================================== */
 
 async function preziRequest(path) {
 
-    const url =
-        PREZI_API_BASE.replace(/\/$/, "") + path;
+    const cleanBase =
+        PREZI_API_BASE.replace(/\/+$/, "");
 
-    const cached = PREZI_CACHE.get(url);
+    const cleanPath =
+        String(path || "").startsWith("/")
+            ? path
+            : "/" + path;
+
+    const url =
+        cleanBase + cleanPath;
+
+
+    /* ================= CACHE ================= */
+
+    const cached =
+        PREZI_CACHE.get(url);
+
 
     if (
         cached &&
-        Date.now() - cached.time < PREZI_CACHE_TIME
+        Date.now() - cached.time <
+        PREZI_CACHE_TIME
     ) {
+
         return cached.data;
+
     }
 
-    const response = await fetch(url, {
-        method: "GET",
-        headers: {
-            "Accept": "application/json"
-        },
-        cache: "no-store"
-    });
+
+    console.log(
+        "🌐 PreziScore API:",
+        url
+    );
+
+
+    /* ================= REQUEST ================= */
+
+    const response =
+        await fetch(
+            url,
+            {
+                method: "GET",
+
+                headers: {
+                    "Accept":
+                        "application/json"
+                },
+
+                cache:
+                    "no-store"
+            }
+        );
+
+
+    /* ================= HTTP ERROR ================= */
 
     if (!response.ok) {
+
+        let errorText = "";
+
+        try {
+
+            errorText =
+                await response.text();
+
+        } catch (_) {
+
+            errorText = "";
+
+        }
+
+
         throw new Error(
             "PreziScore API HTTP " +
-            response.status
+            response.status +
+            (
+                errorText
+                    ? " — " + errorText
+                    : ""
+            )
         );
+
     }
 
-    const data = await response.json();
 
-    PREZI_CACHE.set(url, {
-        time: Date.now(),
-        data: data
-    });
+    /* ================= JSON ================= */
+
+    let data;
+
+    try {
+
+        data =
+            await response.json();
+
+    } catch (error) {
+
+        throw new Error(
+            "API a pa retounen JSON valid."
+        );
+
+    }
+
+
+    /* ================= CACHE ================= */
+
+    PREZI_CACHE.set(
+        url,
+        {
+            time:
+                Date.now(),
+
+            data:
+                data
+        }
+    );
+
+
+    console.log(
+        "✅ API RESPONSE:",
+        data
+    );
+
 
     return data;
+}
+
+
+/* =====================================================
+   DATE HELPERS
+===================================================== */
+
+function getTodayDate() {
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+    );
+}
+
+
+/* =====================================================
+   SAFE STRING
+===================================================== */
+
+function safeString(value) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return "";
+
+    }
+
+
+    if (
+        typeof value === "object"
+    ) {
+
+        return (
+            value.name ||
+            value.title ||
+            value.short_name ||
+            value.shortName ||
+            value.displayName ||
+            ""
+        );
+
+    }
+
+
+    return String(value).trim();
+}
+
+
+/* =====================================================
+   FIND VALUE
+===================================================== */
+
+function firstValue(
+    object,
+    keys
+) {
+
+    if (!object) {
+
+        return null;
+
+    }
+
+
+    for (
+        const key of keys
+    ) {
+
+        const value =
+            object?.[key];
+
+
+        if (
+            value !== undefined &&
+            value !== null &&
+            value !== ""
+        ) {
+
+            return value;
+
+        }
+
+    }
+
+
+    return null;
 }
 
 
@@ -63,70 +274,182 @@ async function preziRequest(path) {
 
 function normalizeStatus(match) {
 
-    const status =
-        String(match?.status || "")
-            .toLowerCase()
-            .trim();
+    if (!match) {
+
+        return "upcoming";
+
+    }
+
+
+    const raw =
+        match.raw || {};
+
+
+    const values = [
+
+        match.status,
+
+        match.status_text,
+
+        match.statusText,
+
+        match.state,
+
+        match.match_status,
+
+        match.matchStatus,
+
+        match.phase,
+
+        raw.status,
+
+        raw.status_text,
+
+        raw.statusText,
+
+        raw.state,
+
+        raw.match_status,
+
+        raw.matchStatus,
+
+        raw.phase
+
+    ];
+
 
     const text =
-        String(match?.status_text || "")
-            .toLowerCase()
-            .trim();
+        values
+            .filter(
+                value =>
+                    value !==
+                    undefined &&
+                    value !== null
+            )
+            .map(
+                value =>
+                    safeString(
+                        value
+                    ).toLowerCase()
+            )
+            .join(" ");
 
 
-    /* LIVE */
+    /* =================================================
+       LIVE
+    ================================================= */
+
+    const liveWords = [
+
+        "live",
+
+        "inplay",
+
+        "in_play",
+
+        "in play",
+
+        "playing",
+
+        "ongoing",
+
+        "started",
+
+        "in_progress",
+
+        "in progress",
+
+        "progress",
+
+        "1h",
+
+        "2h",
+
+        "ht",
+
+        "half",
+
+        "half time",
+
+        "halftime",
+
+        "first half",
+
+        "second half",
+
+        "first_half",
+
+        "second_half",
+
+        "et",
+
+        "extra time",
+
+        "penalty",
+
+        "penalties"
+
+    ];
+
 
     if (
-        status === "live" ||
-        status === "inplay" ||
-        status === "in_play" ||
-        status === "playing" ||
-        status === "started" ||
-        status === "1h" ||
-        status === "2h" ||
-        status === "ht" ||
-        status === "half"
+        liveWords.some(
+            word =>
+                text.includes(word)
+        )
     ) {
+
         return "live";
+
     }
 
 
+    /* =================================================
+       FINISHED
+    ================================================= */
+
+    const finishedWords = [
+
+        "finished",
+
+        "finish",
+
+        "ended",
+
+        "end",
+
+        "completed",
+
+        "full time",
+
+        "full_time",
+
+        "full-time",
+
+        "ft",
+
+        "aet",
+
+        "after extra time"
+
+    ];
+
+
     if (
-        text.includes("live") ||
-        text.includes("1st half") ||
-        text.includes("2nd half") ||
-        text.includes("half time") ||
-        text.includes("halftime") ||
-        text.includes("in play") ||
-        text.includes("in-play")
+        finishedWords.some(
+            word =>
+                text.includes(word)
+        )
     ) {
-        return "live";
-    }
 
-
-    /* FINISHED */
-
-    if (
-        status === "finished" ||
-        status === "finish" ||
-        status === "ended" ||
-        status === "ft"
-    ) {
         return "finished";
+
     }
 
 
-    if (
-        text.includes("finished") ||
-        text === "ft" ||
-        text.includes("full time") ||
-        text.includes("full-time")
-    ) {
-        return "finished";
-    }
-
-
-    /* DEFAULT */
+    /* =================================================
+       UPCOMING
+    ================================================= */
 
     return "upcoming";
 }
@@ -138,62 +461,153 @@ function normalizeStatus(match) {
 
 function getLiveMinute(match) {
 
-    if (normalizeStatus(match) !== "live") {
+    if (
+        normalizeStatus(match) !==
+        "live"
+    ) {
+
         return null;
+
     }
 
 
-    /* Si API a deja bay minute */
-
-    if (
-        match.minute !== undefined &&
-        match.minute !== null &&
-        match.minute !== ""
-    ) {
-        return String(match.minute);
-    }
-
-
-    if (
-        match.elapsed !== undefined &&
-        match.elapsed !== null
-    ) {
-        return String(match.elapsed);
-    }
+    const directMinute =
+        firstValue(
+            match,
+            [
+                "minute",
+                "minutes",
+                "elapsed",
+                "match_minute",
+                "matchMinute",
+                "current_minute",
+                "currentMinute"
+            ]
+        );
 
 
     if (
-        match.minutes !== undefined &&
-        match.minutes !== null
+        directMinute !==
+        null
     ) {
-        return String(match.minutes);
+
+        const value =
+            safeString(
+                directMinute
+            );
+
+
+        if (value) {
+
+            return value
+                .includes("'")
+                ? value
+                : value + "'";
+
+        }
+
     }
 
 
-    /* Eseye kalkile l depi lè kòmansman */
+    /* RAW MINUTE */
 
-    if (match.time) {
+    const raw =
+        match.raw || {};
+
+
+    const rawMinute =
+        firstValue(
+            raw,
+            [
+                "minute",
+                "minutes",
+                "elapsed",
+                "match_minute",
+                "matchMinute",
+                "current_minute",
+                "currentMinute"
+            ]
+        );
+
+
+    if (
+        rawMinute !==
+        null
+    ) {
+
+        const value =
+            safeString(
+                rawMinute
+            );
+
+
+        if (value) {
+
+            return value
+                .includes("'")
+                ? value
+                : value + "'";
+
+        }
+
+    }
+
+
+    /* CALCULATE FROM START TIME */
+
+    const startTime =
+        firstValue(
+            match,
+            [
+                "time",
+                "utcTime",
+                "start_time",
+                "startTime",
+                "kickoff",
+                "kickoff_time",
+                "kickoffTime",
+                "date"
+            ]
+        );
+
+
+    if (startTime) {
 
         const start =
-            new Date(match.time).getTime();
+            new Date(
+                startTime
+            ).getTime();
 
-        if (!Number.isNaN(start)) {
 
-            const now =
-                Date.now();
+        if (
+            !Number.isNaN(
+                start
+            )
+        ) {
 
             const minutes =
                 Math.floor(
-                    (now - start) / 60000
+                    (
+                        Date.now() -
+                        start
+                    ) / 60000
                 );
+
 
             if (
                 minutes >= 0 &&
                 minutes <= 130
             ) {
-                return minutes + "'";
+
+                return (
+                    minutes +
+                    "'"
+                );
+
             }
+
         }
+
     }
 
 
@@ -202,125 +616,870 @@ function getLiveMinute(match) {
 
 
 /* =====================================================
+   TEAM OBJECT
+===================================================== */
+
+function getTeamObject(
+    match,
+    side
+) {
+
+    if (!match) {
+
+        return {};
+
+    }
+
+
+    const raw =
+        match.raw || {};
+
+
+    const direct =
+        match?.[side];
+
+
+    if (
+        direct &&
+        typeof direct ===
+        "object"
+    ) {
+
+        return direct;
+
+    }
+
+
+    if (
+        typeof direct ===
+        "string"
+    ) {
+
+        return {
+            name:
+                direct
+        };
+
+    }
+
+
+    if (
+        side === "home"
+    ) {
+
+        return (
+            raw.home_team ||
+            raw.homeTeam ||
+            raw.home ||
+            {}
+        );
+
+    }
+
+
+    return (
+        raw.away_team ||
+        raw.awayTeam ||
+        raw.away ||
+        {}
+    );
+}
+
+
+/* =====================================================
+   TEAM NAME
+===================================================== */
+
+function getTeamName(
+    match,
+    side
+) {
+
+    const team =
+        getTeamObject(
+            match,
+            side
+        );
+
+
+    const raw =
+        match?.raw || {};
+
+
+    let name =
+        firstValue(
+            team,
+            [
+                "name",
+                "title",
+                "short_name",
+                "shortName",
+                "displayName",
+                "team_name",
+                "teamName"
+            ]
+        );
+
+
+    if (!name) {
+
+        if (
+            side === "home"
+        ) {
+
+            name =
+                firstValue(
+                    match,
+                    [
+                        "home_name",
+                        "homeName",
+                        "home_team_name",
+                        "homeTeamName"
+                    ]
+                );
+
+        } else {
+
+            name =
+                firstValue(
+                    match,
+                    [
+                        "away_name",
+                        "awayName",
+                        "away_team_name",
+                        "awayTeamName"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    if (!name) {
+
+        if (
+            side === "home"
+        ) {
+
+            name =
+                firstValue(
+                    raw,
+                    [
+                        "home_name",
+                        "homeName",
+                        "home_team_name",
+                        "homeTeamName"
+                    ]
+                );
+
+        } else {
+
+            name =
+                firstValue(
+                    raw,
+                    [
+                        "away_name",
+                        "awayName",
+                        "away_team_name",
+                        "awayTeamName"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    return (
+        safeString(
+            name
+        ) ||
+        (
+            side === "home"
+                ? "Équipe domicile"
+                : "Équipe visiteuse"
+        )
+    );
+}
+
+
+/* =====================================================
+   TEAM LOGO
+===================================================== */
+
+function getTeamLogo(
+    match,
+    side
+) {
+
+    const team =
+        getTeamObject(
+            match,
+            side
+        );
+
+
+    const raw =
+        match?.raw || {};
+
+
+    let logo =
+        firstValue(
+            team,
+            [
+                "logo",
+                "crest",
+                "image",
+                "image_url",
+                "imageUrl",
+                "team_logo",
+                "teamLogo"
+            ]
+        );
+
+
+    if (!logo) {
+
+        if (
+            side === "home"
+        ) {
+
+            logo =
+                firstValue(
+                    match,
+                    [
+                        "home_logo",
+                        "homeLogo",
+                        "home_crest",
+                        "homeCrest",
+                        "home_image"
+                    ]
+                );
+
+        } else {
+
+            logo =
+                firstValue(
+                    match,
+                    [
+                        "away_logo",
+                        "awayLogo",
+                        "away_crest",
+                        "awayCrest",
+                        "away_image"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    if (!logo) {
+
+        if (
+            side === "home"
+        ) {
+
+            logo =
+                firstValue(
+                    raw,
+                    [
+                        "home_logo",
+                        "homeLogo",
+                        "home_crest",
+                        "homeCrest",
+                        "home_image"
+                    ]
+                );
+
+        } else {
+
+            logo =
+                firstValue(
+                    raw,
+                    [
+                        "away_logo",
+                        "awayLogo",
+                        "away_crest",
+                        "awayCrest",
+                        "away_image"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    return safeString(
+        logo
+    );
+}
+
+
+/* =====================================================
+   SCORE
+===================================================== */
+
+function getTeamScore(
+    match,
+    side
+) {
+
+    const team =
+        getTeamObject(
+            match,
+            side
+        );
+
+
+    const raw =
+        match?.raw || {};
+
+
+    let score =
+        firstValue(
+            team,
+            [
+                "score",
+                "goals",
+                "goal",
+                "points"
+            ]
+        );
+
+
+    if (
+        score === null
+    ) {
+
+        if (
+            side === "home"
+        ) {
+
+            score =
+                firstValue(
+                    match,
+                    [
+                        "home_score",
+                        "homeScore",
+                        "home_goals",
+                        "homeGoals",
+                        "home_points"
+                    ]
+                );
+
+        } else {
+
+            score =
+                firstValue(
+                    match,
+                    [
+                        "away_score",
+                        "awayScore",
+                        "away_goals",
+                        "awayGoals",
+                        "away_points"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    if (
+        score === null
+    ) {
+
+        if (
+            side === "home"
+        ) {
+
+            score =
+                firstValue(
+                    raw,
+                    [
+                        "home_score",
+                        "homeScore",
+                        "home_goals",
+                        "homeGoals"
+                    ]
+                );
+
+        } else {
+
+            score =
+                firstValue(
+                    raw,
+                    [
+                        "away_score",
+                        "awayScore",
+                        "away_goals",
+                        "awayGoals"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    if (
+        score === null ||
+        score === undefined ||
+        score === ""
+    ) {
+
+        return null;
+
+    }
+
+
+    return score;
+       }
+/* =====================================================
+   PREZISCORE — API CENTRAL
+   PARTIE 2 / 2
+===================================================== */
+
+
+/* =====================================================
+   COMPETITION
+===================================================== */
+
+function getCompetitionName(match) {
+
+    const raw =
+        match?.raw || {};
+
+
+    let competition =
+        match?.competition;
+
+
+    if (
+        competition &&
+        typeof competition ===
+        "object"
+    ) {
+
+        competition =
+            firstValue(
+                competition,
+                [
+                    "name",
+                    "title",
+                    "short_name",
+                    "shortName"
+                ]
+            );
+
+    }
+
+
+    if (!competition) {
+
+        competition =
+            firstValue(
+                match,
+                [
+                    "competition_name",
+                    "competitionName",
+                    "league_name",
+                    "leagueName",
+                    "tournament_name",
+                    "tournamentName"
+                ]
+            );
+
+    }
+
+
+    if (!competition) {
+
+        const league =
+            match?.league;
+
+
+        if (
+            league &&
+            typeof league ===
+            "object"
+        ) {
+
+            competition =
+                firstValue(
+                    league,
+                    [
+                        "name",
+                        "title",
+                        "short_name",
+                        "shortName"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    if (!competition) {
+
+        competition =
+            firstValue(
+                raw,
+                [
+                    "competition_name",
+                    "competitionName",
+                    "league_name",
+                    "leagueName",
+                    "tournament_name",
+                    "tournamentName"
+                ]
+            );
+
+    }
+
+
+    if (!competition) {
+
+        const league =
+            raw?.league;
+
+
+        if (
+            league &&
+            typeof league ===
+            "object"
+        ) {
+
+            competition =
+                firstValue(
+                    league,
+                    [
+                        "name",
+                        "title",
+                        "short_name",
+                        "shortName"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    return (
+        safeString(
+            competition
+        ) ||
+        "Football"
+    );
+}
+
+
+/* =====================================================
+   COMPETITION LOGO
+===================================================== */
+
+function getCompetitionLogo(
+    match
+) {
+
+    const raw =
+        match?.raw || {};
+
+
+    let logo =
+        firstValue(
+            match,
+            [
+                "competition_logo",
+                "competitionLogo",
+                "league_logo",
+                "leagueLogo",
+                "tournament_logo"
+            ]
+        );
+
+
+    if (!logo) {
+
+        const competition =
+            match?.competition;
+
+
+        if (
+            competition &&
+            typeof competition ===
+            "object"
+        ) {
+
+            logo =
+                firstValue(
+                    competition,
+                    [
+                        "logo",
+                        "crest",
+                        "image",
+                        "image_url",
+                        "imageUrl"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    if (!logo) {
+
+        const league =
+            match?.league;
+
+
+        if (
+            league &&
+            typeof league ===
+            "object"
+        ) {
+
+            logo =
+                firstValue(
+                    league,
+                    [
+                        "logo",
+                        "crest",
+                        "image",
+                        "image_url",
+                        "imageUrl"
+                    ]
+                );
+
+        }
+
+    }
+
+
+    if (!logo) {
+
+        logo =
+            firstValue(
+                raw,
+                [
+                    "competition_logo",
+                    "competitionLogo",
+                    "league_logo",
+                    "leagueLogo",
+                    "tournament_logo"
+                ]
+            );
+
+    }
+
+
+    return safeString(
+        logo
+    );
+}
+
+
+/* =====================================================
+   MATCH TIME
+===================================================== */
+
+function getMatchTime(
+    match
+) {
+
+    const raw =
+        match?.raw || {};
+
+
+    const value =
+        firstValue(
+            match,
+            [
+                "time",
+                "utcTime",
+                "utc_time",
+                "start_time",
+                "startTime",
+                "kickoff",
+                "kickoff_time",
+                "kickoffTime",
+                "date",
+                "datetime"
+            ]
+        );
+
+
+    if (value) {
+
+        return value;
+
+    }
+
+
+    return firstValue(
+        raw,
+        [
+            "time",
+            "utcTime",
+            "utc_time",
+            "start_time",
+            "startTime",
+            "kickoff",
+            "kickoff_time",
+            "kickoffTime",
+            "date",
+            "datetime"
+        ]
+    ) || null;
+}
+
+
+/* =====================================================
    NORMALIZE MATCH
 ===================================================== */
 
-function normalizeMatch(match) {
+function normalizeMatch(
+    match
+) {
 
     if (!match) {
+
         return null;
+
     }
 
 
     const status =
-        normalizeStatus(match);
+        normalizeStatus(
+            match
+        );
 
 
     const homeName =
-        typeof match.home === "object"
-            ? match.home?.name
-            : match.home;
+        getTeamName(
+            match,
+            "home"
+        );
 
 
     const awayName =
-        typeof match.away === "object"
-            ? match.away?.name
-            : match.away;
+        getTeamName(
+            match,
+            "away"
+        );
 
 
     const homeLogo =
-        typeof match.home === "object"
-            ? (
-                match.home?.logo ||
-                match.home?.crest ||
-                ""
-            )
-            : (
-                match.home_logo ||
-                ""
-            );
+        getTeamLogo(
+            match,
+            "home"
+        );
 
 
     const awayLogo =
-        typeof match.away === "object"
-            ? (
-                match.away?.logo ||
-                match.away?.crest ||
-                ""
-            )
-            : (
-                match.away_logo ||
-                ""
-            );
+        getTeamLogo(
+            match,
+            "away"
+        );
 
 
     const homeScore =
-        typeof match.home === "object"
-            ? (
-                match.home?.score ??
-                null
-            )
-            : (
-                match.home_score ??
-                null
-            );
+        getTeamScore(
+            match,
+            "home"
+        );
 
 
     const awayScore =
-        typeof match.away === "object"
-            ? (
-                match.away?.score ??
-                null
-            )
-            : (
-                match.away_score ??
-                null
-            );
+        getTeamScore(
+            match,
+            "away"
+        );
+
+
+    const competition =
+        getCompetitionName(
+            match
+        );
+
+
+    const competitionLogo =
+        getCompetitionLogo(
+            match
+        );
+
+
+    const matchTime =
+        getMatchTime(
+            match
+        );
+
+
+    const id =
+        firstValue(
+            match,
+            [
+                "id",
+                "match_id",
+                "matchId",
+                "fixture_id",
+                "fixtureId"
+            ]
+        ) ||
+        match.url ||
+        `${homeName}-${awayName}`;
 
 
     return {
 
         id:
-            match.id ||
-            match.match_id ||
-            match.url ||
-            `${homeName}-${awayName}`,
+            String(id),
 
         slug:
-            match.url ||
-            String(match.id || ""),
+            String(
+                match.slug ||
+                match.url ||
+                id
+            ),
 
 
-        status: status,
+        status:
+            status,
 
 
         statusText:
+
             status === "live"
                 ? "LIVE"
+
                 : status === "finished"
-                    ? "Finished"
-                    : (
-                        match.status_text ||
-                        "À venir"
-                    ),
+                ? "Finished"
+
+                : "À venir",
 
 
         minute:
-            getLiveMinute(match),
+            getLiveMinute(
+                match
+            ),
 
 
         time:
-            match.time ||
-            match.utcTime ||
-            match.start_time ||
-            null,
+            matchTime,
 
 
         home: {
 
             name:
-                homeName ||
-                "Équipe domicile",
+                homeName,
 
             logo:
                 homeLogo,
@@ -334,8 +1493,7 @@ function normalizeMatch(match) {
         away: {
 
             name:
-                awayName ||
-                "Équipe visiteuse",
+                awayName,
 
             logo:
                 awayLogo,
@@ -347,25 +1505,11 @@ function normalizeMatch(match) {
 
 
         competition:
-            typeof match.competition === "object"
-                ? (
-                    match.competition?.name ||
-                    "Football"
-                )
-                : (
-                    match.competition ||
-                    "Football"
-                ),
+            competition,
 
 
         competitionLogo:
-            match.competition_logo ||
-            (
-                typeof match.competition === "object"
-                    ? match.competition?.logo
-                    : ""
-            ) ||
-            "",
+            competitionLogo,
 
 
         url:
@@ -384,50 +1528,116 @@ function normalizeMatch(match) {
    EXTRACT MATCHES
 ===================================================== */
 
-function extractMatches(data) {
+function extractMatches(
+    data
+) {
 
-    /* Nouvo Vercel API */
+    /* ===============================
+       FORMAT:
+       { matches: [] }
+    =============================== */
 
     if (
-        Array.isArray(data?.matches)
+        Array.isArray(
+            data?.matches
+        )
     ) {
+
         return data.matches;
+
     }
 
 
-    /* Si API a retounen data.matches */
+    /* ===============================
+       FORMAT:
+       { data: { matches: [] } }
+    =============================== */
 
     if (
-        Array.isArray(data?.data?.matches)
+        Array.isArray(
+            data?.data?.matches
+        )
     ) {
+
         return data.data.matches;
+
     }
 
 
-    /* Si API a retounen data kòm array */
+    /* ===============================
+       FORMAT:
+       { data: [] }
+    =============================== */
 
     if (
-        Array.isArray(data?.data)
+        Array.isArray(
+            data?.data
+        )
     ) {
+
         return data.data;
+
     }
 
 
-    /* FotMob-style fallback */
+    /* ===============================
+       FORMAT:
+       { results: [] }
+    =============================== */
 
     if (
-        Array.isArray(data?.leagues)
+        Array.isArray(
+            data?.results
+        )
     ) {
 
-        const result = [];
+        return data.results;
+
+    }
+
+
+    /* ===============================
+       FORMAT:
+       { data: { results: [] } }
+    =============================== */
+
+    if (
+        Array.isArray(
+            data?.data?.results
+        )
+    ) {
+
+        return data.data.results;
+
+    }
+
+
+    /* ===============================
+       FOTMOB STYLE
+    =============================== */
+
+    if (
+        Array.isArray(
+            data?.leagues
+        )
+    ) {
+
+        const result =
+            [];
+
 
         data.leagues.forEach(
             league => {
 
-                (
-                    league.matches ||
-                    []
-                ).forEach(
+                const games =
+                    Array.isArray(
+                        league?.matches
+                    )
+                        ? league.matches
+                        : [];
+
+
+                games.forEach(
                     match => {
 
                         result.push({
@@ -435,10 +1645,12 @@ function extractMatches(data) {
                             ...match,
 
                             competition:
-                                league.name,
+                                league?.name ||
+                                "Football",
 
                             competition_logo:
-                                league.logo
+                                league?.logo ||
+                                ""
 
                         });
 
@@ -447,6 +1659,60 @@ function extractMatches(data) {
 
             }
         );
+
+
+        return result;
+    }
+
+
+    /* ===============================
+       DATA LEAGUES
+    =============================== */
+
+    if (
+        Array.isArray(
+            data?.data?.leagues
+        )
+    ) {
+
+        const result =
+            [];
+
+
+        data.data.leagues.forEach(
+            league => {
+
+                const games =
+                    Array.isArray(
+                        league?.matches
+                    )
+                        ? league.matches
+                        : [];
+
+
+                games.forEach(
+                    match => {
+
+                        result.push({
+
+                            ...match,
+
+                            competition:
+                                league?.name ||
+                                "Football",
+
+                            competition_logo:
+                                league?.logo ||
+                                ""
+
+                        });
+
+                    }
+                );
+
+            }
+        );
+
 
         return result;
     }
@@ -468,18 +1734,40 @@ async function getNormalizedMatches() {
         );
 
 
-    const matches =
-        extractMatches(data);
+    const rawMatches =
+        extractMatches(
+            data
+        );
 
 
-    return matches
-        .map(normalizeMatch)
-        .filter(Boolean);
+    console.log(
+        "📊 Matchs bruts:",
+        rawMatches.length
+    );
+
+
+    const normalized =
+        rawMatches
+            .map(
+                normalizeMatch
+            )
+            .filter(
+                Boolean
+            );
+
+
+    console.log(
+        "⚽ Matchs normalisés:",
+        normalized.length
+    );
+
+
+    return normalized;
 }
 
 
 /* =====================================================
-   LIVE
+   LIVE MATCHES
 ===================================================== */
 
 async function getLiveMatches() {
@@ -487,15 +1775,17 @@ async function getLiveMatches() {
     const matches =
         await getNormalizedMatches();
 
+
     return matches.filter(
         match =>
-            match.status === "live"
+            match.status ===
+            "live"
     );
 }
 
 
 /* =====================================================
-   FINISHED
+   FINISHED MATCHES
 ===================================================== */
 
 async function getFinishedMatches() {
@@ -503,15 +1793,17 @@ async function getFinishedMatches() {
     const matches =
         await getNormalizedMatches();
 
+
     return matches.filter(
         match =>
-            match.status === "finished"
+            match.status ===
+            "finished"
     );
 }
 
 
 /* =====================================================
-   UPCOMING
+   UPCOMING MATCHES
 ===================================================== */
 
 async function getUpcomingMatches() {
@@ -519,9 +1811,11 @@ async function getUpcomingMatches() {
     const matches =
         await getNormalizedMatches();
 
+
     return matches.filter(
         match =>
-            match.status === "upcoming"
+            match.status ===
+            "upcoming"
     );
 }
 
@@ -530,15 +1824,31 @@ async function getUpcomingMatches() {
    MATCH DETAILS
 ===================================================== */
 
-async function getMatchDetails(id) {
+async function getMatchDetails(
+    id
+) {
 
     if (!id) {
+
         return null;
+
     }
 
 
-    const encoded =
-        encodeURIComponent(id);
+    const cleanId =
+        String(id)
+            .replace(
+                /^\/api\/matches\//,
+                ""
+            )
+            .replace(
+                /^\/api\/fotmob\/match\//,
+                ""
+            )
+            .replace(
+                /\/$/,
+                ""
+            );
 
 
     try {
@@ -546,8 +1856,11 @@ async function getMatchDetails(id) {
         const data =
             await preziRequest(
                 "/api/matches/" +
-                encoded
+                encodeURIComponent(
+                    cleanId
+                )
             );
+
 
         return (
             data?.match ||
@@ -556,26 +1869,34 @@ async function getMatchDetails(id) {
             null
         );
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.warn(
-            "Match details unavailable:",
+            "⚠️ Match details unavailable:",
             error
         );
 
+
         return null;
+
     }
 }
 
 
 /* =====================================================
-   SEARCH
+   SEARCH TEAM
 ===================================================== */
 
-async function searchTeam(query) {
+async function searchTeam(
+    query
+) {
 
     if (!query) {
+
         return [];
+
     }
 
 
@@ -596,14 +1917,25 @@ async function searchTeam(query) {
                 match.home.name
                     .toLowerCase();
 
+
             const away =
                 match.away.name
                     .toLowerCase();
 
 
+            const league =
+                match.competition
+                    .toLowerCase();
+
+
             return (
+
                 home.includes(text) ||
-                away.includes(text)
+
+                away.includes(text) ||
+
+                league.includes(text)
+
             );
 
         }
@@ -612,12 +1944,13 @@ async function searchTeam(query) {
 
 
 /* =====================================================
-   CACHE
+   CLEAR CACHE
 ===================================================== */
 
 function clearPreziCache() {
 
     PREZI_CACHE.clear();
+
 
     console.log(
         "🧹 PreziScore cache cleared"
@@ -659,7 +1992,7 @@ function getAPIStatus() {
 
 
 /* =====================================================
-   GLOBAL API
+   GLOBAL PREZI API
 ===================================================== */
 
 window.PreziAPI = {
@@ -688,16 +2021,27 @@ window.PreziAPI = {
     searchTeam,
 
 
+    /* HELPERS */
+
+    normalizeMatch,
+
+    getLiveMinute,
+
+    getTeamName,
+
+    getTeamLogo,
+
+    getTeamScore,
+
+    getCompetitionName,
+
+
     /* SYSTEM */
 
     clearCache:
         clearPreziCache,
 
-    getAPIStatus,
-
-    normalizeMatch,
-
-    getLiveMinute
+    getAPIStatus
 
 };
 
@@ -715,7 +2059,8 @@ console.log(
 );
 
 console.log(
-    "🌐 VERCEL: prezi-score.vercel.app"
+    "🌐 VERCEL:",
+    PREZI_API_BASE
 );
 
 console.log(
@@ -728,6 +2073,10 @@ console.log(
 
 console.log(
     "🔴 LIVE: READY"
+);
+
+console.log(
+    "📅 MATCHES: READY"
 );
 
 console.log(
