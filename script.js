@@ -1467,3 +1467,175 @@ window.PreziMatches = {
 console.log(
     "✅ PREZISCORE SCRIPT.JS FULL READY"
 );
+function getMatchStatus(match) {
+    const status = String(match.status || "").toLowerCase();
+    const text = String(match.status_text || "").toLowerCase();
+
+    if (
+        status === "live" ||
+        status === "inplay" ||
+        status === "playing" ||
+        text.includes("live") ||
+        text.includes("1st half") ||
+        text.includes("2nd half") ||
+        text.includes("half time")
+    ) {
+        return "live";
+    }
+
+    if (
+        status === "finished" ||
+        status === "ended" ||
+        status === "ft" ||
+        text.includes("finished")
+    ) {
+        return "finished";
+    }
+
+    return "upcoming";
+}
+
+
+function formatMatchTime(match) {
+    const status = getMatchStatus(match);
+
+    if (status === "live") {
+        return `
+            <span class="live-minute">
+                🔴 LIVE
+            </span>
+        `;
+    }
+
+    if (status === "finished") {
+        return `
+            <span class="finished-status">
+                FT
+            </span>
+        `;
+    }
+
+    if (!match.time) return "--:--";
+
+    const date = new Date(match.time);
+
+    return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+
+function getScore(match) {
+    const status = getMatchStatus(match);
+
+    if (status === "upcoming") {
+        return `<span class="match-time">${formatMatchTime(match)}</span>`;
+    }
+
+    const homeScore =
+        match.home_score === null || match.home_score === undefined
+            ? "-"
+            : match.home_score;
+
+    const awayScore =
+        match.away_score === null || match.away_score === undefined
+            ? "-"
+            : match.away_score;
+
+    return `
+        <div class="score-box">
+            <strong>${homeScore}</strong>
+            <span>-</span>
+            <strong>${awayScore}</strong>
+        </div>
+    `;
+}
+
+
+function getTeamLogo(logo) {
+    if (logo && logo.trim() !== "") {
+        return `
+            <img
+                src="${logo}"
+                class="team-logo"
+                onerror="this.style.display='none'"
+            >
+        `;
+    }
+
+    return `<div class="team-logo-placeholder">⚽</div>`;
+}
+
+
+function createMatchCard(match) {
+
+    const status = getMatchStatus(match);
+
+    return `
+        <div class="match-card ${status}">
+
+            <div class="competition">
+
+                ${
+                    match.competition_logo
+                    ? `<img src="${match.competition_logo}"
+                           onerror="this.style.display='none'">`
+                    : "🏆"
+                }
+
+                <span>${match.competition || "Football"}</span>
+
+            </div>
+
+
+            <div class="match-status">
+
+                ${
+                    status === "live"
+                    ? `<span class="live-badge">🔴 LIVE</span>`
+                    : status === "finished"
+                    ? `<span class="ft-badge">✅ FT</span>`
+                    : `<span class="upcoming-badge">📅 À VENIR</span>`
+                }
+
+            </div>
+
+
+            <div class="teams">
+
+                <div class="team">
+
+                    ${getTeamLogo(match.home_logo)}
+
+                    <span>${match.home || "Équipe domicile"}</span>
+
+                </div>
+
+
+                <div class="match-center">
+
+                    ${getScore(match)}
+
+                    ${
+                        status === "live"
+                        ? `<small>${match.status_text || "En direct"}</small>`
+                        : ""
+                    }
+
+                </div>
+
+
+                <div class="team">
+
+                    ${getTeamLogo(match.away_logo)}
+
+                    <span>${match.away || "Équipe visiteuse"}</span>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
